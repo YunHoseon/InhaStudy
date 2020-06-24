@@ -12,3 +12,4 @@
 *.lastbuildstate
 *.suo
 *.sln
+*.ipch
