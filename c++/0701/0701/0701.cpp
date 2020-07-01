@@ -6,73 +6,89 @@
 
 using namespace std;
 
-int QuickSort(vector<int>& arr, int n, int _pl, int _pr)		//배열, 개수, 왼쪽 인덱스, 오른쪽 인덱스
+int QuickSort(vector<double> &arr, int _left, int _right)		//배열, 개수, 왼쪽 인덱스, 오른쪽 인덱스
 {
-	int pivot = _pl - 1;
+	int pivot = _left;
 	int tmp = 0;
 	bool pl_search = false, pr_search = false;
-	int pl = _pl, pr = _pr;
+	int pl = _left, pr = _right + 1;
 
-	if (pr - _pl <= 0 || _pr - pl <= 0)
+	if (pr - _left <= 0 || _right - pl <= 0)
 		return 0;
 
-	for (int i = 0; i < n - 1; i++)
+	for ( ; ; )
 	{
 		if (pl > pr)
 			break;
 
-		for (int j = 0; j < n - 1; j++)
-		{
-			if (arr[pl] > arr[pivot])
-			{
-				pl_search = true;
-				break;
-			}
-			pl++;
-		}
+		while (pl < _right && arr[++pl] < arr[pivot]);
+		while (pr > _left && arr[--pr] > arr[pivot]);
 
-		for (int j = 0; j < n - 1; j++)
-		{
-			if (arr[pr] < arr[pivot])
-			{
-				pr_search = true;
-				break;
-			}
-			pr--;
-		}
-
-		if (pl_search && pr_search)
+		if (pl < pr)
 		{
 			tmp = arr[pl];
 			arr[pl] = arr[pr];
 			arr[pr] = tmp;
-			pl_search = false;
-			pr_search = false;
 		}
 		
+		//for (int j = 0; j < arr.size() - 1; j++)
+		//{
+		//	if (arr[pl] > arr[pivot])
+		//	{
+		//		pl_search = true;
+		//		break;
+		//	}
+		//	pl++;
+		//}
+		//
+		//for (int j = 0; j < arr.size() - 1; j++)
+		//{
+		//	if (arr[pr] < arr[pivot])
+		//	{
+		//		pr_search = true;
+		//		break;
+		//	}
+		//	pr--;
+		//}
+		//
+		//if (pl_search && pr_search)
+		//{
+		//	tmp = arr[pl];
+		//	arr[pl] = arr[pr];
+		//	arr[pr] = tmp;
+		//	pl_search = false;
+		//	pr_search = false;
+		//}
+	}
+	if (arr[pivot] > arr[pl])
+	{
+		tmp = arr[pivot];
+		arr[pivot] = arr[pl];
+		arr[pl] = tmp;
 	}
 	tmp = arr[pivot];
-	arr[pivot] = arr[pl];
-	arr[pl] = tmp;
+	arr[pivot] = arr[pr];
+	arr[pr] = tmp;
 
-	pivot = pr;
 
-	if (pivot > _pl)
-		QuickSort(arr, pr - _pl + 1, _pl, pr - 1);
-	if (_pr > pivot)
-		QuickSort(arr, _pr - pl + 1, pl + 1, _pr);
+	for (int i = 0; i < arr.size(); i++)
+		cout << arr[i] << " ";
+	cout << "pl : " << pl << " pr : " << pr << endl;
+	QuickSort(arr, _left, pr);
+	QuickSort(arr, pl, _right);
 }
 
 int main()
 {
-	vector<int> arr = { 5,1,7,4,6,2,3,9,8 };
-
-	QuickSort(arr, 9, 1, 9-1);
+	vector<double> arr = { 2,5,1,7,4,6,2,2,2,3,9,8 , 2,-2, 12};
 
 	for (int i = 0; i < arr.size(); i++)
-	{
-	cout << arr[i] << " ";
-	}
+		cout << arr[i] << " ";
+	cout << endl;
+	QuickSort(arr, 0, arr.size() - 1);
+
+	for (int i = 0; i < arr.size(); i++)
+		cout << arr[i] << " ";
 	cout << endl;
 }
 
