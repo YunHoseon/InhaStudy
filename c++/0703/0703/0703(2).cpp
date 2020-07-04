@@ -24,9 +24,9 @@ void HeapSort(int arr[])
 	int cnt = 0;
 	int parent = 0;
 
-	for (int i = 0; i < SIZE - cnt; i++, cnt++)
+	for (int i = 0; i < SIZE; i++)
 	{
-		for (int j = 0; j < SIZE - cnt; j++)
+		for (int j = 0; j < SIZE/3; j++)
 		{
 			if (arr[(i - 1) / 2] < arr[i])	//자신이 부모보다 크다면
 			{
@@ -41,13 +41,20 @@ void HeapSort(int arr[])
 		}
 	}
 
+	cout << "힙 배열 :  ";
+	for (int i = 0; i < SIZE; i++)
+		cout << arr[i] << " ";
+	cout << endl;
+	
+
 	for (int i = 0; i < SIZE - i; i++)
 	{
 		tmp = arr[0];
 		arr[0] = arr[SIZE -1- i];
 		arr[SIZE -1- i] = tmp;
+		int moveIdx = 0;
 
-		for (int j = 0; j < SIZE - cnt; j++)
+		for (int j = 0; j < SIZE; j++)
 		{
 			if (i * 2 + 1 < SIZE - i && arr[i] > arr[i * 2 + 1])
 			{
@@ -169,11 +176,9 @@ int main()
 	}
 
 	for (int i = 0; i < SIZE; i++)
-	{
 		randNumArr2[i] = randNumArr[i];
-	}
 
-	stopwatch.StartTimer();
+	/*stopwatch.StartTimer();
 	QuickSort(randNumArr2, 0, SIZE - 1);
 	stopwatch.StopTimer();
 
@@ -182,7 +187,7 @@ int main()
 	else
 		cout << "quick : false" << endl;
 
-	cout << "퀵 정렬에 걸린 시간 : " << (double)stopwatch.getElapsedTime() / 1000 << endl;
+	cout << "퀵 정렬에 걸린 시간 : " << (double)stopwatch.getElapsedTime() / 1000 << endl;*/
 
 	stopwatch.StartTimer();
 	HeapSort(arr);
