@@ -25,7 +25,7 @@ int main()
 	int num;
 	ClassMate *clm = new ClassMate;
 
-	while (true)
+	while (1)
 	{
 		cout << "메뉴 번호를 입력하세요." << endl << endl;
 		cout << "1. 학생 추가" << endl;
@@ -41,7 +41,7 @@ int main()
 			clm->AddStudent();
 			break;
 		case 2:
-
+			clm->DeleteStudent();
 			break;
 		case 3:
 			clm->PrintStudent();
@@ -76,13 +76,26 @@ void ClassMate::AddStudent()
 
 	clm->next = NULL;
 
-	if (head == NULL)
+	if (head == NULL)	//맨 처음 입력일 때
 		head = clm;
 	else
 	{
 		tmp = head;
 
-		while (tmp->next != NULL)
+		if (tmp->next == NULL)	//자료가 한개 있을 때
+		{
+			if (clm->no < tmp->no)
+			{
+				clm->next = tmp;
+
+				if (tmp == head)
+					head = clm;
+			}
+			else
+				tmp->next = clm;
+		}
+
+		while (tmp->next != NULL)	//마지막 자료까지
 		{
 			if (clm->no < tmp->no)
 			{
@@ -93,29 +106,35 @@ void ClassMate::AddStudent()
 			}
 			tmp = tmp->next;
 		}
-
-		if(tmp->next == NULL)
-			tmp->next = clm;
 	}
-	/*if (head->no > clm->no)
-	{
-		clm->next = head;
-		head->next = NULL;
-	}
-	else
-	{
-		head->next = clm;
-		clm->next = NULL;
-	}*/
 }
 
 void ClassMate::DeleteStudent()
 {
+	ClassMate *tmp;
+	tmp = head;
+	int dNum;
 
+	cout << "삭제할 학생의 번호 : ";
+	cin >> dNum;
+
+	while (tmp != NULL)
+	{
+		if (dNum == tmp->no)
+		{
+			delete tmp;
+			break;
+		}
+	}
+
+	cout << "해당하는 번호의 학생이 없습니다." << endl;
 }
 
 void ClassMate::PrintStudent()
 {
+	ClassMate *tmp;
+	tmp = head;
+
 	while (head != NULL)
 	{
 		cout << "번호 : " << head->no << endl;
@@ -124,4 +143,5 @@ void ClassMate::PrintStudent()
 
 		head = head->next;
 	}
+	head = tmp;
 }
