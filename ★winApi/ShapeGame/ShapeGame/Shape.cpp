@@ -10,16 +10,48 @@ CShape::~CShape()
 {
 }
 
-CRectangle::CRectangle()
+CRectangle::CRectangle(int _x , int _y)
 {
 	srand(time(NULL));
-	dir = rand();
 
-	size = 50;
+	x = _x;
+	y = _y;
+
+	size = 30;
 	type = 1;
-	speed = 10;
-	moveToX = 1;
-	moveToY = 1;
+	speed = 15;
+
+	dir = rand() % 2;
+
+	if (dir == 0)
+		moveToX = 1;
+	else
+		moveToX = -1;
+
+	dir = rand() % 2;
+
+	if (dir == 0)
+		moveToY = 1;
+	else
+		moveToY = -1;
+
+	points = new MYPOINT[4];
+	vertexNum = 4;
+
+	/*for (int i = 0; i < vertexNum; i++)
+	{
+		points[i].x = x + (size * sin(90 * i * PI / 180));
+		points[i].y = y - (size * cos(90 * i * PI / 180));
+	}*/
+
+	points[0].x = x - size;
+	points[0].y = y - size;
+	points[1].x = x + size;
+	points[1].y = y - size;
+	points[2].x = x + size;
+	points[2].y = y + size;
+	points[3].x = x - size;
+	points[3].y = y + size;
 }
 
 CRectangle::~CRectangle()
@@ -28,34 +60,7 @@ CRectangle::~CRectangle()
 
 void CRectangle::Update()
 {
-	/*for (CShape *cRect : cShapes)
-	{
-		if (cRect->dir % 4 == 0)
-		{
-			cRect->x += cRect->GetSpeed() * cRect->moveToX;
-			cRect->y += cRect->GetSpeed() * cRect->moveToY;
-		}
-		else if (cRect->dir % 4 == 1)
-		{
-			cRect->x -= cRect->GetSpeed() * cRect->moveToX;
-			cRect->y -= cRect->GetSpeed() * cRect->moveToY;
-		}
-		else if (cRect->dir % 4 == 2)
-		{
-			cRect->x -= cRect->GetSpeed() * cRect->moveToX;
-			cRect->y += cRect->GetSpeed() * cRect->moveToY;
-		}
-		else if (cRect->dir % 4 == 3)
-		{
-			cRect->x += cRect->GetSpeed() * cRect->moveToX;
-			cRect->y -= cRect->GetSpeed() * cRect->moveToY;
-		}
-
-		if (cRect->y + (cRect->size * 0.5) <= rectRange.top + cRect->size || cRect->y + (cRect->size * 0.5) >= rectRange.bottom)
-			cRect->SetmoveToY(cRect->moveToY * -1);
-		if (cRect->x + (cRect->size * 0.5) <= rectRange.left + cRect->size || cRect->x + (cRect->size * 0.5) >= rectRange.right)
-			cRect->SetmoveToX(cRect->moveToX * -1);
-	}*/
+	
 }
 
 void CRectangle::Collision()
@@ -65,5 +70,13 @@ void CRectangle::Collision()
 
 void CRectangle::DrawShape(HDC hdc)
 {
-	Rectangle(hdc, x - (size * 0.5), y - (size * 0.5), x + (size * 0.5), y + (size * 0.5));
+	POINT pt[4];
+
+	for (int i = 0; i < vertexNum; i++)
+	{
+		pt[i].x = points[i].x;
+		pt[i].y = points[i].y;
+	}
+
+	Polygon(hdc, pt, vertexNum);
 }

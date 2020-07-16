@@ -25,6 +25,6 @@
 
 #include "Shape.h"
 
-#define PI 3.141592
+#define PI 3.14159187
 
 POINT point[10];

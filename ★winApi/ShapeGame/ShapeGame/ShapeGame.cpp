@@ -159,38 +159,43 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		case 1:
 			for (CShape *cRect : cShapes)
 			{
+				for (int i = 0; i < cRect->vertexNum; i++)		//도형 회전
+				{
+					float xTmp = cRect->points[i].x - cRect->x;
+					float yTmp = cRect->points[i].y - cRect->y;
 
-				if (cRect->dir % 4 == 0)
-				{
-					cRect->x += cRect->GetSpeed() * cRect->moveToX;
-					cRect->y += cRect->GetSpeed() * cRect->moveToY;
-				}
-				else if (cRect->dir % 4 == 1)
-				{
-					cRect->x -= cRect->GetSpeed() * cRect->moveToX;
-					cRect->y -= cRect->GetSpeed() * cRect->moveToY;
-				}
-				else if (cRect->dir % 4 == 2)
-				{
-					cRect->x -= cRect->GetSpeed() * cRect->moveToX;
-					cRect->y += cRect->GetSpeed() * cRect->moveToY;
-				}
-				else if (cRect->dir % 4 == 3)
-				{
-					cRect->x += cRect->GetSpeed() * cRect->moveToX;
-					cRect->y -= cRect->GetSpeed() * cRect->moveToY;
+					cRect->points[i].x = cos(20 * PI / 180) * xTmp - sin(20 * PI / 180) * yTmp + cRect->x;
+					cRect->points[i].y = sin(20 * PI / 180) * xTmp + cos(20 * PI / 180) * yTmp + cRect->y;
 				}
 
-				if (cRect->y + (cRect->size * 0.5) <= rectRange.top + cRect->size || cRect->y + (cRect->size * 0.5) >= rectRange.bottom)
-					cRect->SetmoveToY(cRect->moveToY * -1);
-				if (cRect->x + (cRect->size * 0.5) <= rectRange.left + cRect->size || cRect->x + (cRect->size * 0.5) >= rectRange.right)
-					cRect->SetmoveToX(cRect->moveToX * -1);
+				cRect->x += cRect->GetSpeed() * cRect->moveToX;
+				cRect->y += cRect->GetSpeed() * cRect->moveToY;
 
-				for (int i = 0; i < 12; i ++)
+				for (int i = 0; i < cRect->vertexNum; i++)	//도형 이동
 				{
-					point[i].x = cRect->x + (cRect->size * sin(30 * (i / 2) * PI / 180));
-					point[i].y = cRect->y - (cRect->size * cos(30 * (i / 2) * PI / 180));
+					cRect->points[i].x += cRect->GetSpeed() * cRect->moveToX;
+					cRect->points[i].y += cRect->GetSpeed() * cRect->moveToY;
 				}
+
+				for (int i = 0; i < cRect->vertexNum; i++)		//벽에 막히게
+				{
+					if (cRect->points[i].y + (cRect->size * 0.5) <= rectRange.top + cRect->size)
+						cRect->SetmoveToY(1);
+
+					if (cRect->points[i].y + (cRect->size * 0.5) >= rectRange.bottom)
+						cRect->SetmoveToY(-1);
+
+					if (cRect->points[i].x + (cRect->size * 0.5) <= rectRange.left + cRect->size)
+						cRect->SetmoveToX(1);
+
+					if (cRect->points[i].x + (cRect->size * 0.5) >= rectRange.right)
+						cRect->SetmoveToX(-1);
+				}
+			}
+
+			for (CShape *cRect : cShapes)
+			{
+
 			}
 
 			break;
@@ -198,7 +203,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		default:
 			break;
 		}
-
 		InvalidateRgn(hWnd, NULL, TRUE);
 	}
 
@@ -208,9 +212,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	{
 		srand(time(NULL));
 		int mx = LOWORD(lParam), my = HIWORD(lParam);
-		CRectangle *cRect = new CRectangle;
+		CRectangle *cRect = new CRectangle(mx, my);
 
-		cRect->SetXY(mx, my);
 		cShapes.push_back(cRect);
 
 		InvalidateRgn(hWnd, NULL, TRUE);

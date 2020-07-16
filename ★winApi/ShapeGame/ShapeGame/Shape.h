@@ -3,8 +3,8 @@
 class CShape
 {
 public:
-	int x;
-	int y;
+	float x;
+	float y;
 
 	int size;
 	int type;
@@ -16,6 +16,15 @@ public:
 	int moveToX;
 	int moveToY;
 
+	typedef struct MYPOINT
+	{
+		float x;
+		float y;
+	}MYPOINT;
+
+	MYPOINT *points;
+	size_t vertexNum;
+
 public:
 	CShape();
 	~CShape();
@@ -24,13 +33,13 @@ public:
 	virtual void Collision() = 0;
 	virtual void DrawShape(HDC hdc) = 0;
 
-	virtual void SetXY(int _x, int _y) { x = _x; y = _y; }
-	virtual void SetSize(int _size) { size = _size; }
-	virtual void SetType(int _type) { type = _type; }
+	//virtual void SetXY(int _x, int _y) { x = _x; y = _y; }
+	//virtual void SetSize(int _size) { size = _size; }
+	//virtual void SetType(int _type) { type = _type; }
 
 	virtual int GetSpeed() { return speed; }
-	virtual void SetSpeed(int _speed) { speed = _speed; }
-	virtual void SetRot(double _rot) { rotation = _rot; }
+	//virtual void SetSpeed(int _speed) { speed = _speed; }
+	//virtual void SetRot(double _rot) { rotation = _rot; }
 
 	virtual void SetmoveToX(int _moveToX) { moveToX = _moveToX; }
 	virtual void SetmoveToY(int _moveToY) { moveToY = _moveToY; }
@@ -38,10 +47,11 @@ public:
 
 class CRectangle : public CShape
 {
+public:
 	int type;
 
 public:
-	CRectangle();
+	CRectangle(int _x, int _y);
 	~CRectangle();
 
 	void Update();
