@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "Objects.h"
 
-//extern list<CObjects*> objects;
 extern list<EnemyObj*> enemyList;
 extern list<BlockObj*> blockList;
 extern list<BulletObj*> bulletList;
@@ -11,7 +10,6 @@ extern Player player;
 CObjects::CObjects()
 {
 }
-
 
 CObjects::~CObjects()
 {

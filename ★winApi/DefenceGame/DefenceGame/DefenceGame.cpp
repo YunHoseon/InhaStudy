@@ -2,6 +2,7 @@
 #include "DefenceGame.h"
 
 #define MAX_LOADSTRING 100
+const int FILESIZE = 1024;
 
 // Global Variables:
 HINSTANCE hInst;                                // current instance
@@ -13,6 +14,86 @@ ATOM                MyRegisterClass(HINSTANCE hInstance);
 BOOL                InitInstance(HINSTANCE, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
+
+typedef struct PLAYERDATA
+{
+	int score;
+	TCHAR ID[9];
+};
+
+void SaveFile()
+{
+	/*fstream fp;
+
+	fp.open("data.dat", ios_base::in | ios_base::out | ios_base::binary);
+	PLAYERDATA* playerData = new PLAYERDATA;
+
+	if (fp.is_open())
+	{
+		playerData->score = player.GetScore();
+
+		for (int i = 0; i < sizeof(player.GetID()); i++)
+			playerData->ID[i] = player.GetID()[i];
+
+
+	}*/
+
+	ofstream outFile;
+	outFile.open("test.txt");
+	//cin >> text;
+	if (outFile.is_open())
+	{
+		//outFile << text;
+		PLAYERDATA playerData;
+
+		playerData.score = player.GetScore();
+
+		for (int i = 0; i < sizeof(player.GetID()); i++)
+			playerData.ID[i] = player.GetID()[i];
+
+		//outFile << "STR:"<<play.str << endl <<"DEF:"<< play.def << endl <<"HP:"<< play.hp << endl <<"MAX_HP:"<< play.max_hp ;
+		outFile.write((char *)&playerData, sizeof(PLAYERDATA));
+	}
+	else
+	{
+		cout << "실패";
+	}
+	outFile.close();
+}
+
+void LoadFile() 
+{
+	string text;
+	string temp;
+	string num;
+	ifstream inFile;
+	PLAYERDATA playerData;
+
+	inFile.open("test.txt");
+
+	if (inFile.is_open())
+	{
+		inFile.read((char *)&playerData, sizeof(PLAYERDATA));
+
+		//cout << play.str;
+		/* 하나하나 읽어오기
+		while (getline(inFile, text))
+		{
+		cout << text << endl;
+		int fin;
+		fin = text.find(":");
+		temp = "";
+		num = "";
+		for (int i = 0; i < fin; i++)
+		{
+		temp += text[i];
+		}
+
+		}
+		*/
+	}
+	inFile.close();
+}
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_opt_ HINSTANCE hPrevInstance,
@@ -99,10 +180,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	static TCHAR playerID[9];				//아이디
 	static int charNum;						//글자 수
 
-	float xTmp = playerObj.points[1].x - playerObj.center.x;
+	float xTmp = playerObj.points[1].x - playerObj.center.x;	//회전 연산
 	float yTmp = playerObj.points[1].y - playerObj.center.y;
 
-	static int bulletX;
+	static int mx;							//마우스 좌표
+	static int my;
 
     switch (message)
     {
@@ -119,13 +201,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		{
 			switch (wParam)
 			{
-			case 65:
+			case 97:
 			case VK_LEFT:
 				playerObj.points[1].x = cos(-(10 * PI / 180)) * xTmp - sin(-(10 * PI / 180)) * yTmp + playerObj.center.x;
 				playerObj.points[1].y = sin(-(10 * PI / 180)) * xTmp + cos(-(10 * PI / 180)) * yTmp + playerObj.center.y;
 				break;
 
-			case 68:
+			case 100:
 			case VK_RIGHT:
 				playerObj.points[1].x = cos(10 * PI / 180) * xTmp - sin(10 * PI / 180) * yTmp + playerObj.center.x;
 				playerObj.points[1].y = sin(10 * PI / 180) * xTmp + cos(10 * PI / 180) * yTmp + playerObj.center.y;
@@ -133,9 +215,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 			case VK_SPACE:
 			{
-				BulletObj *bullets = new BulletObj(playerObj.points[1].x, playerObj.points[1].y);
+				BulletObj *bullets = new BulletObj(playerObj.points[1].x, playerObj.points[1].y);	//총알 생성
 				bulletList.push_back(bullets);
-				bulletX = playerObj.center.x - playerObj.points[1].x;
+
+				bullets->bx = playerObj.center.x - playerObj.points[1].x;
+				bullets->by = playerObj.center.y - playerObj.points[1].y;
 			}
 				break;
 
@@ -147,11 +231,21 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			break;
 
 	case WM_CHAR:
-
 		if (gameState == START)
 			GameStartMenu(hWnd, wParam, &charNum, player.GetID());
-
+		
 		InvalidateRgn(hWnd, NULL, TRUE);
+		break;
+
+	case WM_LBUTTONDOWN:
+		mx = LOWORD(lParam);
+		my = HIWORD(lParam);
+
+		if (gameState == END)
+		{
+			if (mx >= 300 && mx <= 450 || my >= 600 && my <= 650)		//종료 버튼
+				PostQuitMessage(0);
+		}
 		break;
 
 	case WM_TIMER:
@@ -164,7 +258,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		{
 		case 1:
 		{
-			cObject->Collision();									//적&블록 충돌
+			cObject->Collision();								//적&블록 충돌
 
 			for (iter = enemyList.begin(); iter != enemyList.end();)
 			{
@@ -182,23 +276,24 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				}
 
 				if ((*iter)->center.y >= rectRange.bottom)
-					iter = enemyList.erase(iter);					//범위 벗어나면 삭제
+					iter = enemyList.erase(iter);				//범위 벗어나면 삭제
 				else
 					iter++;
 			}
 
-			for (iter3 = bulletList.begin(); iter3 != bulletList.end();)
+			for (iter3 = bulletList.begin(); iter3 != bulletList.end();)	//총알 움직임
 			{
-				(*iter3)->center.x -= bulletX / 2;
-				(*iter3)->center.y -= (playerObj.center.y - playerObj.points[1].y) / 2;
+				(*iter3)->center.x -= (*iter3)->bx / 2;
+				(*iter3)->center.y -= (*iter3)->by / 2;
 				iter3++;
 			}
 
-			if (blockList.size() == 0)
+			if (blockList.size() == 0)		//블록이 모두 없어지면 게임 오버
 			{
 				KillTimer(hWnd, 1);
 				KillTimer(hWnd, 2);
 
+				SaveFile();
 				gameState = END;
 			}
 		}
@@ -272,6 +367,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 			case END:
 			{
+				LoadFile();
+
 				RECT rc_Rank = { 200, 100, 300, 200 };
 				DrawText(hdc, _T("RANK"), _tcslen(_T("RANK")), &rc_Rank, DT_SINGLELINE | DT_CENTER | DT_VCENTER);
 

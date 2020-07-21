@@ -13,13 +13,13 @@ extern list<BulletObj*> bulletList;
 PlayerObj playerObj(240, 680);
 extern Player player;									//플레이어 정보
 
-void delay(unsigned int sec)     // 특정 시간(초)만큼 기다리는 함수
-{
-	clock_t ticks1 = clock();
-	clock_t ticks2 = ticks1;
-	while ((ticks2 / CLOCKS_PER_SEC - ticks1 / CLOCKS_PER_SEC) < (clock_t)sec)
-		ticks2 = clock();
-}
+//void delay(unsigned int sec)     // 특정 시간(초)만큼 기다리는 함수
+//{
+//	clock_t ticks1 = clock();
+//	clock_t ticks2 = ticks1;
+//	while ((ticks2 / CLOCKS_PER_SEC - ticks1 / CLOCKS_PER_SEC) < (clock_t)sec)
+//		ticks2 = clock();
+//}
 
 void CreateObjects()
 {
@@ -37,17 +37,17 @@ void GameStartMenu(HWND hWnd, WPARAM wParam, int *charNum, TCHAR* playerID)
 		(*charNum)--;
 		playerID[*charNum] = NULL;
 	}
-	else if (*charNum < 8)
+	else if (*charNum < 8 && wParam != VK_RETURN)
 	{
 		playerID[(*charNum)++] = wParam;
 		playerID[*charNum] = NULL;
 	}
 
-	if (wParam == VK_RETURN && *charNum > 0)	//게임 진입
+	if (wParam == VK_RETURN && *charNum > 1)	//게임 진입
 	{
 		player.SetID(playerID);
-		//gameState = INGAME;
-		gameState = END;
+		gameState = INGAME;
+		//gameState = END;
 
 		CreateObjects();
 		

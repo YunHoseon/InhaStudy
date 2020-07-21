@@ -19,7 +19,6 @@ public:
 	MYPOINT *points;
 	size_t vertexNum;
 
-public:
 	CObjects();
 	~CObjects();
 
@@ -57,6 +56,9 @@ public:
 class BulletObj : public CObjects
 {
 public:
+	int bx;
+	int by;
+
 	BulletObj(float _x, float _y);
 	~BulletObj();
 
