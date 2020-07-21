@@ -5,9 +5,13 @@
 enum GameState { START = 100, INGAME, END };	//게임 상태
 enum GameState gameState;
 
-extern vector<CObjects*> objects;
+extern CObjects *cObject;
+extern list<EnemyObj*> enemyList;
+extern list<BlockObj*> blockList;
+extern list<BulletObj*> bulletList;
 
-Player player;					//플레이어 정보
+PlayerObj playerObj(240, 680);
+extern Player player;									//플레이어 정보
 
 void delay(unsigned int sec)     // 특정 시간(초)만큼 기다리는 함수
 {
@@ -15,6 +19,15 @@ void delay(unsigned int sec)     // 특정 시간(초)만큼 기다리는 함수
 	clock_t ticks2 = ticks1;
 	while ((ticks2 / CLOCKS_PER_SEC - ticks1 / CLOCKS_PER_SEC) < (clock_t)sec)
 		ticks2 = clock();
+}
+
+void CreateObjects()
+{
+	for (int i = 0; i < 6; i++)					//블록 생성
+	{
+		BlockObj *blocks = new BlockObj(40 + (i * 80), 720);
+		blockList.push_back(blocks);
+	}
 }
 
 void GameStartMenu(HWND hWnd, WPARAM wParam, int *charNum, TCHAR* playerID)
@@ -33,19 +46,13 @@ void GameStartMenu(HWND hWnd, WPARAM wParam, int *charNum, TCHAR* playerID)
 	if (wParam == VK_RETURN && *charNum > 0)	//게임 진입
 	{
 		player.SetID(playerID);
-		gameState = INGAME;
+		//gameState = INGAME;
+		gameState = END;
 
-		//CreateObj();
-		for (int i = 0; i < 6; i++)			//블록 생성
-		{
-			BlockObj *blocks = new BlockObj(40 + (i * 80), 720);
-			objects.push_back(blocks);
-		}
-		/*EnemyObj *enemeis = new EnemyObj(40 + 80, 100);
-		objects.push_back(enemeis);*/
+		CreateObjects();
 		
 		SetTimer(hWnd, 1, 70, NULL);		//오브젝트 움직임 타이머
-		SetTimer(hWnd, 2, 800, NULL);		//적 생성 타이머
+		SetTimer(hWnd, 2, 1000, NULL);		//적 생성 타이머
 	}
 	InvalidateRgn(hWnd, NULL, TRUE);
 }

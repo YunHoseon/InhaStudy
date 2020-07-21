@@ -20,6 +20,7 @@
 #include <string>
 #include <time.h>
 #include <vector>
+#include <list>
 
 // TODO: reference additional headers your program requires here
 #include "Player.h"

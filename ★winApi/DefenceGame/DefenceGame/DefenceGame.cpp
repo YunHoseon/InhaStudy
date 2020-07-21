@@ -99,10 +99,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	static TCHAR playerID[9];				//아이디
 	static int charNum;						//글자 수
 
-	static int mx;							//마우스 x좌표
-	static int my;							//마우스 y좌표
+	float xTmp = playerObj.points[1].x - playerObj.center.x;
+	float yTmp = playerObj.points[1].y - playerObj.center.y;
 
-	bool col = false;
+	static int bulletX;
 
     switch (message)
     {
@@ -114,94 +114,118 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		gameState = START;
 		break;
 
-    case WM_COMMAND:
-        {
-            //int wmId = LOWORD(wParam);
-            // Parse the menu selections:
-            /*switch (wmId)
-            {
-            case IDM_ABOUT:
-                DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
-                break;
-            case IDM_EXIT:
-                DestroyWindow(hWnd);
-                break;
-            default:
-                return DefWindowProc(hWnd, message, wParam, lParam);
-            }*/
-        }
-        break;
+	case WM_KEYDOWN:
+		if (gameState == INGAME)
+		{
+			switch (wParam)
+			{
+			case 65:
+			case VK_LEFT:
+				playerObj.points[1].x = cos(-(10 * PI / 180)) * xTmp - sin(-(10 * PI / 180)) * yTmp + playerObj.center.x;
+				playerObj.points[1].y = sin(-(10 * PI / 180)) * xTmp + cos(-(10 * PI / 180)) * yTmp + playerObj.center.y;
+				break;
+
+			case 68:
+			case VK_RIGHT:
+				playerObj.points[1].x = cos(10 * PI / 180) * xTmp - sin(10 * PI / 180) * yTmp + playerObj.center.x;
+				playerObj.points[1].y = sin(10 * PI / 180) * xTmp + cos(10 * PI / 180) * yTmp + playerObj.center.y;
+				break;
+
+			case VK_SPACE:
+			{
+				BulletObj *bullets = new BulletObj(playerObj.points[1].x, playerObj.points[1].y);
+				bulletList.push_back(bullets);
+				bulletX = playerObj.center.x - playerObj.points[1].x;
+			}
+				break;
+
+			default:
+				break;
+			}
+		}
+		InvalidateRgn(hWnd, NULL, TRUE);
+			break;
+
+	case WM_CHAR:
+
+		if (gameState == START)
+			GameStartMenu(hWnd, wParam, &charNum, player.GetID());
+
+		InvalidateRgn(hWnd, NULL, TRUE);
+		break;
 
 	case WM_TIMER:
 	{
+		list<EnemyObj*>::iterator iter = enemyList.begin();
+		list<BlockObj*>::iterator iter2 = blockList.begin();
+		list<BulletObj*>::iterator iter3 = bulletList.begin();
+
 		switch (wParam)
 		{
 		case 1:
-			for (CObjects *blocks : objects)
+		{
+			cObject->Collision();									//적&블록 충돌
+
+			for (iter = enemyList.begin(); iter != enemyList.end();)
 			{
-				if (blocks->objType == type_Enemy)
+				(*iter)->center.y += 5;							//적 아래로 이동
+
+				for (int i = 0; i < (*iter)->vertexNum; i++)	//적 회전
 				{
-					blocks->center.y += 5;							//적 아래로 이동
+					(*iter)->points[i].y += 5;					//꼭짓점들도 이동
 
-					for (int i = 0; i < blocks->vertexNum; i++)
-					{
-						blocks->points[i].y += 5;
+					float xTmp = (*iter)->points[i].x - (*iter)->center.x;
+					float yTmp = (*iter)->points[i].y - (*iter)->center.y;
 
-						/*if (blocks->points[i].y >= 500)
-						{
-							objects.pop_back();
-							delete blocks;
-						}*/
-					}
-						
-					for (int i = 0; i < blocks->vertexNum; i++)		//적 회전
-					{
-						float xTmp = blocks->points[i].x - blocks->center.x;
-						float yTmp = blocks->points[i].y - blocks->center.y;
-
-						blocks->points[i].x = cos(20 * PI / 180) * xTmp - sin(20 * PI / 180) * yTmp + blocks->center.x;
-						blocks->points[i].y = sin(20 * PI / 180) * xTmp + cos(20 * PI / 180) * yTmp + blocks->center.y;
-					}
+					(*iter)->points[i].x = cos(20 * PI / 180) * xTmp - sin(20 * PI / 180) * yTmp + (*iter)->center.x;
+					(*iter)->points[i].y = sin(20 * PI / 180) * xTmp + cos(20 * PI / 180) * yTmp + (*iter)->center.y;
 				}
+
+				if ((*iter)->center.y >= rectRange.bottom)
+					iter = enemyList.erase(iter);					//범위 벗어나면 삭제
+				else
+					iter++;
 			}
 
-			for (int i = 0; i < objects.size(); i++)	//충돌 처리
+			for (iter3 = bulletList.begin(); iter3 != bulletList.end();)
 			{
-				for (int j = 0; j < objects.size(); j++)
-				{
-					if (objects[j]->objType == type_Enemy && objects[i]->objType == type_Block)
-					{
-						int dir = pow(pow(objects[i]->center.x - objects[j]->center.x, 2) + pow(objects[i]->center.y - objects[j]->center.y, 2), 0.5);
-
-						if (dir <= objects[j]->size + objects[i]->size)		//충돌 했을 때
-							col = true;
-					}
-				}
+				(*iter3)->center.x -= bulletX / 2;
+				(*iter3)->center.y -= (playerObj.center.y - playerObj.points[1].y) / 2;
+				iter3++;
 			}
+
+			if (blockList.size() == 0)
+			{
+				KillTimer(hWnd, 1);
+				KillTimer(hWnd, 2);
+
+				gameState = END;
+			}
+		}
 			break;
 
 		case 2:
 			srand(time(NULL));
-			int randNum = rand() % 6;
+			int randNum = rand() % 6 + 1;
 
-			EnemyObj *enemeis = new EnemyObj(40 + (randNum * 80), 100);
-			objects.push_back(enemeis);
+			for (int i = 1; i < randNum; i++)
+			{
+				int randNum2 = rand() % 6;
+				EnemyObj *enemeis = new EnemyObj(40 + (randNum2 * 80), 100);		//적 생성
+				enemyList.push_back(enemeis);
+			}
+			
 			break;
 		}
 		InvalidateRgn(hWnd, NULL, TRUE);
 	}
 		break;
 
-	case WM_CHAR:
-		if(gameState == START)
-			GameStartMenu(hWnd, wParam, &charNum, player.GetID());
-		break;
-
-	case WM_MOUSEMOVE:
+	/*case WM_MOUSEMOVE:
 		mx = LOWORD(lParam);
 		my = HIWORD(lParam);
 		InvalidateRgn(hWnd, NULL, TRUE);
-		break;
+		break;*/
 
     case WM_PAINT:
         {
@@ -227,26 +251,43 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 			case INGAME:
 			{
+				playerObj.DrawObj(hdc);
+
 				RECT rc_ID = { 10, 10, 100, 40 };
 				DrawText(hdc, player.GetID(), _tcslen(player.GetID()), &rc_ID, DT_SINGLELINE | DT_LEFT);
 
 				RECT rc_Score = { 300, 10, 450, 50 };
 				DrawText(hdc, to_wstring(player.GetScore()).c_str(), _tcslen(to_wstring(player.GetScore()).c_str()), &rc_Score, DT_SINGLELINE | DT_RIGHT);
 
-				TextOut(hdc, 185, 350, to_wstring(mx).c_str(), _tcslen(to_wstring(mx).c_str()));
+				for (EnemyObj *it_enemies : enemyList)
+					it_enemies->DrawObj(hdc);
 
-				for (CObjects *blocks : objects)
-				{
-					if (blocks->objType == type_Block)
-						blocks->DrawObj(hdc);
-						
-					if (blocks->objType == type_Enemy)
-						blocks->DrawObj(hdc);
-				}
+				for (BlockObj *it_blocks : blockList)
+					it_blocks->DrawObj(hdc);
+
+				for (BulletObj *it_bullets : bulletList)
+					it_bullets->DrawObj(hdc);
 			}
 				break;
 
 			case END:
+			{
+				RECT rc_Rank = { 200, 100, 300, 200 };
+				DrawText(hdc, _T("RANK"), _tcslen(_T("RANK")), &rc_Rank, DT_SINGLELINE | DT_CENTER | DT_VCENTER);
+
+				RECT rc_Result = { 150, 200, 350, 400 };
+				DrawText(hdc, player.GetID(), _tcslen(player.GetID()), &rc_Result, DT_SINGLELINE | DT_LEFT);
+				DrawText(hdc, to_wstring(player.GetScore()).c_str(), _tcslen(to_wstring(player.GetScore()).c_str()), &rc_Result, DT_SINGLELINE | DT_RIGHT);
+
+				Rectangle(hdc, 50, 600, 200, 650);
+				Rectangle(hdc, 300, 600, 450, 650);
+
+				RECT rc_Restart = { 50, 600, 200, 650 };
+				DrawText(hdc, _T("다시하기"), _tcslen(_T("다시하기")), &rc_Restart, DT_SINGLELINE | DT_CENTER | DT_VCENTER);
+
+				RECT rc_Quit = { 300, 600, 450, 650 };
+				DrawText(hdc, _T("종료"), _tcslen(_T("종료")), &rc_Quit, DT_SINGLELINE | DT_CENTER | DT_VCENTER);
+			}
 				break;
 
 			default:
@@ -260,8 +301,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
     case WM_DESTROY:
 		DestroyCaret();
-		KillTimer(hWnd, 1);
-		KillTimer(hWnd, 2);
         PostQuitMessage(0);
         break;
 

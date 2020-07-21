@@ -1,7 +1,12 @@
 #include "stdafx.h"
 #include "Objects.h"
 
-extern vector<CObjects*> objects;
+//extern list<CObjects*> objects;
+extern list<EnemyObj*> enemyList;
+extern list<BlockObj*> blockList;
+extern list<BulletObj*> bulletList;
+
+extern Player player;
 
 CObjects::CObjects()
 {
@@ -12,15 +17,78 @@ CObjects::~CObjects()
 {
 }
 
+void CObjects::Collision()
+{
+	list<EnemyObj*>::iterator iter = enemyList.begin();
+	list<BlockObj*>::iterator iter2 = blockList.begin();
+	list<BulletObj*>::iterator iter3 = bulletList.begin();
+
+	for (iter = enemyList.begin(); iter != enemyList.end();)
+	{
+		for (iter2 = blockList.begin(); iter2 != blockList.end();)
+		{
+			int dir = pow(pow((*iter)->center.x - (*iter2)->center.x, 2) + pow((*iter)->center.y - (*iter2)->center.y, 2), 0.5);
+
+			if (dir <= (*iter2)->size + (*iter)->size)
+			{
+				iter = enemyList.erase(iter);
+				iter2 = blockList.erase(iter2);
+				break;
+			}
+			else
+				iter2++;
+		}
+
+		for (iter3 = bulletList.begin(); iter3 != bulletList.end();)
+		{
+			int dir = pow(pow((*iter)->center.x - (*iter3)->center.x, 2) + pow((*iter)->center.y - (*iter3)->center.y, 2), 0.5);
+
+			if (dir <= (*iter3)->size + (*iter)->size)
+			{
+				iter = enemyList.erase(iter);
+				iter3 = bulletList.erase(iter3);
+
+				int score = player.GetScore();
+				player.SetScore(score + 100);
+				break;
+			}
+			else
+				iter3++;
+		}
+		if(iter != enemyList.end())
+			iter++;
+	}
+}
+
 /*PlayerObject*/
 
-PlayerObj::PlayerObj()
+PlayerObj::PlayerObj(float _x, float _y)
 {
 	objType = type_Player;
+	center.x = _x;
+	center.y = _y;
+	size = 40;
+
+	points = new MYPOINT[2];
+	vertexNum = 2;
+
+	points[0].x = center.x;
+	points[0].y = center.y;
+
+	points[1].x = center.x;
+	points[1].y = center.y - (size + 20);
 }
 
 PlayerObj::~PlayerObj()
 {
+}
+
+void PlayerObj::DrawObj(HDC hdc)
+{
+	Ellipse(hdc, center.x - size, center.y - size, center.x + size, center.y + size);
+	
+	MoveToEx(hdc, center.x, center.y, NULL);
+	LineTo(hdc, points[1].x, points[1].y);
 }
 
 /*BlockObject*/
@@ -62,20 +130,11 @@ void BlockObj::DrawObj(HDC hdc)
 	Polygon(hdc, pt, vertexNum);
 }
 
-void BlockObj::CreateObj()
-{
-	for (int i = 0; i < 6; i++)			//블록 생성
-	{
-		BlockObj *blocks = new BlockObj(40 + (i * 80), 720);
-		objects.push_back(blocks);
-	}
-}
-
 /*EnemyObject*/
 
 EnemyObj::EnemyObj(float _x, float _y)
 {
-	objType = type_Enemy;
+	objType = type_Enemy; 
 	center.x = _x;
 	center.y = _y;
 	size = 30;
@@ -125,20 +184,19 @@ void EnemyObj::DrawObj(HDC hdc)
 	Polygon(hdc, pt, 10);
 }
 
-void EnemyObj::CreateObj()
+BulletObj::BulletObj(float _x, float _y)
 {
-	EnemyObj *enemeis = new EnemyObj(40 + 80, 100);
-	objects.push_back(enemeis);
+	objType = type_Bullet;
+	center.x = _x;
+	center.y = _y;
+	size = 10;
 }
 
-void EnemyObj::RotateEnemy(EnemyObj *enemeis)
+BulletObj::~BulletObj()
 {
-	for (int i = 0; i < enemeis->vertexNum; i++)		//도형 회전
-	{
-		float xTmp = enemeis->points[i].x - enemeis->center.x;
-		float yTmp = enemeis->points[i].y - enemeis->center.y;
+}
 
-		enemeis->points[i].x = cos(20 * PI / 180) * xTmp - sin(20 * PI / 180) * yTmp + enemeis->center.x;
-		enemeis->points[i].y = sin(20 * PI / 180) * xTmp + cos(20 * PI / 180) * yTmp + enemeis->center.y;
-	}
+void BulletObj::DrawObj(HDC hdc)
+{
+	Ellipse(hdc, center.x - size, center.y - size, center.x + size, center.y + size);
 }

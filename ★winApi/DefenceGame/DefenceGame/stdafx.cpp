@@ -7,4 +7,10 @@
 // TODO: reference any additional headers you need in STDAFX.H
 // and not in this file
 
-vector<CObjects*> objects;		//오브젝트 컨테이너
+CObjects *cObject;
+
+list<EnemyObj*> enemyList;		//오브젝트 컨테이너
+list<BlockObj*> blockList;
+list<BulletObj*> bulletList;
+
+Player player;

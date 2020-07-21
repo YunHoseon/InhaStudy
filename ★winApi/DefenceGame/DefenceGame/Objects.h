@@ -24,14 +24,16 @@ public:
 	~CObjects();
 
 	virtual void DrawObj(HDC hdc) = 0;
-	virtual void CreateObj() = 0;
+	void Collision();
 };
 
 class PlayerObj : public CObjects
 {
 public:
-	PlayerObj();
+	PlayerObj(float _x, float _y);
 	~PlayerObj();
+
+	void DrawObj(HDC hdc);
 };
 
 class EnemyObj : public CObjects
@@ -41,8 +43,6 @@ public:
 	~EnemyObj();
 
 	void DrawObj(HDC hdc);
-	void CreateObj();		//사용x
-	void RotateEnemy(EnemyObj *enemeis);//사용x
 };
 
 class BlockObj : public CObjects
@@ -52,10 +52,13 @@ public:
 	~BlockObj();
 
 	void DrawObj(HDC hdc);
-	void CreateObj();//사용x
 };
 
 class BulletObj : public CObjects
 {
+public:
+	BulletObj(float _x, float _y);
+	~BulletObj();
 
+	void DrawObj(HDC hdc);
 };
