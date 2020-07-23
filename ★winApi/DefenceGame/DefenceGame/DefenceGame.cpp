@@ -68,6 +68,34 @@ void LoadFile()
 	delete playerData;
 }
 
+void DeleteObjects()
+{
+	BlockObj *bObj;
+	EnemyObj *eObj;
+	BulletObj *blObj;
+
+	while (blockList.size() > 0)
+	{
+		bObj = blockList.back();
+		blockList.pop_back();
+		delete bObj;
+	}
+
+	while (enemyList.size() > 0)
+	{
+		eObj = enemyList.back();
+		enemyList.pop_back();
+		delete eObj;
+	}
+
+	while (bulletList.size() > 0)
+	{
+		blObj = bulletList.back();
+		bulletList.pop_back();
+		delete blObj;
+	}
+}
+
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_opt_ HINSTANCE hPrevInstance,
                      _In_ LPWSTR    lpCmdLine,
@@ -198,15 +226,16 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			default:
 				break;
 			}
+			InvalidateRgn(hWnd, NULL, TRUE);
 		}
-		InvalidateRgn(hWnd, NULL, TRUE);
 			break;
 
 	case WM_CHAR:
 		if (gameState == START)
+		{
 			GameStartMenu(hWnd, wParam, &charNum, player.GetID());
-		
-		InvalidateRgn(hWnd, NULL, TRUE);
+			InvalidateRgn(hWnd, NULL, TRUE);
+		}
 		break;
 
 	case WM_LBUTTONDOWN:
@@ -215,8 +244,22 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 		if (gameState == END)
 		{
-			if (mx >= 300 && mx <= 450 || my >= 600 && my <= 650)		//종료 버튼
+			if ((mx >= 300 && mx <= 450) && (my >= 600 && my <= 650))		//종료 버튼
 				PostQuitMessage(0);
+			else if ((mx >= 50 && mx <= 200) && (my >= 600 && my <= 650))	//다시 시작 버튼
+			{
+				player.SetScore(0);
+				playerObj.points[1].x = playerObj.center.x;
+				playerObj.points[1].y = playerObj.center.y - (playerObj.size + 20);
+
+				gameState = INGAME;
+				CreateObjects();
+
+				SetTimer(hWnd, 1, 70, NULL);
+				SetTimer(hWnd, 2, 1000, NULL);
+
+				InvalidateRgn(hWnd, NULL, TRUE);
+			}
 		}
 		break;
 
@@ -262,11 +305,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 			if (blockList.size() == 0)							//블록이 모두 없어지면 게임 오버
 			{
-				KillTimer(hWnd, 1);
-				KillTimer(hWnd, 2);
-
 				SaveFile();
 				gameState = END;
+
+				KillTimer(hWnd, 2);
+				KillTimer(hWnd, 1);
 			}
 		}
 			break;
@@ -339,6 +382,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 			case END:
 			{
+				DeleteObjects();
 				LoadFile();
 
 				RECT rc_Rank = { 200, 100, 300, 200 };
