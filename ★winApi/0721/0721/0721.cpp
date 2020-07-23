@@ -121,6 +121,57 @@ VOID CALLBACK KeyStateProc(HWND hWnd, UINT uMsg, UINT idEvent, DWORD dwTime)
 	}
 }
 
+/* DialogBox */
+
+BOOL CALLBACK Dlg6_1Proc(HWND hDlg, UINT iMsg, WPARAM wParam, LPARAM lParam)
+{
+	TCHAR word[256];
+
+	switch (iMsg)
+	{
+	case WM_INITDIALOG:
+	{
+		HWND hButton;
+		/*hButton = GetDlgItem(hDlg, ID_BUTTON_PRINT);
+		EnableWindow(hButton, FALSE);*/
+	}
+		SetWindowPos(hDlg, HWND_TOP, (rectView.left + (rectView.right - rectView.left) / 2) - 250, (rectView.top + (rectView.bottom - rectView.top)/ 2) - 175, 500, 350, NULL);
+		return (INT_PTR)TRUE;
+
+	case WM_COMMAND:
+		/*if (LOWORD(wParam) == IDOK || LOWORD(wParam) == IDCANCEL)
+		{
+			EndDialog(hDlg, LOWORD(wParam));
+			return (INT_PTR)TRUE;
+		}
+		break;*/
+		switch (LOWORD(wParam))
+		{
+		case ID_BUTTON_PRINT:
+		{
+			HDC hdc = GetDC(hDlg);
+			TextOut(hdc, 10, 10, _T("Hello Dialog"), 12);
+			ReleaseDC(hDlg, hdc);
+		}
+		break;
+
+		case ID_BUTTON_COPY:
+			GetDlgItemText(hDlg, IDC_EDIT_INPUT, word, 256);
+			SetDlgItemText(hDlg, IDC_EDIT_OUTPUT, word);
+			break;
+
+		case ID_BUTTON_DELETE:
+			SetDlgItemText(hDlg, IDC_EDIT_INPUT, _T(""));
+			SetDlgItemText(hDlg, IDC_EDIT_OUTPUT, _T(""));
+			break;
+
+		case ID_BUTTON_END:
+			EndDialog(hDlg, 0);
+			break;
+		}
+	}
+	return false;
+ }
 
 POINT starPoint[10];
 
@@ -326,7 +377,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		SetTimer(hWnd, 123, 100, AniProc);
 		SetTimer(hWnd, 111, 100, KeyStateProc);
 
-		GetClientRect(hWnd, &rectView);
+		//GetClientRect(hWnd, &rectView);
+		GetWindowRect(hWnd, &rectView);
 		break;
 
     case WM_COMMAND:
@@ -425,9 +477,18 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			InvalidateRgn(hWnd, NULL, TRUE);*/
 		break;
 
+	case WM_RBUTTONDOWN:
+		DialogBox(hInst, MAKEINTRESOURCE(IDD_DIALOG1), hWnd, Dlg6_1Proc);
+		break;
+
 	case WM_SIZE:
-		GetClientRect(hWnd, &rectView);
+		//GetClientRect(hWnd, &rectView);
+		GetWindowRect(hWnd, &rectView);
 		sizeChanged = true;
+		break;
+
+	case WM_MOVE:
+		GetWindowRect(hWnd, &rectView);
 		break;
 
     case WM_PAINT:
@@ -496,7 +557,7 @@ void DrawRectText(HDC hdc)
 {
 	static int xPos = 0;
 	static int speed = 10;
-	TCHAR strTest[] = _T("~~¿ÃπÃ¡ˆ~~");
+	TCHAR strTest[] = _T("\(^°‰^)/");
 	SetBkMode(hdc, TRANSPARENT);
 	TextOut(hdc, xPos, 10, strTest, _tcslen(strTest));
 

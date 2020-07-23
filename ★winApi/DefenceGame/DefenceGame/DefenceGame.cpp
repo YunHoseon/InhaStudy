@@ -18,81 +18,54 @@ INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
 typedef struct PLAYERDATA
 {
 	int score;
-	TCHAR ID[9];
+	TCHAR id[9];
 };
+
+vector<PLAYERDATA> datas;
+
+bool Compare(PLAYERDATA a, PLAYERDATA b)
+{
+	return a.score > b.score;
+}
 
 void SaveFile()
 {
-	/*fstream fp;
+	ofstream fp;
 
-	fp.open("data.dat", ios_base::in | ios_base::out | ios_base::binary);
 	PLAYERDATA* playerData = new PLAYERDATA;
+	fp.open("data.dat", ios_base::out | ios_base::binary | ios_base::app);
 
-	if (fp.is_open())
+	if (fp.is_open())									//파일이 열렸을 때
 	{
+		wcscpy(playerData->id, player.GetID());
 		playerData->score = player.GetScore();
 
-		for (int i = 0; i < sizeof(player.GetID()); i++)
-			playerData->ID[i] = player.GetID()[i];
-
-
-	}*/
-
-	ofstream outFile;
-	outFile.open("test.txt");
-	//cin >> text;
-	if (outFile.is_open())
-	{
-		//outFile << text;
-		PLAYERDATA playerData;
-
-		playerData.score = player.GetScore();
-
-		for (int i = 0; i < sizeof(player.GetID()); i++)
-			playerData.ID[i] = player.GetID()[i];
-
-		//outFile << "STR:"<<play.str << endl <<"DEF:"<< play.def << endl <<"HP:"<< play.hp << endl <<"MAX_HP:"<< play.max_hp ;
-		outFile.write((char *)&playerData, sizeof(PLAYERDATA));
+		fp.write((char*)playerData, sizeof(PLAYERDATA));
+		
+		fp.close();
 	}
-	else
-	{
-		cout << "실패";
-	}
-	outFile.close();
+
+	delete playerData;
 }
 
 void LoadFile() 
 {
-	string text;
-	string temp;
-	string num;
-	ifstream inFile;
-	PLAYERDATA playerData;
+	ifstream fp;
 
-	inFile.open("test.txt");
+	PLAYERDATA* playerData = new PLAYERDATA;
 
-	if (inFile.is_open())
+	fp.open("data.dat", ios_base::in | ios_base::binary);
+	
+	while(!fp.eof())
 	{
-		inFile.read((char *)&playerData, sizeof(PLAYERDATA));
-
-		//cout << play.str;
-		/* 하나하나 읽어오기
-		while (getline(inFile, text))
-		{
-		cout << text << endl;
-		int fin;
-		fin = text.find(":");
-		temp = "";
-		num = "";
-		for (int i = 0; i < fin; i++)
-		{
-		temp += text[i];
-		}
-
-		}
-		*/
+ 		fp.read((char*)playerData, sizeof(PLAYERDATA));
+		datas.push_back(*playerData);		//(벡터)데이터 컨테이너에 저장
 	}
-	inFile.close();
+	datas.pop_back();
+
+	sort(datas.begin(), datas.end(), Compare);
+
+	delete playerData;
 }
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
@@ -129,7 +102,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             DispatchMessage(&msg);
         }
     }
-
     return (int) msg.wParam;
 }
 
@@ -288,7 +260,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				iter3++;
 			}
 
-			if (blockList.size() == 0)		//블록이 모두 없어지면 게임 오버
+			if (blockList.size() == 0)							//블록이 모두 없어지면 게임 오버
 			{
 				KillTimer(hWnd, 1);
 				KillTimer(hWnd, 2);
@@ -372,10 +344,16 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				RECT rc_Rank = { 200, 100, 300, 200 };
 				DrawText(hdc, _T("RANK"), _tcslen(_T("RANK")), &rc_Rank, DT_SINGLELINE | DT_CENTER | DT_VCENTER);
 
-				RECT rc_Result = { 150, 200, 350, 400 };
-				DrawText(hdc, player.GetID(), _tcslen(player.GetID()), &rc_Result, DT_SINGLELINE | DT_LEFT);
-				DrawText(hdc, to_wstring(player.GetScore()).c_str(), _tcslen(to_wstring(player.GetScore()).c_str()), &rc_Result, DT_SINGLELINE | DT_RIGHT);
+				RECT rc_Result[5];
 
+				for (int i = 0; i < 5 && i < datas.size(); i++)					//랭킹 출력
+				{
+					rc_Result[i] = { 150, 200 + (i*50), 350, 300 + (i * 50) };
+
+					DrawText(hdc, datas[i].id, _tcslen(datas[i].id), &rc_Result[i], DT_SINGLELINE | DT_LEFT);
+					DrawText(hdc, to_wstring(datas[i].score).c_str(), _tcslen(to_wstring(datas[i].score).c_str()), &rc_Result[i], DT_SINGLELINE | DT_RIGHT);
+				}
+				
 				Rectangle(hdc, 50, 600, 200, 650);
 				Rectangle(hdc, 300, 600, 450, 650);
 

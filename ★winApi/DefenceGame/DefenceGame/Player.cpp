@@ -4,6 +4,7 @@
 
 Player::Player()
 {
+	lstrcpy(ID, _T("user"));
 	score = 0;
 }
 

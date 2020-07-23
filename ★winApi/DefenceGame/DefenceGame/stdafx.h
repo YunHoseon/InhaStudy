@@ -21,6 +21,8 @@
 #include <time.h>
 #include <list>
 #include <fstream>
+#include <algorithm>
+#include <vector>
 
 // TODO: reference additional headers your program requires here
 #include "Player.h"
