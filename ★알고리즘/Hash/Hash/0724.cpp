@@ -102,6 +102,7 @@ void InsertData()
 
 void DeleteData()
 {
+
 }
 
 void SearchData()

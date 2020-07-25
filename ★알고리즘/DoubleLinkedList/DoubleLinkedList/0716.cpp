@@ -16,7 +16,7 @@ public:
 
 	void AddStudent();
 	void DeleteStudent();
-	ClassMate SearchStudent();
+	void SearchStudent();
 	void PrintStudent();
 };
 
@@ -32,10 +32,12 @@ int main()
 		cout << "메뉴 번호를 입력하세요." << endl << endl;
 		cout << "1. 학생 추가" << endl;
 		cout << "2. 학생 삭제" << endl;
-		cout << "3. 전체 출력" << endl;
-		cout << "4. 종료" << endl;
+		cout << "3. 학생 검색" << endl;
+		cout << "4. 전체 출력" << endl;
+		cout << "5. 종료" << endl;
 
 		cin >> num;
+		system("cls");
 
 		switch (num)
 		{
@@ -46,9 +48,12 @@ int main()
 			clm->DeleteStudent();
 			break;
 		case 3:
-			clm->PrintStudent();
+			clm->SearchStudent();
 			break;
 		case 4:
+			clm->PrintStudent();
+			break;
+		case 5:
 			exit(0);
 			break;
 
@@ -127,6 +132,38 @@ void ClassMate::AddStudent()
 
 void ClassMate::DeleteStudent()
 {
+	ClassMate *tmp = NULL;
+
+	cout << "삭제할 번호를 입력하세요 : ";
+	cin >> tmp->no;
+
+	if (tmp->no == head->no)	//head를 삭제할 때
+	{
+
+	}
+}
+
+void ClassMate::SearchStudent()
+{
+	ClassMate *tmp;
+	tmp = head;
+	int num;
+
+	cout << "학생의 번호를 입력하세요 : ";
+	cin >> num;
+
+	while (tmp != NULL)
+	{
+		if (num == tmp->no)
+		{
+			cout << "번호 : " << tmp->no << endl;
+			cout << "이름 : " << tmp->name << endl;
+			cout << endl;
+			return;
+		}
+		tmp = tmp->next;
+	}
+	cout << "번호가 없습니다." << endl;
 }
 
 void ClassMate::PrintStudent()
