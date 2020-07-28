@@ -56,10 +56,52 @@ void DrawBitmap(HWND hWnd, HDC hdc);
 void DeleteBitmap();
 void UpdateFrame(HWND hWnd); 
 
+void DrawRect(HDC hdc, int centerX, int centerY, int r)
+{
+	Rectangle(hdc, centerX - r, centerY - r, centerX + r, centerY + r);
+}
+
+void DrawCircle(HDC hdc, int centerX, int centerY, int r)
+{
+	Ellipse(hdc, centerX - r, centerY - r, centerX + r, centerY + r);
+}
+
+POINT starPoint[10];
+void DrawStar(HDC hdc, int x, int y, int r)
+{
+	MoveToEx(hdc, x, y, NULL);
+
+	for (int i = 0; i < 9; i += 2)
+	{
+		starPoint[i].x = x + (r * sin(72 * (i / 2) * PI / 180));
+		starPoint[i].y = y - (r * cos(72 * (i / 2) * PI / 180));
+	}
+
+	float a = starPoint[0].y - starPoint[4].y;
+	float b = -(starPoint[0].x - starPoint[4].x);
+	float c = starPoint[2].y - starPoint[8].y;
+	float d = -(starPoint[2].x - starPoint[8].x);
+	float e = a * starPoint[0].x + b * starPoint[0].y;
+	float f = c * starPoint[2].x + d * starPoint[2].y;
+
+	starPoint[1].x = (e*d - b*f) / (a*d - b*c);
+	starPoint[1].y = (a*f - e*c) / (a*d - b*c);
+
+	double r2 = pow(pow(x - starPoint[1].x, 2) + pow(y - starPoint[1].y, 2), 0.5);
+
+	for (int i = 3; i < 10; i += 2)
+	{
+		starPoint[i].x = x + (r2 * sin((72 * (i / 2) + 36) * PI / 180));
+		starPoint[i].y = y - (r2 * cos((72 * (i / 2) + 36) * PI / 180));
+	}
+
+	Polygon(hdc, starPoint, 10);
+}
+
 VOID CALLBACK AniProc(HWND hWnd, UINT uMsg, UINT idEvent, DWORD dwTime)
 {
 	UpdateFrame(hWnd);
-	InvalidateRgn(hWnd, NULL, FALSE);
+	//InvalidateRgn(hWnd, NULL, FALSE);
 }
 
 TCHAR sKeyState[128];
@@ -127,6 +169,16 @@ BOOL CALLBACK Dlg6_1Proc(HWND hDlg, UINT iMsg, WPARAM wParam, LPARAM lParam)
 {
 	TCHAR word[256];
 
+	/* CheckBox */
+	static int Check[3], Radio;
+	TCHAR hobby[][30] = { _T("독서"), _T("음악감상"), _T("게임") };
+	TCHAR sex[][30] = { _T("여자"), _T("남자") };
+	TCHAR output[200];
+
+	static HWND hCombo;
+	static int selection;
+	TCHAR name[20];
+
 	switch (iMsg)
 	{
 	case WM_INITDIALOG:
@@ -134,8 +186,12 @@ BOOL CALLBACK Dlg6_1Proc(HWND hDlg, UINT iMsg, WPARAM wParam, LPARAM lParam)
 		HWND hButton;
 		/*hButton = GetDlgItem(hDlg, ID_BUTTON_PRINT);
 		EnableWindow(hButton, FALSE);*/
+
+		CheckRadioButton(hDlg, IDC_RADIO_FEMALE, IDC_RADIO_MALE, IDC_RADIO_FEMALE);
+		hCombo = GetDlgItem(hDlg, IDC_COMBO_LIST);
+
 	}
-		SetWindowPos(hDlg, HWND_TOP, (rectView.left + (rectView.right - rectView.left) / 2) - 250, (rectView.top + (rectView.bottom - rectView.top)/ 2) - 175, 500, 350, NULL);
+		SetWindowPos(hDlg, HWND_TOP, (rectView.left + (rectView.right - rectView.left) / 2) - 400, (rectView.top + (rectView.bottom - rectView.top)/ 2) - 300, 800, 600, NULL);
 		return (INT_PTR)TRUE;
 
 	case WM_COMMAND:
@@ -168,53 +224,197 @@ BOOL CALLBACK Dlg6_1Proc(HWND hDlg, UINT iMsg, WPARAM wParam, LPARAM lParam)
 		case ID_BUTTON_END:
 			EndDialog(hDlg, 0);
 			break;
+
+		case IDC_CHECK_READING:
+			Check[0] = 1 - Check[0];
+			break;
+
+		case IDC_CHECK_MUSIC:
+			Check[1] = 1 - Check[1];
+			break;
+
+		case IDC_CHECK_GAME:
+			Check[2] = 1 - Check[2];
+			break;
+
+		case IDC_RADIO_FEMALE:
+			Radio = 0;
+			break;
+
+		case IDC_RADIO_MALE:
+			Radio = 1;
+			break;
+
+		case IDC_BUTTON_OUTPUT:
+			_stprintf_s(output, _T("선택한 취미는 %s %s %s 입니다.\r\n 선택한 성별은 %s입니다."), 
+				Check[0] ? hobby[0] : _T(""),
+				Check[1] ? hobby[1] : _T(""), 
+				Check[2] ? hobby[2] : _T(""), 
+				sex[Radio]);
+			SetDlgItemText(hDlg, IDC_EDIT_SAMPLE, output);
+			break;
+
+		case IDC_BUTTON_INSERT:
+			GetDlgItemText(hDlg, IDC_EDIT_NAME, name, 20);
+			if (_tcscmp(name, _T("")))
+				SendMessage(hCombo, CB_ADDSTRING, 0, (LPARAM)name);
+			return 0;
+
+		case IDC_BUTTON_DELETE:
+			SendMessage(hCombo, CB_DELETESTRING, selection, 0);
+			return 0;
+
+		case IDC_COMBO_LIST:
+			if (HIWORD(wParam) == CBN_SELCHANGE)
+				selection = SendMessage(hCombo, CB_GETCURSEL, 0, 0);
+			break;
 		}
 	}
 	return false;
  }
 
-POINT starPoint[10];
+ /* split window */
+#define IDC_CHILD_BTN			100
+#define IDC_CHILD_BTN_CIRCLE	101
+#define IDC_CHILD_BTN_RECT		102
+#define IDC_CHILD_BTN_STAR		103
 
-void DrawRect(HDC hdc, int centerX, int centerY, int r)
-{
-	Rectangle(hdc, centerX - r, centerY - r, centerX + r, centerY + r);
-}
+ HWND childHwnd[3];
 
-void DrawCircle(HDC hdc, int centerX, int centerY, int r)
-{
-	Ellipse(hdc, centerX - r, centerY - r, centerX + r, centerY + r);
-}
+ enum Shape { EMPTY, CIRCLE, RECTANGLE, STAR };
+ enum Shape shape = EMPTY;
+ static int mx, my;
 
-void DrawStar(HDC hdc, int x, int y, int r)
-{
-	MoveToEx(hdc, x, y, NULL);
+ LRESULT CALLBACK ChildWndProc(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
+ {
+	 HWND hButton;
+	 HDC hdc = GetDC(childHwnd[0]);
 
-	for (int i = 0; i < 9; i += 2)
-	{
-		starPoint[i].x = x + (r * sin(72 * (i / 2) * PI / 180));
-		starPoint[i].y = y - (r * cos(72 * (i / 2) * PI / 180));
-	}
+	 switch (iMsg)
+	 {
+	 case WM_CREATE:
+		 /*hButton[0] = CreateWindow(_T("button"), _T("확인"), WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
+			 200, 10, 100, 25, hWnd, (HMENU)IDC_CHILD_BTN, hInst, NULL);*/
+		 break;
 
-	float a = starPoint[0].y - starPoint[4].y;
-	float b = -(starPoint[0].x - starPoint[4].x);
-	float c = starPoint[2].y - starPoint[8].y;
-	float d = -(starPoint[2].x - starPoint[8].x);
-	float e = a * starPoint[0].x + b * starPoint[0].y;
-	float f = c * starPoint[2].x + d * starPoint[2].y;
+		 //case WM_COMMAND:
+			// switch (LOWORD(wParam))
+			// {
+			//	 /*case IDC_CHILD_BTN:
+			//	 {
+			//		 HDC hdc = GetDC(hWnd);
+			//		 TextOut(hdc, 0, 10, _T("Child2"), 6);
+			//		 ReleaseDC(hWnd, hdc);
+			//		 return 0;
+			//	 }
+			//	 break;*/
+			// }
+			// break;
 
-	starPoint[1].x = (e*d - b*f) / (a*d - b*c);
-	starPoint[1].y = (a*f - e*c) / (a*d - b*c);
+	 case WM_PAINT:
+		 switch (shape)
+		 {
+		 case CIRCLE:
+			 DrawCircle(hdc, mx, my, 50);
+			 break;
 
-	double r2 = pow(pow(x - starPoint[1].x, 2) + pow(y - starPoint[1].y, 2), 0.5);
+		 case RECTANGLE:
+			 DrawRect(hdc, mx, my, 50);
+			 break;
 
-	for (int i = 3; i < 10; i += 2)
-	{
-		starPoint[i].x = x + (r2 * sin((72 * (i / 2) + 36) * PI / 180));
-		starPoint[i].y = y - (r2 * cos((72 * (i / 2) + 36) * PI / 180));
-	}
+		 case STAR:
+			 DrawStar(hdc, mx, my, 50);
+			 break;
 
-	Polygon(hdc, starPoint, 10);
-}
+		 default:
+			 break;
+		 }
+		 break;
+
+	 case WM_LBUTTONDOWN:
+		 mx = LOWORD(lParam);
+		 my = HIWORD(lParam);
+		 InvalidateRect(hWnd, NULL, FALSE);
+		 break;
+
+	 case WM_DESTROY:
+		 break;
+
+	 }
+	 ReleaseDC(hWnd, hdc);
+	 return DefWindowProc(hWnd, iMsg, wParam, lParam);
+ }
+
+ LRESULT CALLBACK ChildWndProc2(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
+ {
+	 HDC hdc = GetDC(childHwnd[1]);
+
+	 switch (iMsg)
+	 {
+	 case WM_PAINT:
+	 {
+		 PAINTSTRUCT ps;
+		 HDC hdc = BeginPaint(hWnd, &ps);
+
+		 switch (shape)
+		 {
+		 case CIRCLE:
+			 DrawCircle(hdc, 100, 100, 80);
+			 break;
+
+		 case RECTANGLE:
+			 DrawRect(hdc, 100, 100, 80);
+			 break;
+
+		 case STAR:
+			 DrawStar(hdc, 100, 100, 80);
+			 break;
+		 }
+		 EndPaint(hWnd, &ps);
+	 }
+		break;
+	 }
+	 ReleaseDC(childHwnd[1], hdc);
+	 return DefWindowProc(hWnd, iMsg, wParam, lParam);
+ }
+
+ LRESULT CALLBACK ChildWndProc3(HWND hWnd, UINT iMsg, WPARAM wParam, LPARAM lParam)
+ {
+	 HWND hButton[3];
+
+	 switch (iMsg)
+	 {
+	 case WM_CREATE:
+		 hButton[0] = CreateWindow(_T("button"), _T("원"), WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
+			 200, 40, 100, 25, hWnd, (HMENU)IDC_CHILD_BTN_CIRCLE, hInst, NULL);
+		 hButton[1] = CreateWindow(_T("button"), _T("사각형"), WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
+			 200, 70, 100, 25, hWnd, (HMENU)IDC_CHILD_BTN_RECT, hInst, NULL);
+		 hButton[2] = CreateWindow(_T("button"), _T("별"), WS_CHILD | WS_VISIBLE | BS_PUSHBUTTON,
+			 200, 100, 100, 25, hWnd, (HMENU)IDC_CHILD_BTN_STAR, hInst, NULL);
+		 break;
+
+	 case WM_COMMAND:
+
+		 switch (LOWORD(wParam))
+		 {
+		 case IDC_CHILD_BTN_CIRCLE:
+			 shape = CIRCLE;
+			 break;
+
+		 case IDC_CHILD_BTN_RECT:
+			 shape = RECTANGLE;
+			 break;
+
+		 case IDC_CHILD_BTN_STAR:
+			 shape = STAR;
+			 break;
+		 }
+		 InvalidateRect(childHwnd[1], NULL, TRUE);
+		 break;
+
+	 }
+	 return DefWindowProc(hWnd, iMsg, wParam, lParam);
+ }
 
 void OutFromFile(TCHAR filename[], HWND hWnd)
 {
@@ -305,6 +505,22 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
     wcex.lpszMenuName   = MAKEINTRESOURCEW(IDC_MY0721);
     wcex.lpszClassName  = szWindowClass;
     wcex.hIconSm        = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
+	RegisterClassExW(&wcex);
+
+	wcex.lpfnWndProc = ChildWndProc;
+	wcex.lpszMenuName = NULL;
+	wcex.lpszClassName = _T("Child1");
+	RegisterClassExW(&wcex);
+
+	wcex.lpfnWndProc = ChildWndProc2;
+	wcex.lpszMenuName = NULL;
+	wcex.lpszClassName = _T("Child2");
+	RegisterClassExW(&wcex);
+
+	wcex.lpfnWndProc = ChildWndProc3;
+	wcex.lpszMenuName = NULL;
+	wcex.lpszClassName = _T("Child3");
+	wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 2);
 
     return RegisterClassExW(&wcex);
 }
@@ -347,8 +563,8 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 //
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
-	static int mx, my;
-	static int shape = 0;
+	//static int mx, my;
+	//static int shape = 0;
 
 	OPENFILENAME ofn;
 	TCHAR str[100], lpstrFile[100] = _T("");
@@ -378,7 +594,15 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		SetTimer(hWnd, 111, 100, KeyStateProc);
 
 		//GetClientRect(hWnd, &rectView);
-		GetWindowRect(hWnd, &rectView);
+		GetClientRect(hWnd, &rectView);
+		childHwnd[0] = CreateWindowEx(WS_EX_CLIENTEDGE, _T("Child1"), NULL, WS_CHILD | WS_VISIBLE, 0, 0, 
+			rectView.right/2, rectView.bottom / 2 + 1,  hWnd, NULL, hInst, NULL);
+
+		childHwnd[1] = CreateWindowEx(WS_EX_CLIENTEDGE, _T("Child2"), NULL, WS_CHILD | WS_VISIBLE, 0,
+			rectView.bottom/2+1, rectView.right/2, rectView.bottom / 2-1, hWnd, NULL, hInst, NULL); 
+
+		childHwnd[2] = CreateWindowExW(WS_EX_CLIENTEDGE, _T("Child3"), _T("우재바보"), WS_CHILD | WS_VISIBLE, rectView.right/2 + 1,
+			rectView.top, rectView.right/2, rectView.bottom, hWnd, NULL, hInst, NULL);
 		break;
 
     case WM_COMMAND:
@@ -471,12 +695,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	//	InvalidateRgn(hWnd, NULL, FALSE);
 	//	break;
 
-	case WM_LBUTTONDOWN:
-			/*mx = LOWORD(lParam);
-			my = HIWORD(lParam);
-			InvalidateRgn(hWnd, NULL, TRUE);*/
-		break;
-
 	case WM_RBUTTONDOWN:
 		DialogBox(hInst, MAKEINTRESOURCE(IDD_DIALOG1), hWnd, Dlg6_1Proc);
 		break;
@@ -497,8 +715,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             HDC hdc = BeginPaint(hWnd, &ps);
 
 			//DrawBitmap(hWnd, hdc);
-			DrawBitmapDoubleBuffering(hWnd, hdc);
-			DrawRectText(hdc);
+			//DrawBitmapDoubleBuffering(hWnd, hdc);
+			//DrawRectText(hdc);
 
 			/*hBrush = CreateSolidBrush(color);
 			OldBrush = (HBRUSH)SelectObject(hdc, hBrush);
@@ -557,7 +775,7 @@ void DrawRectText(HDC hdc)
 {
 	static int xPos = 0;
 	static int speed = 10;
-	TCHAR strTest[] = _T("\(^▽^)/");
+	TCHAR strTest[] = _T("\\(^▽^)/");
 	SetBkMode(hdc, TRANSPARENT);
 	TextOut(hdc, xPos, 10, strTest, _tcslen(strTest));
 

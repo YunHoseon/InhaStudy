@@ -168,6 +168,15 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 					cRect->points[i].y = sin(20 * PI / 180) * xTmp + cos(20 * PI / 180) * yTmp + cRect->y;
 				}
 
+	/*			for (CShape *cRect : cShapes)
+				{
+					for (int i = 0; i < cRect->vertexNum; i++)
+					{
+						cRect->points[i].x = cos(30 * PI / 180) * (float)(cRect->points[i].x - cRect->x) - sin(30 * PI / 180) * (float)(cRect->points[i].y - cRect->y) + cRect->x;
+						cRect->points[i].y = sin(30 * PI / 180) * (float)(cRect->points[i].x - cRect->x) + cos(30 * PI / 180) * (float)(cRect->points[i].y - cRect->y) + cRect->y;
+					}
+				}*/
+
 				cRect->x += cRect->GetSpeed() * cRect->moveToX;
 				cRect->y += cRect->GetSpeed() * cRect->moveToY;
 
@@ -193,10 +202,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				}
 			}
 
-			for (CShape *cRect : cShapes)
-			{
+			//for (CShape *cRect : cShapes)
+			//{
 
-			}
+			//}
 
 			break;
 
