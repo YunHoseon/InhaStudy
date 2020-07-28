@@ -13,3 +13,4 @@
 *.suo
 *.sln
 *.ipch
+*.pch

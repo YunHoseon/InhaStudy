@@ -22,6 +22,8 @@ RECT rectView;
 HBITMAP hBackImage;
 BITMAP bitBack;
 
+
+
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_opt_ HINSTANCE hPrevInstance,
                      _In_ LPWSTR    lpCmdLine,
@@ -106,6 +108,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_CREATE:
 		GetClientRect(hWnd, &rectView);
 		CreateBitmap(hBackImage, bitBack);
+		SetTimer(hWnd, 1, 100, KeyStateProc);
 		break;
 
     case WM_COMMAND:
@@ -125,6 +128,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             }
         }
         break;
+
+	case WM_KEYDOWN:
+		//player.PlayerMove(message, wParam, lParam);
+		InvalidateRgn(hWnd, NULL, TRUE);
+		break;
 
     case WM_PAINT:
         {

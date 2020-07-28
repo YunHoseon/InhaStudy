@@ -69,3 +69,33 @@ void DeleteBitmap(HBITMAP &hBackImage)
 {
 	DeleteObject(hBackImage);
 }
+
+VOID CALLBACK KeyStateProc(HWND hWnd, UINT uMsg, UINT idEvent, DWORD dwTime)
+{
+	if (GetKeyState('A') & 0x8000)
+	{
+		if (GetKeyState('S') & 0x8000)
+			player.PosY += 1;
+		else if (GetKeyState('W') & 0x8000)
+			player.PosY -= 1;
+		player.PosX -= 1;
+	}
+	else if (GetKeyState('S') & 0x8000)
+	{
+		if (GetKeyState('D') & 0x8000)
+			player.PosX += 1;
+		player.PosY += 1;
+	}
+	else if (GetKeyState('D') & 0x8000)
+	{
+		if (GetKeyState('W') & 0x8000)
+			player.PosY -= 1;
+		player.PosX += 1;
+	}
+	else if (GetKeyState('W') & 0x8000)
+	{
+		if (GetKeyState('A') & 0x8000)
+			player.PosX -= 1;
+		player.PosY -= 1;
+	}
+}

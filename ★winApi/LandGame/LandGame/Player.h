@@ -11,6 +11,6 @@ public:
 	~Player();
 
 	void DrawPlayer(HDC hdc);
-	void PlayerMove();
+	void PlayerMove(UINT message, WPARAM wParam, LPARAM lParam);
 };
 
