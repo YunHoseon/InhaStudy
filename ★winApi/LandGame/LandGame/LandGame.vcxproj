@@ -141,17 +141,27 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CurScene.h" />
+    <ClInclude Include="EndScene.h" />
+    <ClInclude Include="IngameScene.h" />
     <ClInclude Include="LandGame.h" />
     <ClInclude Include="Map.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="SceneManager.h" />
+    <ClInclude Include="StartScene.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CurScene.cpp" />
+    <ClCompile Include="EndScene.cpp" />
+    <ClCompile Include="IngameScene.cpp" />
     <ClCompile Include="LandGame.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="SceneManager.cpp" />
+    <ClCompile Include="StartScene.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

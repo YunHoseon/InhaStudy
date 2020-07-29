@@ -7,10 +7,19 @@ public:
 
 	int size;
 
+	typedef struct PlayerRect
+	{
+		RECT playerRect;
+		int px;
+		int py;
+	}PlayerRect;
+
+	PlayerRect pr;
+
 	Player();
 	~Player();
 
 	void DrawPlayer(HDC hdc);
-	void PlayerMove(UINT message, WPARAM wParam, LPARAM lParam);
+	void FootPrint(HDC hdc, int _x, int _y);
 };
 

@@ -5,11 +5,12 @@
 class Map
 {
 public:
-	int map[COL][ROW];
+	int board[COL][ROW];
 
 	Map();
 	~Map();
 
 	void InitMap();
+	void UpdateMap();
 };
 

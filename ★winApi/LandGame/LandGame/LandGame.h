@@ -2,9 +2,10 @@
 
 #include "resource.h"
 
-enum State { CLOSE, OPEN, ROAD };
+enum State { WALL = -1, CLOSE, OPEN, ROAD, FOOTPRINT};
 State state;
 Player player;
+Map map;
 
 void DrawBox(HWND hWnd, HDC hdc)
 {
@@ -72,30 +73,89 @@ void DeleteBitmap(HBITMAP &hBackImage)
 
 VOID CALLBACK KeyStateProc(HWND hWnd, UINT uMsg, UINT idEvent, DWORD dwTime)
 {
+	HDC hdc = GetDC(hWnd);
+
+	int currentX = player.PosX;
+	int currentY = player.PosY;
+
+	int tmpX = currentX;
+	int tmpY = currentY;
+
 	if (GetKeyState('A') & 0x8000)
 	{
-		if (GetKeyState('S') & 0x8000)
-			player.PosY += 1;
-		else if (GetKeyState('W') & 0x8000)
-			player.PosY -= 1;
-		player.PosX -= 1;
+		if (map.board[currentY][currentX - 1] != WALL && map.board[currentY][currentX - 1] != OPEN)
+		{
+			if (GetKeyState('S') & 0x8000)
+			{
+				if (map.board[currentY + 1][currentX - 1] != WALL && map.board[currentY + 1][currentX - 1] != OPEN)
+				{
+					player.PosY += 1;
+					player.pr.py += 1;
+				}
+			}
+			else if (GetKeyState('W') & 0x8000)
+			{
+				if (map.board[currentY - 1][currentX - 1] != WALL && map.board[currentY - 1][currentX - 1] != OPEN)
+				{
+					player.PosY -= 1;
+					player.pr.py -= 1;
+				}
+			}
+			player.PosX -= 1;
+			player.pr.px -= 1;
+		}
 	}
 	else if (GetKeyState('S') & 0x8000)
 	{
-		if (GetKeyState('D') & 0x8000)
-			player.PosX += 1;
-		player.PosY += 1;
+		if (map.board[currentY + 1][currentX] != WALL && map.board[currentY + 1][currentX] != OPEN)
+		{
+			if (GetKeyState('D') & 0x8000)
+			{
+				if (map.board[currentY + 1][currentX + 1] != WALL && map.board[currentY + 1][currentX + 1] != OPEN)
+				{
+					player.PosX += 1;
+					player.pr.px += 1;
+				}
+			}
+			player.PosY += 1;
+			player.pr.py += 1;
+		}
 	}
 	else if (GetKeyState('D') & 0x8000)
 	{
-		if (GetKeyState('W') & 0x8000)
-			player.PosY -= 1;
-		player.PosX += 1;
+		if (map.board[currentY][currentX + 1] != WALL && map.board[currentY][currentX + 1] != OPEN)
+		{
+			if (GetKeyState('W') & 0x8000)
+			{
+				if (map.board[currentY - 1][currentX + 1] != WALL && map.board[currentY - 1][currentX + 1] != OPEN)
+				{
+					player.PosY -= 1;
+					player.pr.py -= 1;
+				}
+			}
+			player.PosX += 1;
+			player.pr.px += 1;
+		}
 	}
 	else if (GetKeyState('W') & 0x8000)
 	{
-		if (GetKeyState('A') & 0x8000)
-			player.PosX -= 1;
-		player.PosY -= 1;
+		if (map.board[currentY - 1][currentX] != WALL && map.board[currentY - 1][currentX] != OPEN)
+		{
+			if (GetKeyState('A') & 0x8000)
+			{
+				if (map.board[currentY - 1][currentX - 1] != WALL && map.board[currentY - 1][currentX - 1] != OPEN)
+				{
+					player.PosX -= 1;
+					player.pr.px -= 1;
+				}
+			}
+			player.PosY -= 1;
+			player.pr.py -= 1;
+		}
 	}
+
+	player.pr.playerRect = { player.PosX - player.size - 1, player.PosY - player.size - 1, player.PosX + player.size + 1, player.PosY + player.size + 1 };
+	InvalidateRect(hWnd, &player.pr.playerRect, TRUE);
+
+	ReleaseDC(hWnd, hdc);
 }

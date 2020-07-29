@@ -108,7 +108,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_CREATE:
 		GetClientRect(hWnd, &rectView);
 		CreateBitmap(hBackImage, bitBack);
-		SetTimer(hWnd, 1, 100, KeyStateProc);
+
+		SetTimer(hWnd, 1, 1, KeyStateProc);	//플레이어 이동 타이머
 		break;
 
     case WM_COMMAND:
@@ -129,11 +130,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         }
         break;
 
-	case WM_KEYDOWN:
-		//player.PlayerMove(message, wParam, lParam);
-		InvalidateRgn(hWnd, NULL, TRUE);
-		break;
-
     case WM_PAINT:
         {
             PAINTSTRUCT ps;
@@ -142,6 +138,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			DrawBitmap(hWnd, hdc, hBackImage, bitBack);
 			DrawBox(hWnd, hdc);
 			player.DrawPlayer(hdc);
+			player.FootPrint(hdc, player.PosX, player.PosY);
 
             EndPaint(hWnd, &ps);
         }
