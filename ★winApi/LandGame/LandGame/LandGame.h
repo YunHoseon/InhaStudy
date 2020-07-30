@@ -74,6 +74,7 @@ VOID CALLBACK KeyStateProc(HWND hWnd, UINT uMsg, UINT idEvent, DWORD dwTime)
 {
 	HDC hdc = GetDC(hWnd);
 	static int dir = 0;
+	int tmpDir = dir;
 
 	int currentX = player.playerPos.x;
 	int currentY = player.playerPos.y;
@@ -125,6 +126,7 @@ VOID CALLBACK KeyStateProc(HWND hWnd, UINT uMsg, UINT idEvent, DWORD dwTime)
 		}
 	}
 
+	
 	points.push_back(&player.playerPos);
 
 	map.UpdateMap(hdc);
@@ -132,8 +134,12 @@ VOID CALLBACK KeyStateProc(HWND hWnd, UINT uMsg, UINT idEvent, DWORD dwTime)
 	if(map.board[currentY][currentX] == CLOSE)
 		map.board[currentY][currentX] = FOOTPRINT;
 
-	if (map.board[currentY][currentX] == ROAD)
+	else if (map.board[currentY][currentX] == ROAD)
+	{
+		points.push_back(&player.playerPos);
 		player.research = true;
+	}
+		
 
 	player.pr.playerRect = { player.playerPos.x - player.size - player.speed, player.playerPos.y - player.size - player.speed,
 		player.playerPos.x + player.size + player.speed, player.playerPos.y + player.size + player.speed };

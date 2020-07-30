@@ -22,8 +22,6 @@ RECT rectView;
 HBITMAP hBackImage;
 BITMAP bitBack;
 
-
-
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_opt_ HINSTANCE hPrevInstance,
                      _In_ LPWSTR    lpCmdLine,
@@ -109,7 +107,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		GetClientRect(hWnd, &rectView);
 		CreateBitmap(hBackImage, bitBack);
 
-		SetTimer(hWnd, 1, 50, KeyStateProc);	//플레이어 이동 타이머
+		SetTimer(hWnd, 1, 70, KeyStateProc);	//플레이어 이동 타이머
 		break;
 
     case WM_COMMAND:
