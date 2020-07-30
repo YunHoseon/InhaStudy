@@ -3,13 +3,17 @@
 
 Player::Player()
 {
-	PosX = 15;
-	PosY = 20;
-	size = 5;
+	playerPos.x = 15;
+	playerPos.y = 20;
 
-	pr.playerRect = { PosX - size, PosY - size, PosX + size, PosY + size };
-	pr.px = PosX;
-	pr.py = PosY;
+	size = 5;
+	speed = 3;
+
+	research = false;
+
+	pr.playerRect = { playerPos.x - size, playerPos.y - size, playerPos.x + size, playerPos.y + size };
+	pr.px = playerPos.x;
+	pr.py = playerPos.y;
 }
 
 Player::~Player()
@@ -18,7 +22,7 @@ Player::~Player()
 
 void Player::DrawPlayer(HDC hdc)
 {
-	Ellipse(hdc, PosX - size, PosY - size, PosX + size, PosY + size);
+	Ellipse(hdc, playerPos.x - size, playerPos.y - size, playerPos.x + size, playerPos.y + size);
 }
 
 void Player::FootPrint(HDC hdc, int _x, int _y)

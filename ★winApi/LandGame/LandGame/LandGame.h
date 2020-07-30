@@ -2,10 +2,9 @@
 
 #include "resource.h"
 
-enum State { WALL = -1, CLOSE, OPEN, ROAD, FOOTPRINT};
-State state;
 Player player;
 Map map;
+extern list<POINT*> points;
 
 void DrawBox(HWND hWnd, HDC hdc)
 {
@@ -74,87 +73,70 @@ void DeleteBitmap(HBITMAP &hBackImage)
 VOID CALLBACK KeyStateProc(HWND hWnd, UINT uMsg, UINT idEvent, DWORD dwTime)
 {
 	HDC hdc = GetDC(hWnd);
+	static int dir = 0;
 
-	int currentX = player.PosX;
-	int currentY = player.PosY;
+	int currentX = player.playerPos.x;
+	int currentY = player.playerPos.y;
 
 	int tmpX = currentX;
 	int tmpY = currentY;
 
-	if (GetKeyState('A') & 0x8000)
+	if (GetKeyState(VK_SPACE) & 0x8000)
 	{
-		if (map.board[currentY][currentX - 1] != WALL && map.board[currentY][currentX - 1] != OPEN)
+		if (GetKeyState(VK_LEFT) & 0x8000)
 		{
-			if (GetKeyState('S') & 0x8000)
+			if (map.board[currentY][currentX - player.speed] != WALL && map.board[currentY][currentX - player.speed] != OPEN
+				&& map.board[currentY][currentX - player.speed] != FOOTPRINT)
 			{
-				if (map.board[currentY + 1][currentX - 1] != WALL && map.board[currentY + 1][currentX - 1] != OPEN)
-				{
-					player.PosY += 1;
-					player.pr.py += 1;
-				}
+				dir = 1;
+				player.playerPos.x -= player.speed;
+				player.pr.px -= player.speed;
 			}
-			else if (GetKeyState('W') & 0x8000)
-			{
-				if (map.board[currentY - 1][currentX - 1] != WALL && map.board[currentY - 1][currentX - 1] != OPEN)
-				{
-					player.PosY -= 1;
-					player.pr.py -= 1;
-				}
-			}
-			player.PosX -= 1;
-			player.pr.px -= 1;
 		}
-	}
-	else if (GetKeyState('S') & 0x8000)
-	{
-		if (map.board[currentY + 1][currentX] != WALL && map.board[currentY + 1][currentX] != OPEN)
+		else if (GetKeyState(VK_DOWN) & 0x8000)
 		{
-			if (GetKeyState('D') & 0x8000)
+			if (map.board[currentY + player.speed][currentX] != WALL && map.board[currentY + player.speed][currentX] != OPEN
+				&& map.board[currentY + player.speed][currentX] != FOOTPRINT)
 			{
-				if (map.board[currentY + 1][currentX + 1] != WALL && map.board[currentY + 1][currentX + 1] != OPEN)
-				{
-					player.PosX += 1;
-					player.pr.px += 1;
-				}
+				dir = 2;
+				player.playerPos.y += player.speed;
+				player.pr.py += player.speed;
 			}
-			player.PosY += 1;
-			player.pr.py += 1;
 		}
-	}
-	else if (GetKeyState('D') & 0x8000)
-	{
-		if (map.board[currentY][currentX + 1] != WALL && map.board[currentY][currentX + 1] != OPEN)
+		else if (GetKeyState(VK_RIGHT) & 0x8000)
 		{
-			if (GetKeyState('W') & 0x8000)
+			if (map.board[currentY][currentX + player.speed] != WALL && map.board[currentY][currentX + player.speed] != OPEN
+				&& map.board[currentY][currentX + player.speed] != FOOTPRINT)
 			{
-				if (map.board[currentY - 1][currentX + 1] != WALL && map.board[currentY - 1][currentX + 1] != OPEN)
-				{
-					player.PosY -= 1;
-					player.pr.py -= 1;
-				}
+				dir = 3;
+				player.playerPos.x += player.speed;
+				player.pr.px += player.speed;
 			}
-			player.PosX += 1;
-			player.pr.px += 1;
 		}
-	}
-	else if (GetKeyState('W') & 0x8000)
-	{
-		if (map.board[currentY - 1][currentX] != WALL && map.board[currentY - 1][currentX] != OPEN)
+		else if (GetKeyState(VK_UP) & 0x8000)
 		{
-			if (GetKeyState('A') & 0x8000)
+			if (map.board[currentY - player.speed][currentX] != WALL && map.board[currentY - player.speed][currentX] != OPEN
+				&& map.board[currentY - player.speed][currentX] != FOOTPRINT)
 			{
-				if (map.board[currentY - 1][currentX - 1] != WALL && map.board[currentY - 1][currentX - 1] != OPEN)
-				{
-					player.PosX -= 1;
-					player.pr.px -= 1;
-				}
+				dir = 4;
+				player.playerPos.y -= player.speed;
+				player.pr.py -= player.speed;
 			}
-			player.PosY -= 1;
-			player.pr.py -= 1;
 		}
 	}
 
-	player.pr.playerRect = { player.PosX - player.size - 1, player.PosY - player.size - 1, player.PosX + player.size + 1, player.PosY + player.size + 1 };
+	points.push_back(&player.playerPos);
+
+	map.UpdateMap(hdc);
+
+	if(map.board[currentY][currentX] == CLOSE)
+		map.board[currentY][currentX] = FOOTPRINT;
+
+	if (map.board[currentY][currentX] == ROAD)
+		player.research = true;
+
+	player.pr.playerRect = { player.playerPos.x - player.size - player.speed, player.playerPos.y - player.size - player.speed,
+		player.playerPos.x + player.size + player.speed, player.playerPos.y + player.size + player.speed };
 	InvalidateRect(hWnd, &player.pr.playerRect, TRUE);
 
 	ReleaseDC(hWnd, hdc);

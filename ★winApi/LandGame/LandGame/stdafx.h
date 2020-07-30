@@ -16,8 +16,15 @@
 #include <malloc.h>
 #include <memory.h>
 #include <tchar.h>
-
+#include <vector>
+#include <list>
 
 // TODO: reference additional headers your program requires here
 #include "Player.h"
 #include "Map.h"
+#include "SceneManager.h"
+
+using namespace std;
+
+enum State { WALL = -1, CLOSE, OPEN, ROAD, FOOTPRINT };
+State state;

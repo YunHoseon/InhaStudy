@@ -6,3 +6,8 @@
 
 // TODO: reference any additional headers you need in STDAFX.H
 // and not in this file
+
+list<int*> closes;
+list<int*> roads;
+list<int*> footPrints;
+list<POINT*> points;

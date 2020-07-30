@@ -11,6 +11,7 @@ public:
 	~Map();
 
 	void InitMap();
-	void UpdateMap();
+	void UpdateMap(HDC hdc);
+	void FloodFill(HDC hdc, int _x, int _y);
 };
 

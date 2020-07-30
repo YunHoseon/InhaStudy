@@ -2,10 +2,11 @@
 class Player
 {
 public:
-	int PosX;
-	int PosY;
+	POINT playerPos;
 
 	int size;
+	int speed;
+	bool research;
 
 	typedef struct PlayerRect
 	{

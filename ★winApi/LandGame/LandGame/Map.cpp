@@ -1,6 +1,9 @@
 #include "stdafx.h"
 #include "Map.h"
 
+extern list<int*> closes;
+extern Player player;
+
 Map::Map()
 {
 	for (int i = 0; i <= ROW; i++)
@@ -39,7 +42,33 @@ void Map::InitMap()
 	
 }
 
-void Map::UpdateMap()
+void Map::UpdateMap(HDC hdc)
 {
+	if (player.research)
+	{
+		for (int i = 0; i <= ROW; i++)		//3을 2로
+		{
+			for (int j = 0; j <= COL; j++)
+			{
+				if (board[j][i] == FOOTPRINT)
+					board[j][i] = ROAD;
+			}
+		}
 
+
+
+		player.research = false;
+	}
+}
+
+void Map::FloodFill(HDC hdc, int _x, int _y)	//시작점 판단해야함
+{
+	if (board[_y][_x] == CLOSE)
+	{
+		board[_y][_x] = OPEN;
+		FloodFill(hdc, _x + 1, _y);
+		FloodFill(hdc, _x - 1, _y);
+		FloodFill(hdc, _x, _y + 1);
+		FloodFill(hdc, _x, _y - 1);
+	}
 }

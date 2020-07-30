@@ -109,7 +109,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		GetClientRect(hWnd, &rectView);
 		CreateBitmap(hBackImage, bitBack);
 
-		SetTimer(hWnd, 1, 1, KeyStateProc);	//플레이어 이동 타이머
+		SetTimer(hWnd, 1, 50, KeyStateProc);	//플레이어 이동 타이머
 		break;
 
     case WM_COMMAND:
@@ -138,7 +138,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			DrawBitmap(hWnd, hdc, hBackImage, bitBack);
 			DrawBox(hWnd, hdc);
 			player.DrawPlayer(hdc);
-			player.FootPrint(hdc, player.PosX, player.PosY);
+			player.FootPrint(hdc, player.playerPos.x, player.playerPos.y);
 
             EndPaint(hWnd, &ps);
         }
