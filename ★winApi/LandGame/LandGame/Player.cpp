@@ -10,6 +10,7 @@ Player::Player()
 	speed = 3;
 
 	research = false;
+	moved = false;
 
 	pr.playerRect = { playerPos.x - size, playerPos.y - size, playerPos.x + size, playerPos.y + size };
 	pr.px = playerPos.x;
@@ -27,6 +28,6 @@ void Player::DrawPlayer(HDC hdc)
 
 void Player::FootPrint(HDC hdc, int _x, int _y)
 {
-	//MoveToEx(hdc, _x, _y, NULL);
-	LineTo(hdc, _x, _y);
+	MoveToEx(hdc, _x, _y, NULL);
+	LineTo(hdc, playerPos.x, playerPos.x);
 }
