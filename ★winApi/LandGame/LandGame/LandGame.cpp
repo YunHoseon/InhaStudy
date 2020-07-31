@@ -22,6 +22,8 @@ RECT rectView;
 HBITMAP hBackImage;
 BITMAP bitBack;
 
+extern vector<POINT> *points;
+
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_opt_ HINSTANCE hPrevInstance,
                      _In_ LPWSTR    lpCmdLine,
@@ -106,7 +108,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_CREATE:
 		GetClientRect(hWnd, &rectView);
 		CreateBitmap(hBackImage, bitBack);
-
+		points = new vector<POINT>;
 		SetTimer(hWnd, 1, 70, KeyStateProc);	//플레이어 이동 타이머
 		break;
 
@@ -136,7 +138,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			DrawBitmap(hWnd, hdc, hBackImage, bitBack);
 			DrawBox(hWnd, hdc);
 			player.DrawPlayer(hdc);
-			player.FootPrint(hdc, player.playerPos.x, player.playerPos.y);
 
             EndPaint(hWnd, &ps);
         }

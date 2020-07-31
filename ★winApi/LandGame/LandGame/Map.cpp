@@ -3,6 +3,9 @@
 
 extern list<int*> closes;
 extern Player player;
+extern vector<POINT> *points;
+extern vector<vector<POINT>> ploygons;
+extern int idxPoint;
 
 Map::Map()
 {
@@ -54,9 +57,6 @@ void Map::UpdateMap(HDC hdc)
 					board[j][i] = ROAD;
 			}
 		}
-
-
-
 		player.research = false;
 	}
 }
@@ -70,5 +70,18 @@ void Map::FloodFill(HDC hdc, int _x, int _y)	//시작점 판단해야함
 		FloodFill(hdc, _x - 1, _y);
 		FloodFill(hdc, _x, _y + 1);
 		FloodFill(hdc, _x, _y - 1);
+	}
+}
+
+void Map::DrawPloygon(HDC hdc)
+{
+	if (player.research)
+	{
+		POINT *vArr = &(*points)[0];
+		MoveToEx(hdc, player.playerPos.x, player.playerPos.y, NULL);
+		Polygon(hdc, vArr, points[idxPoint].size());
+
+		ploygons.push_back(points[idxPoint]);
+		idxPoint += 1;
 	}
 }

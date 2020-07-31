@@ -10,4 +10,7 @@
 list<int*> closes;
 list<int*> roads;
 list<int*> footPrints;
-list<POINT*> points;
+vector<POINT> *points;
+vector<vector<POINT>> ploygons;
+
+int idxPoint = 0;

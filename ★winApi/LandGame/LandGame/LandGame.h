@@ -4,7 +4,8 @@
 
 Player player;
 Map map;
-extern list<POINT*> points;
+extern vector<POINT> *points;
+extern int idxPoint;
 
 void DrawBox(HWND hWnd, HDC hdc)
 {
@@ -23,7 +24,10 @@ void DrawBox(HWND hWnd, HDC hdc)
 
 		Rectangle(hMemDC, 15, 20, 765, 653);
 
-		//BitBlt(hdc, 15, 20, 750, 633, hMemDC, 0, 0, SRCCOPY);
+		hBrush = CreateSolidBrush(RGB(255, 255, 255));
+		oldBrush = (HBRUSH)SelectObject(hMemDC, hBrush);
+		map.DrawPloygon(hMemDC);
+
 		TransparentBlt(hdc, 15, 20, 750, 633, hMemDC, 15, 20, 750, 633, RGB(255,255,255));
 		SelectObject(hMemDC, oldBrush);
 		SelectObject(hMemDC, oldBit);
@@ -75,75 +79,120 @@ VOID CALLBACK KeyStateProc(HWND hWnd, UINT uMsg, UINT idEvent, DWORD dwTime)
 	HDC hdc = GetDC(hWnd);
 	static int dir = 0;
 	int tmpDir = dir;
+	POINT curPos;
 
-	int currentX = player.playerPos.x;
-	int currentY = player.playerPos.y;
+	curPos.x = player.playerPos.x;
+	curPos.y = player.playerPos.y;
 
-	int tmpX = currentX;
-	int tmpY = currentY;
+	int tmpX = curPos.x;
+	int tmpY = curPos.y;
 
 	if (GetKeyState(VK_SPACE) & 0x8000)
 	{
 		if (GetKeyState(VK_LEFT) & 0x8000)
 		{
-			if (map.board[currentY][currentX - player.speed] != WALL && map.board[currentY][currentX - player.speed] != OPEN
-				&& map.board[currentY][currentX - player.speed] != FOOTPRINT)
+			if (map.board[curPos.y][curPos.x - player.speed] == ROAD || map.board[curPos.y][curPos.x - player.speed] == CLOSE)
 			{
 				dir = 1;
+				if (tmpDir != dir)
+					points[idxPoint].push_back(player.playerPos);
+
 				player.playerPos.x -= player.speed;
 				player.pr.px -= player.speed;
 			}
 		}
 		else if (GetKeyState(VK_DOWN) & 0x8000)
 		{
-			if (map.board[currentY + player.speed][currentX] != WALL && map.board[currentY + player.speed][currentX] != OPEN
-				&& map.board[currentY + player.speed][currentX] != FOOTPRINT)
+			if (map.board[curPos.y + player.speed][curPos.x] == ROAD || map.board[curPos.y + player.speed][curPos.x] == CLOSE)
 			{
 				dir = 2;
+				if (tmpDir != dir)
+					points[idxPoint].push_back(player.playerPos);
+
 				player.playerPos.y += player.speed;
 				player.pr.py += player.speed;
 			}
 		}
 		else if (GetKeyState(VK_RIGHT) & 0x8000)
 		{
-			if (map.board[currentY][currentX + player.speed] != WALL && map.board[currentY][currentX + player.speed] != OPEN
-				&& map.board[currentY][currentX + player.speed] != FOOTPRINT)
+			if (map.board[curPos.y][curPos.x + player.speed] == ROAD || map.board[curPos.y][curPos.x + player.speed] == CLOSE)
 			{
 				dir = 3;
+				if (tmpDir != dir)
+					points[idxPoint].push_back(player.playerPos);
+
 				player.playerPos.x += player.speed;
 				player.pr.px += player.speed;
+
 			}
 		}
 		else if (GetKeyState(VK_UP) & 0x8000)
 		{
-			if (map.board[currentY - player.speed][currentX] != WALL && map.board[currentY - player.speed][currentX] != OPEN
-				&& map.board[currentY - player.speed][currentX] != FOOTPRINT)
+			if (map.board[curPos.y - player.speed][curPos.x] == ROAD || map.board[curPos.y - player.speed][curPos.x] == CLOSE)
 			{
 				dir = 4;
+				if (tmpDir != dir)
+					points[idxPoint].push_back(player.playerPos);
+
 				player.playerPos.y -= player.speed;
 				player.pr.py -= player.speed;
 			}
 		}
+
+		map.UpdateMap(hdc);
+
+		if (map.board[curPos.y][curPos.x] == CLOSE)
+		{
+			map.board[curPos.y][curPos.x] = FOOTPRINT;
+			player.moved = true;
+		}
+		else if (map.board[curPos.y][curPos.x] == ROAD && player.moved)	//도형 다 그렸을 때
+		{
+			points[idxPoint].push_back(curPos);
+			player.research = true;
+			player.moved = false;
+		}
 	}
-
-	
-	points.push_back(&player.playerPos);
-
-	map.UpdateMap(hdc);
-
-	if(map.board[currentY][currentX] == CLOSE)
-		map.board[currentY][currentX] = FOOTPRINT;
-
-	else if (map.board[currentY][currentX] == ROAD)
+	else
 	{
-		points.push_back(&player.playerPos);
-		player.research = true;
+		if (GetKeyState(VK_LEFT) & 0x8000)
+		{
+			if (map.board[curPos.y][curPos.x - player.speed] == ROAD)
+			{
+				dir = 1;
+				player.playerPos.x -= player.speed;
+			}
+		}
+		else if (GetKeyState(VK_DOWN) & 0x8000)
+		{
+			if (map.board[curPos.y + player.speed][curPos.x] == ROAD)
+			{
+				dir = 2;
+				player.playerPos.y += player.speed;
+			}
+		}
+		else if (GetKeyState(VK_RIGHT) & 0x8000)
+		{
+			if (map.board[curPos.y][curPos.x + player.speed] == ROAD)
+			{
+				dir = 3;
+				player.playerPos.x += player.speed;
+
+			}
+		}
+		else if (GetKeyState(VK_UP) & 0x8000)
+		{
+			if (map.board[curPos.y - player.speed][curPos.x] == ROAD)
+			{
+				dir = 4;
+				player.playerPos.y -= player.speed;
+			}
+		}
 	}
-		
 
 	player.pr.playerRect = { player.playerPos.x - player.size - player.speed, player.playerPos.y - player.size - player.speed,
 		player.playerPos.x + player.size + player.speed, player.playerPos.y + player.size + player.speed };
-	InvalidateRect(hWnd, &player.pr.playerRect, TRUE);
+	InvalidateRect(hWnd, /*&player.pr.playerRect*/NULL, FALSE);
 
 	ReleaseDC(hWnd, hdc);
 }

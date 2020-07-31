@@ -7,6 +7,7 @@ public:
 	int size;
 	int speed;
 	bool research;
+	bool moved;
 
 	typedef struct PlayerRect
 	{
