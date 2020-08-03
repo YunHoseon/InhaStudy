@@ -95,7 +95,7 @@ VOID CALLBACK KeyStateProc(HWND hWnd, UINT uMsg, UINT idEvent, DWORD dwTime)
 			{
 				dir = 1;
 				if (tmpDir != dir)
-					points[idxPoint].push_back(player.playerPos);
+					points->push_back(player.playerPos);
 
 				player.playerPos.x -= player.speed;
 				player.pr.px -= player.speed;
@@ -107,7 +107,7 @@ VOID CALLBACK KeyStateProc(HWND hWnd, UINT uMsg, UINT idEvent, DWORD dwTime)
 			{
 				dir = 2;
 				if (tmpDir != dir)
-					points[idxPoint].push_back(player.playerPos);
+					points->push_back(player.playerPos);
 
 				player.playerPos.y += player.speed;
 				player.pr.py += player.speed;
@@ -119,7 +119,7 @@ VOID CALLBACK KeyStateProc(HWND hWnd, UINT uMsg, UINT idEvent, DWORD dwTime)
 			{
 				dir = 3;
 				if (tmpDir != dir)
-					points[idxPoint].push_back(player.playerPos);
+					points->push_back(player.playerPos);
 
 				player.playerPos.x += player.speed;
 				player.pr.px += player.speed;
@@ -132,7 +132,7 @@ VOID CALLBACK KeyStateProc(HWND hWnd, UINT uMsg, UINT idEvent, DWORD dwTime)
 			{
 				dir = 4;
 				if (tmpDir != dir)
-					points[idxPoint].push_back(player.playerPos);
+					points->push_back(player.playerPos);
 
 				player.playerPos.y -= player.speed;
 				player.pr.py -= player.speed;
@@ -146,9 +146,10 @@ VOID CALLBACK KeyStateProc(HWND hWnd, UINT uMsg, UINT idEvent, DWORD dwTime)
 			map.board[curPos.y][curPos.x] = FOOTPRINT;
 			player.moved = true;
 		}
-		else if (map.board[curPos.y][curPos.x] == ROAD && player.moved)	//도형 다 그렸을 때
+		else if (map.board[curPos.y][curPos.x] == ROAD && player.moved)		//도형 다 그렸을 때
 		{
-			points[idxPoint].push_back(curPos);
+			points->push_back(curPos);
+			//내부 점 판단, 플러드 필
 			player.research = true;
 			player.moved = false;
 		}

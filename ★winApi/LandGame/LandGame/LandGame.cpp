@@ -106,9 +106,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     switch (message)
     {
 	case WM_CREATE:
+		points = new vector<POINT>;
 		GetClientRect(hWnd, &rectView);
 		CreateBitmap(hBackImage, bitBack);
-		points = new vector<POINT>;
 		SetTimer(hWnd, 1, 70, KeyStateProc);	//플레이어 이동 타이머
 		break;
 
