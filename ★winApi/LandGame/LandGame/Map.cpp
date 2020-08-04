@@ -60,19 +60,19 @@ void Map::UpdateMap(HDC hdc)
 	}
 }
 
-void Map::FloodFill(HDC hdc, int _x, int _y)	//시작점 판단해야함
+void Map::FloodFill(int _x, int _y)
 {
 	if (board[_y][_x] == CLOSE)
 	{
 		board[_y][_x] = OPEN;
-		FloodFill(hdc, _x + 1, _y);
-		FloodFill(hdc, _x - 1, _y);
-		FloodFill(hdc, _x, _y + 1);
-		FloodFill(hdc, _x, _y - 1);
-		FloodFill(hdc, _x + 1, _y + 1);
-		FloodFill(hdc, _x - 1, _y - 1);
-		FloodFill(hdc, _x - 1, _y + 1);
-		FloodFill(hdc, _x + 1, _y - 1);
+		FloodFill(_x + 1, _y);
+		FloodFill(_x - 1, _y);
+		FloodFill(_x, _y + 1);
+		FloodFill( _x, _y - 1);
+		FloodFill( _x + 1, _y + 1);
+		FloodFill(_x - 1, _y - 1);
+		FloodFill(_x - 1, _y + 1);
+		FloodFill(_x + 1, _y - 1);
 	}
 }
 

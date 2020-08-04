@@ -155,7 +155,7 @@ VOID CALLBACK KeyStateProc(HWND hWnd, UINT uMsg, UINT idEvent, DWORD dwTime)
 			}
 		}
 
-		map.UpdateMap(hdc);
+ 		map.UpdateMap(hdc);
 
 		if (map.board[curPos.y][curPos.x] == CLOSE)
 		{
@@ -164,19 +164,19 @@ VOID CALLBACK KeyStateProc(HWND hWnd, UINT uMsg, UINT idEvent, DWORD dwTime)
 		}
 		else if (map.board[curPos.y][curPos.x] == ROAD && player.moved)		//도형 다 그렸을 때
 		{
+			player.moved = false;
 			points->push_back(curPos);
 			//내부 점 판단, 플러드 필
-			if (IsInside((*points)[1].x + 1, (*points)[1].y + 1))
-				map.FloodFill(hdc, (*points)[1].x + 1, (*points)[1].y + 1);
+ 			/*if (IsInside((*points)[1].x + 1, (*points)[1].y + 1))
+				map.FloodFill((*points)[1].x + 1, (*points)[1].y + 1);
 			else if(IsInside((*points)[1].x - 1, (*points)[1].y + 1))
-				map.FloodFill(hdc, (*points)[1].x - 1, (*points)[1].y + 1);
+				map.FloodFill((*points)[1].x - 1, (*points)[1].y + 1);
 			else if(IsInside((*points)[1].x - 1, (*points)[1].y - 1))
-				map.FloodFill(hdc, (*points)[1].x - 1, (*points)[1].y - 1);
+				map.FloodFill((*points)[1].x - 1, (*points)[1].y - 1);
 			else if(IsInside((*points)[1].x + 1, (*points)[1].y - 1))
-				map.FloodFill(hdc, (*points)[1].x + 1, (*points)[1].y - 1);
+				map.FloodFill((*points)[1].x + 1, (*points)[1].y - 1);*/
 
 			player.research = true;
-			player.moved = false;
 		}
 	}
 	else

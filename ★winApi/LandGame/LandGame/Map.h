@@ -12,7 +12,7 @@ public:
 
 	void InitMap();
 	void UpdateMap(HDC hdc);
-	void FloodFill(HDC hdc, int _x, int _y);
+	void FloodFill(int _x, int _y);
 	void DrawPloygon(HDC hdc);
 };
 
