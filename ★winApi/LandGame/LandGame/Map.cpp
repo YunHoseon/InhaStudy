@@ -5,7 +5,6 @@ extern list<int*> closes;
 extern Player player;
 extern vector<POINT> *points;
 extern vector<vector<POINT>*> ploygons;
-extern int idxPoint;
 
 Map::Map()
 {

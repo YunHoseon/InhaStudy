@@ -5,7 +5,6 @@
 Player player;
 Map map;
 extern vector<POINT> *points;
-extern int idxPoint;
 
 void DrawBox(HWND hWnd, HDC hdc)
 {
@@ -74,6 +73,23 @@ void DeleteBitmap(HBITMAP &hBackImage)
 	DeleteObject(hBackImage);
 }
 
+bool IsInside(int _x, int _y)
+{
+	int crosses = 0;
+
+	for (int i = 0; i < points->size(); i++)
+	{
+		int j = (i + 1) % points->size();
+		if (((*points)[i].y > _y) != ((*points)[j].y > _y))
+		{
+			double atX = ((*points)[j].x - (*points)[i].x) * (_y - (*points)[i].y) / ((*points)[j].y - (*points)[i].y) + (*points)[i].x;
+			if (_x < atX)
+				crosses++;
+		}
+	}
+	return crosses % 2 > 0;
+}
+
 VOID CALLBACK KeyStateProc(HWND hWnd, UINT uMsg, UINT idEvent, DWORD dwTime)
 {
 	HDC hdc = GetDC(hWnd);
@@ -103,7 +119,7 @@ VOID CALLBACK KeyStateProc(HWND hWnd, UINT uMsg, UINT idEvent, DWORD dwTime)
 		}
 		else if (GetKeyState(VK_DOWN) & 0x8000)
 		{
-			if (map.board[curPos.y + player.speed][curPos.x] == ROAD || map.board[curPos.y + player.speed][curPos.x] == CLOSE)
+  			if (map.board[curPos.y + player.speed][curPos.x] == ROAD || map.board[curPos.y + player.speed][curPos.x] == CLOSE)
 			{
 				dir = 2;
 				if (tmpDir != dir)
@@ -150,6 +166,15 @@ VOID CALLBACK KeyStateProc(HWND hWnd, UINT uMsg, UINT idEvent, DWORD dwTime)
 		{
 			points->push_back(curPos);
 			//내부 점 판단, 플러드 필
+			if (IsInside((*points)[1].x + 1, (*points)[1].y + 1))
+				map.FloodFill(hdc, (*points)[1].x + 1, (*points)[1].y + 1);
+			else if(IsInside((*points)[1].x - 1, (*points)[1].y + 1))
+				map.FloodFill(hdc, (*points)[1].x - 1, (*points)[1].y + 1);
+			else if(IsInside((*points)[1].x - 1, (*points)[1].y - 1))
+				map.FloodFill(hdc, (*points)[1].x - 1, (*points)[1].y - 1);
+			else if(IsInside((*points)[1].x + 1, (*points)[1].y - 1))
+				map.FloodFill(hdc, (*points)[1].x + 1, (*points)[1].y - 1);
+
 			player.research = true;
 			player.moved = false;
 		}
