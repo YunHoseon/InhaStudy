@@ -8,13 +8,14 @@ Player::Player()
 
 	size = 5;
 	speed = 3;
+	dir = 0;
 
 	research = false;
 	moved = false;
 
-	pr.playerRect = { playerPos.x - size, playerPos.y - size, playerPos.x + size, playerPos.y + size };
+	/*pr.playerRect = { playerPos.x - size, playerPos.y - size, playerPos.x + size, playerPos.y + size };
 	pr.px = playerPos.x;
-	pr.py = playerPos.y;
+	pr.py = playerPos.y;*/
 }
 
 Player::~Player()

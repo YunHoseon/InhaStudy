@@ -8,15 +8,16 @@ public:
 	int speed;
 	bool research;
 	bool moved;
+	int dir;
 
-	typedef struct PlayerRect
-	{
-		RECT playerRect;
-		int px;
-		int py;
-	}PlayerRect;
+	//typedef struct PlayerRect
+	//{
+	//	RECT playerRect;
+	//	int px;
+	//	int py;
+	//}PlayerRect;
 
-	PlayerRect pr;
+	//PlayerRect pr;
 
 	Player();
 	~Player();

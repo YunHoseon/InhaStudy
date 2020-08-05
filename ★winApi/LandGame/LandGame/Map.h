@@ -6,13 +6,16 @@ class Map
 {
 public:
 	int board[COL][ROW];
+	int opened;
+	int closed;
+	int road;
+	double extension;
 
 	Map();
 	~Map();
 
 	void InitMap();
 	void UpdateMap(HDC hdc);
-	void FloodFill(int _x, int _y);
-	void DrawPloygon(HDC hdc);
+	void DrawPloygon(HDC _hdc);
 };
 

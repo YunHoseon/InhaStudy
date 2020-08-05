@@ -133,11 +133,23 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     case WM_PAINT:
         {
             PAINTSTRUCT ps;
-            HDC hdc = BeginPaint(hWnd, &ps);
-           
-			DrawBitmap(hWnd, hdc, hBackImage, bitBack);
-			DrawBox(hWnd, hdc);
-			player.DrawPlayer(hdc);
+            hdc = BeginPaint(hWnd, &ps);
+			static HBITMAP backHBit = NULL;
+
+			if (backHBit == NULL)
+			{
+				backHDC = CreateCompatibleDC(hdc);
+				backHBit = CreateCompatibleBitmap(hdc, bitBack.bmWidth, bitBack.bmHeight);
+				SelectObject(backHDC, backHBit);
+			}
+
+			DrawBitmap(hWnd, backHDC, hBackImage, bitBack);
+			DrawBox(hWnd, backHDC);
+			player.DrawPlayer(backHDC);
+			DrawExtension();
+			Update(backHDC);
+
+			BitBlt(hdc, 0, 0, bitBack.bmWidth, bitBack.bmHeight, backHDC, 0, 0, SRCCOPY);
 
             EndPaint(hWnd, &ps);
         }

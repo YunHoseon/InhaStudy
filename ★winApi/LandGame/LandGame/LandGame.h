@@ -4,7 +4,15 @@
 
 Player player;
 Map map;
+HDC hdc;
+HDC backHDC;
+
 extern vector<POINT> *points;
+static bool keydown = false;
+static bool drawFill = false;
+
+bool IsInside(int _x, int _y);
+void FloodFill(int _x, int _y);
 
 void DrawBox(HWND hWnd, HDC hdc)
 {
@@ -27,7 +35,16 @@ void DrawBox(HWND hWnd, HDC hdc)
 		oldBrush = (HBRUSH)SelectObject(hMemDC, hBrush);
 		map.DrawPloygon(hMemDC);
 
-		TransparentBlt(hdc, 15, 20, 750, 633, hMemDC, 15, 20, 750, 633, RGB(255,255,255));
+		for (int i = 15; i <= 765; i++)		//너무 깜빡임 ;_;
+		{
+			for (int j = 20; j <= 653; j++)
+			{
+				if (map.board[j][i] == OPEN)
+					SetPixel(hMemDC, i, j, RGB(255, 255, 255));
+			}
+		}
+		TransparentBlt(hdc, 15, 20, 750, 633, hMemDC, 15, 20, 750, 633, RGB(255, 255, 255));
+
 		SelectObject(hMemDC, oldBrush);
 		SelectObject(hMemDC, oldBit);
 
@@ -90,11 +107,109 @@ bool IsInside(int _x, int _y)
 	return crosses % 2 > 0;
 }
 
+void FloodFill(int _x, int _y)
+{
+	if (map.board[_y][_x] == OPEN || map.board[_y][_x] == WALL || map.board[_y][_x] == ROAD)
+		return;
+
+	if (map.board[_y][_x] == CLOSE)
+	{
+		map.board[_y][_x] = OPEN;
+
+		FloodFill(_x + 1, _y);
+		FloodFill(_x - 1, _y);
+		FloodFill(_x, _y + 1);
+		FloodFill(_x, _y - 1);
+		FloodFill(_x + 1, _y + 1);
+		FloodFill(_x - 1, _y - 1);
+		FloodFill(_x - 1, _y + 1);
+		FloodFill(_x + 1, _y - 1);
+	}
+}
+
+void Update(HDC hdc)
+{
+	if (keydown)
+	{
+		map.UpdateMap(hdc);
+
+		if (map.board[player.playerPos.y][player.playerPos.x] == CLOSE)
+		{
+			switch (player.dir)
+			{
+			case 1:
+				for (int i = 0; i < player.speed; i++)
+					map.board[player.playerPos.y][player.playerPos.x + i] = FOOTPRINT;
+				break;
+			case 2:
+				for (int i = 0; i < player.speed; i++)
+					map.board[player.playerPos.y - i][player.playerPos.x] = FOOTPRINT;
+				break;
+			case 3:
+				for (int i = 0; i < player.speed; i++)
+					map.board[player.playerPos.y][player.playerPos.x - i] = FOOTPRINT;
+				break;
+			case 4:
+				for (int i = 0; i < player.speed; i++)
+					map.board[player.playerPos.y + i][player.playerPos.x] = FOOTPRINT;
+				break;
+			default:
+				break;
+			}
+			player.moved = true;
+		}
+		else if (map.board[player.playerPos.y][player.playerPos.x] == ROAD && player.moved)		//도형 다 그렸을 때
+		{
+			points->push_back(player.playerPos);
+
+			switch (player.dir)
+			{
+			case 1:
+				for (int i = 0; i < player.speed; i++)
+					map.board[player.playerPos.y][player.playerPos.x + i] = FOOTPRINT;
+				break;
+			case 2:
+				for (int i = 0; i < player.speed; i++)
+					map.board[player.playerPos.y - i][player.playerPos.x] = FOOTPRINT;
+				break;
+			case 3:
+				for (int i = 0; i < player.speed; i++)
+					map.board[player.playerPos.y][player.playerPos.x - i] = FOOTPRINT;
+				break;
+			case 4:
+				for (int i = 0; i < player.speed; i++)
+					map.board[player.playerPos.y + i][player.playerPos.x] = FOOTPRINT;
+				break;
+			default:
+				break;
+			}
+
+			if (IsInside((*points)[1].x + 1, (*points)[1].y + 1))
+				FloodFill((*points)[1].x + 1, (*points)[1].y + 1);
+			else if (IsInside((*points)[1].x - 1, (*points)[1].y + 1))
+				FloodFill((*points)[1].x - 1, (*points)[1].y + 1);
+			else if (IsInside((*points)[1].x - 1, (*points)[1].y - 1))
+				FloodFill((*points)[1].x - 1, (*points)[1].y - 1);
+			else if (IsInside((*points)[1].x + 1, (*points)[1].y - 1))
+				FloodFill((*points)[1].x + 1, (*points)[1].y - 1);
+
+			drawFill = true;
+			player.moved = false;
+			player.research = true;
+		}
+	}
+}
+
+void DrawExtension()
+{
+	RECT rc_Score = { 500, 100, 650, 150 };
+	DrawText(hdc, to_wstring(map.extension).c_str(), _tcslen(to_wstring(map.extension).c_str()), &rc_Score, DT_SINGLELINE | DT_RIGHT);
+}
+
 VOID CALLBACK KeyStateProc(HWND hWnd, UINT uMsg, UINT idEvent, DWORD dwTime)
 {
 	HDC hdc = GetDC(hWnd);
-	static int dir = 0;
-	int tmpDir = dir;
+	int tmpDir = player.dir;
 	POINT curPos;
 
 	curPos.x = player.playerPos.x;
@@ -105,87 +220,60 @@ VOID CALLBACK KeyStateProc(HWND hWnd, UINT uMsg, UINT idEvent, DWORD dwTime)
 
 	if (GetKeyState(VK_SPACE) & 0x8000)
 	{
+		keydown = true;
 		if (GetKeyState(VK_LEFT) & 0x8000)
 		{
 			if (map.board[curPos.y][curPos.x - player.speed] == ROAD || map.board[curPos.y][curPos.x - player.speed] == CLOSE)
 			{
-				dir = 1;
-				if (tmpDir != dir)
+				player.dir = 1;
+				if (tmpDir != player.dir)
 					points->push_back(player.playerPos);
 
 				player.playerPos.x -= player.speed;
-				player.pr.px -= player.speed;
 			}
 		}
 		else if (GetKeyState(VK_DOWN) & 0x8000)
 		{
   			if (map.board[curPos.y + player.speed][curPos.x] == ROAD || map.board[curPos.y + player.speed][curPos.x] == CLOSE)
 			{
-				dir = 2;
-				if (tmpDir != dir)
+				player.dir = 2;
+				if (tmpDir != player.dir)
 					points->push_back(player.playerPos);
 
 				player.playerPos.y += player.speed;
-				player.pr.py += player.speed;
 			}
 		}
 		else if (GetKeyState(VK_RIGHT) & 0x8000)
 		{
 			if (map.board[curPos.y][curPos.x + player.speed] == ROAD || map.board[curPos.y][curPos.x + player.speed] == CLOSE)
 			{
-				dir = 3;
-				if (tmpDir != dir)
+				player.dir = 3;
+				if (tmpDir != player.dir)
 					points->push_back(player.playerPos);
 
 				player.playerPos.x += player.speed;
-				player.pr.px += player.speed;
-
 			}
 		}
 		else if (GetKeyState(VK_UP) & 0x8000)
 		{
 			if (map.board[curPos.y - player.speed][curPos.x] == ROAD || map.board[curPos.y - player.speed][curPos.x] == CLOSE)
 			{
-				dir = 4;
-				if (tmpDir != dir)
+				player.dir = 4;
+				if (tmpDir != player.dir)
 					points->push_back(player.playerPos);
 
 				player.playerPos.y -= player.speed;
-				player.pr.py -= player.speed;
 			}
-		}
-
- 		map.UpdateMap(hdc);
-
-		if (map.board[curPos.y][curPos.x] == CLOSE)
-		{
-			map.board[curPos.y][curPos.x] = FOOTPRINT;
-			player.moved = true;
-		}
-		else if (map.board[curPos.y][curPos.x] == ROAD && player.moved)		//도형 다 그렸을 때
-		{
-			player.moved = false;
-			points->push_back(curPos);
-			//내부 점 판단, 플러드 필
- 			/*if (IsInside((*points)[1].x + 1, (*points)[1].y + 1))
-				map.FloodFill((*points)[1].x + 1, (*points)[1].y + 1);
-			else if(IsInside((*points)[1].x - 1, (*points)[1].y + 1))
-				map.FloodFill((*points)[1].x - 1, (*points)[1].y + 1);
-			else if(IsInside((*points)[1].x - 1, (*points)[1].y - 1))
-				map.FloodFill((*points)[1].x - 1, (*points)[1].y - 1);
-			else if(IsInside((*points)[1].x + 1, (*points)[1].y - 1))
-				map.FloodFill((*points)[1].x + 1, (*points)[1].y - 1);*/
-
-			player.research = true;
 		}
 	}
 	else
 	{
+		keydown = false;
 		if (GetKeyState(VK_LEFT) & 0x8000)
 		{
 			if (map.board[curPos.y][curPos.x - player.speed] == ROAD)
 			{
-				dir = 1;
+				player.dir = 1;
 				player.playerPos.x -= player.speed;
 			}
 		}
@@ -193,7 +281,7 @@ VOID CALLBACK KeyStateProc(HWND hWnd, UINT uMsg, UINT idEvent, DWORD dwTime)
 		{
 			if (map.board[curPos.y + player.speed][curPos.x] == ROAD)
 			{
-				dir = 2;
+				player.dir = 2;
 				player.playerPos.y += player.speed;
 			}
 		}
@@ -201,23 +289,22 @@ VOID CALLBACK KeyStateProc(HWND hWnd, UINT uMsg, UINT idEvent, DWORD dwTime)
 		{
 			if (map.board[curPos.y][curPos.x + player.speed] == ROAD)
 			{
-				dir = 3;
+				player.dir = 3;
 				player.playerPos.x += player.speed;
-
 			}
 		}
 		else if (GetKeyState(VK_UP) & 0x8000)
 		{
 			if (map.board[curPos.y - player.speed][curPos.x] == ROAD)
 			{
-				dir = 4;
+				player.dir = 4;
 				player.playerPos.y -= player.speed;
 			}
 		}
 	}
 
-	player.pr.playerRect = { player.playerPos.x - player.size - player.speed, player.playerPos.y - player.size - player.speed,
-		player.playerPos.x + player.size + player.speed, player.playerPos.y + player.size + player.speed };
+	/*player.pr.playerRect = { player.playerPos.x - player.size - player.speed, player.playerPos.y - player.size - player.speed,
+		player.playerPos.x + player.size + player.speed, player.playerPos.y + player.size + player.speed };*/
 	InvalidateRect(hWnd, /*&player.pr.playerRect*/NULL, FALSE);
 
 	ReleaseDC(hWnd, hdc);

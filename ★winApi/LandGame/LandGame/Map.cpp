@@ -8,18 +8,19 @@ extern vector<vector<POINT>*> ploygons;
 
 Map::Map()
 {
+	opened = 0;
+	closed = 0;
+	road = 0;
+	extension = 0;
+
 	for (int i = 0; i <= ROW; i++)
-	{
 		for (int j = 0; j <= COL; j++)
 			board[j][i] = -1;
-	}
 
 	/* 게임 판 */
 	for (int i = 20; i <= 653; i++)
-	{
 		for (int j = 15; j <= 765; j++)
 			board[i][j] = 0;
-	}
 
 	/* 테두리 */
 	for (int i = 20; i <= 653; i++)
@@ -48,43 +49,42 @@ void Map::UpdateMap(HDC hdc)
 {
 	if (player.research)
 	{
-		for (int i = 0; i <= ROW; i++)		//3을 2로
+		for (int i = 15; i <= 765; i++)		//3을 2로
 		{
-			for (int j = 0; j <= COL; j++)
+			for (int j = 20; j <= 653; j++)
 			{
 				if (board[j][i] == FOOTPRINT)
 					board[j][i] = ROAD;
 			}
 		}
+
+		for (int i = 15; i <= 765; i++)		//보드의 open, close, road탐색
+		{
+			for (int j = 20; j <= 653; j++)
+			{
+				if (board[j][i] == OPEN)
+					opened += 1;
+				else if (board[j][i] == CLOSE)
+					closed += 1;
+				else if (board[j][i] == ROAD)
+					road += 1;
+			}
+		}
+
+		extension = (((double)opened + (double)road) / (double)closed) * 100;	//몇 퍼센트 확장되었는지
 		player.research = false;
 	}
 }
 
-void Map::FloodFill(int _x, int _y)
+void Map::DrawPloygon(HDC _hdc)
 {
-	if (board[_y][_x] == CLOSE)
-	{
-		board[_y][_x] = OPEN;
-		FloodFill(_x + 1, _y);
-		FloodFill(_x - 1, _y);
-		FloodFill(_x, _y + 1);
-		FloodFill( _x, _y - 1);
-		FloodFill( _x + 1, _y + 1);
-		FloodFill(_x - 1, _y - 1);
-		FloodFill(_x - 1, _y + 1);
-		FloodFill(_x + 1, _y - 1);
-	}
-}
-
-void Map::DrawPloygon(HDC hdc)
-{
-	for (vector<POINT> * polygon : ploygons)
-		Polygon(hdc, &(*polygon)[0], polygon->size());
+	/*for (vector<POINT> * polygon : ploygons)
+		Polygon(_hdc, &(*polygon)[0], polygon->size());*/
 
 	if (player.research)
 	{
 		POINT *vArr = &(*points)[0];	//벡터를 배열로
-		MoveToEx(hdc, player.playerPos.x, player.playerPos.y, NULL);
+		MoveToEx(_hdc, player.playerPos.x, player.playerPos.y, NULL);
 
 		ploygons.push_back(points);
 		points = new vector<POINT>;
