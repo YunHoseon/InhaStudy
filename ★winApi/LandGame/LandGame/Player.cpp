@@ -6,7 +6,7 @@ Player::Player()
 	playerPos.x = 15;
 	playerPos.y = 20;
 
-	size = 5;
+	size = 7;
 	speed = 3;
 	dir = 0;
 
@@ -24,7 +24,14 @@ Player::~Player()
 
 void Player::DrawPlayer(HDC hdc)
 {
+	HBRUSH hBrush, oldBrush;
+	hBrush = CreateSolidBrush(RGB(255, 200, 215));
+	oldBrush = (HBRUSH)SelectObject(hdc, hBrush);
+
 	Ellipse(hdc, playerPos.x - size, playerPos.y - size, playerPos.x + size, playerPos.y + size);
+
+	SelectObject(hdc, oldBrush);
+	DeleteObject(hBrush);
 }
 
 void Player::FootPrint(HDC hdc, int _x, int _y)

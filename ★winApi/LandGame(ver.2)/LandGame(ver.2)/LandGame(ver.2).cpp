@@ -1,28 +1,21 @@
-// LandGame.cpp : Defines the entry point for the application.
+// LandGame(ver.2).cpp : Defines the entry point for the application.
 //
 
 #include "stdafx.h"
-#include "LandGame.h"
-
-#pragma comment(lib, "msimg32.lib")
+#include "LandGame(ver.2).h"
 
 #define MAX_LOADSTRING 100
 
 // Global Variables:
-HINSTANCE hInst;                               
-WCHAR szTitle[MAX_LOADSTRING];                  
-WCHAR szWindowClass[MAX_LOADSTRING];           
+HINSTANCE hInst;                                // current instance
+WCHAR szTitle[MAX_LOADSTRING];                  // The title bar text
+WCHAR szWindowClass[MAX_LOADSTRING];            // the main window class name
 
+// Forward declarations of functions included in this code module:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
 BOOL                InitInstance(HINSTANCE, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
-
-RECT rectView;
-HBITMAP hBackImage;
-BITMAP bitBack;
-
-extern vector<POINT> *points;
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_opt_ HINSTANCE hPrevInstance,
@@ -36,7 +29,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     // Initialize global strings
     LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
-    LoadStringW(hInstance, IDC_LANDGAME, szWindowClass, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDC_LANDGAMEVER2, szWindowClass, MAX_LOADSTRING);
     MyRegisterClass(hInstance);
 
     // Perform application initialization:
@@ -45,7 +38,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         return FALSE;
     }
 
-    HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_LANDGAME));
+    HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_LANDGAMEVER2));
 
     MSG msg;
 
@@ -73,10 +66,10 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
     wcex.cbClsExtra     = 0;
     wcex.cbWndExtra     = 0;
     wcex.hInstance      = hInstance;
-    wcex.hIcon          = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_LANDGAME));
+    wcex.hIcon          = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_LANDGAMEVER2));
     wcex.hCursor        = LoadCursor(nullptr, IDC_ARROW);
     wcex.hbrBackground  = (HBRUSH)(COLOR_WINDOW+1);
-    wcex.lpszMenuName   = NULL;
+    wcex.lpszMenuName   = MAKEINTRESOURCEW(IDC_LANDGAMEVER2);
     wcex.lpszClassName  = szWindowClass;
     wcex.hIconSm        = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
 
@@ -85,13 +78,15 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 
 BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
-   hInst = hInstance;
+   hInst = hInstance; // Store instance handle in our global variable
 
    HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
-      CW_USEDEFAULT, 0, 767, 673, nullptr, nullptr, hInstance, nullptr);
+      CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
 
    if (!hWnd)
+   {
       return FALSE;
+   }
 
    ShowWindow(hWnd, nCmdShow);
    UpdateWindow(hWnd);
@@ -103,13 +98,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message)
     {
-	case WM_CREATE:
-		points = new vector<POINT>;
-		GetClientRect(hWnd, &rectView);
-		CreateBitmap(hBackImage, bitBack);
-		SetTimer(hWnd, 1, 50, KeyStateProc);	//플레이어 이동 타이머
-		break;
-
     case WM_COMMAND:
         {
             int wmId = LOWORD(wParam);
@@ -127,36 +115,17 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             }
         }
         break;
-
     case WM_PAINT:
         {
             PAINTSTRUCT ps;
-            hdc = BeginPaint(hWnd, &ps);
-			static HBITMAP backHBit = NULL;
-
-			if (backHBit == NULL)
-			{
-				backHDC = CreateCompatibleDC(hdc);
-				backHBit = CreateCompatibleBitmap(hdc, bitBack.bmWidth + 15, bitBack.bmHeight + 20);
-				SelectObject(backHDC, backHBit);
-			}
-
-			DrawBitmap(hWnd, backHDC, hBackImage, bitBack);
-			DrawBox(hWnd, backHDC);
-			player.DrawPlayer(backHDC);
-			Update(backHDC);
-
-			BitBlt(hdc, 0, 0, bitBack.bmWidth, bitBack.bmHeight, backHDC, 15, 20, SRCCOPY);
+            HDC hdc = BeginPaint(hWnd, &ps);
 
             EndPaint(hWnd, &ps);
         }
         break;
-
     case WM_DESTROY:
-		DeleteBitmap(hBackImage);
         PostQuitMessage(0);
         break;
-
     default:
         return DefWindowProc(hWnd, message, wParam, lParam);
     }

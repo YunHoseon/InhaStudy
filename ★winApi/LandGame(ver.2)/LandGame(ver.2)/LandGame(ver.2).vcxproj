@@ -19,9 +19,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{0AA0AF4F-8B02-47E8-8B59-9E600C707814}</ProjectGuid>
+    <ProjectGuid>{B565A53E-787E-4949-BFC6-B996393C9EAC}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>LandGame</RootNamespace>
+    <RootNamespace>LandGamever2</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -141,28 +141,24 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="CurScene.h" />
     <ClInclude Include="EndScene.h" />
-    <ClInclude Include="Enemy.h" />
-    <ClInclude Include="IngameScene.h" />
-    <ClInclude Include="LandGame.h" />
-    <ClInclude Include="Map.h" />
-    <ClInclude Include="Player.h" />
+    <ClInclude Include="GameScene.h" />
+    <ClInclude Include="LandGame(ver.2).h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneManager.h" />
+    <ClInclude Include="Singleton.h" />
     <ClInclude Include="StartScene.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CurScene.cpp" />
     <ClCompile Include="EndScene.cpp" />
-    <ClCompile Include="Enemy.cpp" />
-    <ClCompile Include="IngameScene.cpp" />
-    <ClCompile Include="LandGame.cpp" />
-    <ClCompile Include="Map.cpp" />
-    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="GameScene.cpp" />
+    <ClCompile Include="LandGame(ver.2).cpp" />
+    <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneManager.cpp" />
+    <ClCompile Include="Singleton.cpp" />
     <ClCompile Include="StartScene.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -172,10 +168,10 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="LandGame.rc" />
+    <ResourceCompile Include="LandGame(ver.2).rc" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="LandGame.ico" />
+    <Image Include="LandGame(ver.2).ico" />
     <Image Include="small.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

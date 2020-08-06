@@ -13,6 +13,7 @@ static bool drawFill = false;
 
 bool IsInside(int _x, int _y);
 void FloodFill(int _x, int _y);
+void DrawExtension(HDC hdc);
 
 void DrawBox(HWND hWnd, HDC hdc)
 {
@@ -22,7 +23,7 @@ void DrawBox(HWND hWnd, HDC hdc)
 		HBRUSH hBrush, oldBrush;
 		hMemDC = CreateCompatibleDC(hdc);
 
-		hBrush = CreateSolidBrush(RGB(220, 240, 215));
+		hBrush = CreateSolidBrush(RGB(220, 245, 215));
 		oldBrush = (HBRUSH)SelectObject(hMemDC, hBrush);
 
 		if (hBit == NULL)
@@ -35,7 +36,7 @@ void DrawBox(HWND hWnd, HDC hdc)
 		oldBrush = (HBRUSH)SelectObject(hMemDC, hBrush);
 		map.DrawPloygon(hMemDC);
 
-		for (int i = 15; i <= 765; i++)		//³Ê¹« ±ôºýÀÓ ;_;
+		for (int i = 15; i <= 765; i++)
 		{
 			for (int j = 20; j <= 653; j++)
 			{
@@ -129,6 +130,7 @@ void FloodFill(int _x, int _y)
 
 void Update(HDC hdc)
 {
+	DrawExtension(hdc);
 	if (keydown)
 	{
 		map.UpdateMap(hdc);
@@ -200,10 +202,16 @@ void Update(HDC hdc)
 	}
 }
 
-void DrawExtension()
+void DrawExtension(HDC hdc)
 {
-	RECT rc_Score = { 500, 100, 650, 150 };
+	RECT rc_Score = { 600, 30, 700, 50 };
 	DrawText(hdc, to_wstring(map.extension).c_str(), _tcslen(to_wstring(map.extension).c_str()), &rc_Score, DT_SINGLELINE | DT_RIGHT);
+
+	RECT rc_ScorePercent = { 600, 30, 710, 50 };
+	DrawText(hdc, _T("%"), _tcslen(_T("%")), &rc_ScorePercent, DT_SINGLELINE | DT_RIGHT);
+
+	RECT rc_Score2 = { 700, 30, 750, 50 };
+	DrawText(hdc, _T("80%"), _tcslen(_T("80%")), &rc_Score2, DT_SINGLELINE | DT_RIGHT);
 }
 
 VOID CALLBACK KeyStateProc(HWND hWnd, UINT uMsg, UINT idEvent, DWORD dwTime)

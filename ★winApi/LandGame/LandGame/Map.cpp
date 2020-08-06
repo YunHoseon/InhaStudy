@@ -49,6 +49,10 @@ void Map::UpdateMap(HDC hdc)
 {
 	if (player.research)
 	{
+		opened = 0;
+		closed = 0;
+		road = 0;
+
 		for (int i = 15; i <= 765; i++)		//3을 2로
 		{
 			for (int j = 20; j <= 653; j++)
@@ -71,7 +75,11 @@ void Map::UpdateMap(HDC hdc)
 			}
 		}
 
-		extension = (((double)opened + (double)road) / (double)closed) * 100;	//몇 퍼센트 확장되었는지
+		if (closed <= 0 || opened <= 0 || road <= 0)
+			extension = 0;
+		else
+			extension = (((double)opened + (double)road) / (double)(750 * 633)) * 100;	//몇 퍼센트 확장되었는지
+			
 		player.research = false;
 	}
 }

@@ -9,7 +9,7 @@ public:
 	int opened;
 	int closed;
 	int road;
-	double extension;
+	int extension;
 
 	Map();
 	~Map();
