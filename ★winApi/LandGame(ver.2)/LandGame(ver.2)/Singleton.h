@@ -1,9 +1,17 @@
 #pragma once
+
+class SceneManager;
+
 class Singleton
 {
-	Singleton();
+	Singleton() {};
+
 public:
-	~Singleton();
+	SceneManager *sceneManager;
+	HDC hdc;
+	HDC backHDC;
+
+	~Singleton() {};
 
 	static Singleton *GetInstance()
 	{

@@ -4,6 +4,7 @@
 //
 
 #pragma once
+#pragma comment (lib, "Msimg32.lib")
 
 #include "targetver.h"
 
@@ -17,11 +18,9 @@
 #include <memory.h>
 #include <tchar.h>
 
-
 // TODO: reference additional headers your program requires here
 #include "Singleton.h"
 #include "Scene.h"
 #include "SceneManager.h"
 
-enum GameState { NONE, START, INGAME, END };
-GameState gameState;
+enum class GameState { NONE, START, INGAME, END };
