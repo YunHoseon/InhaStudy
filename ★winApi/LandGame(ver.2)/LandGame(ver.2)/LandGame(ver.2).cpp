@@ -83,9 +83,7 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
       CW_USEDEFAULT, 0, 800, 700, nullptr, nullptr, hInstance, nullptr);
 
    if (!hWnd)
-   {
       return FALSE;
-   }
 
    ShowWindow(hWnd, nCmdShow);
    UpdateWindow(hWnd);
@@ -99,8 +97,12 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     {
 	case WM_CREATE:
 		singleton = Singleton::GetInstance();
+
 		singleton->sceneManager = new SceneManager;
+		singleton->sceneManager->hWnd = hWnd;
 		singleton->sceneManager->ManagerInit();
+
+		GetClientRect(hWnd, &(singleton->rectView));
 		break;
 
     case WM_COMMAND:
@@ -121,9 +123,16 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         }
         break;
 
+	case WM_TIMER:
+		InvalidateRect(hWnd, NULL, TRUE);
+		break;
+
 	case WM_LBUTTONDOWN:
 		singleton->sceneManager->ManagerUpdate(message, wParam, lParam);
 		InvalidateRect(hWnd, NULL, TRUE);
+		break;
+	case WM_KEYDOWN:
+		singleton->sceneManager->ManagerUpdate(message, wParam, lParam);
 		break;
 
     case WM_PAINT:

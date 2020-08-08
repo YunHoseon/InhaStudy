@@ -22,6 +22,9 @@ SceneManager::~SceneManager()
 void SceneManager::ManagerInit()
 {
 	gameState = GameState::START;
+	timerId = TimerID::TM_START;
+
+	SetTimer(hWnd, (int)timerId, 1000 / 30, NULL);
 	curScene = startScene = new StartScene;
 	curScene->Init();
 }
@@ -41,23 +44,29 @@ void SceneManager::ManagerRender(HWND hWnd, HDC hdc)
 void SceneManager::SceneChange(GameState nextState)
 {
 	if(curScene != NULL)
-		curScene->Free();
+		curScene->Free(hWnd);
 
 	switch (nextState)
 	{
 	case GameState::START:
-
 		break;
+
 	case GameState::INGAME:
 		if (gameScene == NULL)
 			gameScene = new GameScene;
+
+		timerId = TimerID::TM_INGAME;
 		curScene = gameScene;
 		break;
+
 	case GameState::END:
 		if (endScene == NULL)
 			endScene = new EndScene;
+
+		timerId = TimerID::TM_END;
 		curScene = endScene;
 		break;
+
 	default:
 		break;
 	}

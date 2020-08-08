@@ -60,7 +60,7 @@ void StartScene::Render(HWND hWnd, HDC hdc)
 	DrawText(hdc, _T("QUIT"), _tcslen(_T("QUIT")), &drawQuitBtn, DT_SINGLELINE | DT_CENTER | DT_VCENTER);
 }
 
-void StartScene::Free()
+void StartScene::Free(HWND hWnd)
 {
 	startGame = false;
 }

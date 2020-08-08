@@ -145,6 +145,7 @@
     <ClInclude Include="EndScene.h" />
     <ClInclude Include="GameScene.h" />
     <ClInclude Include="LandGame(ver.2).h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="SceneManager.h" />
@@ -158,6 +159,7 @@
     <ClCompile Include="EndScene.cpp" />
     <ClCompile Include="GameScene.cpp" />
     <ClCompile Include="LandGame(ver.2).cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneManager.cpp" />
     <ClCompile Include="StartScene.cpp" />

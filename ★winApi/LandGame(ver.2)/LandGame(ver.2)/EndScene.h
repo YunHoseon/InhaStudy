@@ -10,6 +10,6 @@ public:
 	void Init();
 	void Update(UINT message, WPARAM wParam, LPARAM lParam);
 	void Render(HWND hWnd, HDC hdc);
-	void Free();
+	void Free(HWND hWnd);
 };
 

@@ -1,12 +1,14 @@
 #include "stdafx.h"
 #include "GameScene.h"
 #include "Bitmap.h"
+#include "Player.h"
 
 extern Singleton *singleton;
 
 GameScene::GameScene()
 {
 	bitmap = new Bitmap;
+	player = new Player;
 	bitmap->CreateBitmap();
 }
 
@@ -16,15 +18,67 @@ GameScene::~GameScene()
 
 void GameScene::Init()
 {
-	SetTimer(singleton->sceneManager->hWnd, 1, 70, NULL);
+	mapPoint[0] = { 15, 20 };
+	mapPoint[1] = { 765, 20 };
+	mapPoint[2] = { 765, 653 };
+	mapPoint[3] = { 15, 653 };
 }
 
 void GameScene::Update(UINT message, WPARAM wParam, LPARAM lParam)
 {
-	switch (message)
+	int tmpDir = player->dir;
+	POINT curPos;
+
+	curPos.x = player->playerPos.x;
+	curPos.y = player->playerPos.y;
+
+	if (GetKeyState(VK_SPACE) & 0x8000)
 	{
-	default:
-		break;
+		player->drawMode = true;
+		if (GetKeyState(VK_LEFT) & 0x8000)
+		{
+			player->dir = 1;
+			player->playerPos.x -= player->speed;
+		}
+		else if (GetKeyState(VK_RIGHT) & 0x8000)
+		{
+			player->dir = 2;
+			player->playerPos.x += player->speed;
+		}
+		else if (GetKeyState(VK_UP) & 0x8000)
+		{
+			player->dir = 3;
+			player->playerPos.y -= player->speed;
+		}
+		else if (GetKeyState(VK_DOWN) & 0x8000)
+		{
+			player->dir = 4;
+			player->playerPos.y += player->speed;
+		}
+	}
+	else
+	{
+		player->drawMode = false;
+		if (GetKeyState(VK_LEFT) & 0x8000)
+		{
+			player->dir = 1;
+			player->playerPos.x -= player->speed;
+		}
+		else if (GetKeyState(VK_RIGHT) & 0x8000)
+		{
+			player->dir = 2;
+			player->playerPos.x += player->speed;
+		}
+		else if (GetKeyState(VK_UP) & 0x8000)
+		{
+			player->dir = 3;
+			player->playerPos.y -= player->speed;
+		}
+		else if (GetKeyState(VK_DOWN) & 0x8000)
+		{
+			player->dir = 4;
+			player->playerPos.y += player->speed;
+		}
 	}
 }
 
@@ -39,14 +93,17 @@ void GameScene::Render(HWND hWnd, HDC hdc)
 		SelectObject(singleton->backHDC, backHBit);
 	}
 
-	bitmap->DrawBitmap(hWnd, hdc);
-	DrawBox(hWnd, hdc);
+	bitmap->DrawBitmap(hWnd, singleton->backHDC);
+	DrawBox(hWnd, singleton->backHDC);
+	
+	BitBlt(hdc, 15, 20, bitmap->bitBack.bmWidth, bitmap->bitBack.bmHeight, singleton->backHDC, 15, 20, SRCCOPY);
 
-	BitBlt(hdc, 0, 0, bitmap->bitBack.bmWidth, bitmap->bitBack.bmHeight, singleton->backHDC, 15, 20, SRCCOPY);
+	player->DrawPlayer(hdc);
 }
 
-void GameScene::Free()
+void GameScene::Free(HWND hWnd)
 {
+	KillTimer(hWnd, 1);
 }
 
 void GameScene::DrawBox(HWND hWnd, HDC hdc)
@@ -61,7 +118,7 @@ void GameScene::DrawBox(HWND hWnd, HDC hdc)
 		oldBrush = (HBRUSH)SelectObject(hMemDC, hBrush);
 
 		if (hBit == NULL)
-			hBit = CreateCompatibleBitmap(hdc, 800, 700);	//hdc에 호환되는 이미지
+			hBit = CreateCompatibleBitmap(hdc, 800, 700);
 		oldBit = (HBITMAP)SelectObject(hMemDC, hBit);
 
 		Rectangle(hMemDC, 15, 20, 765, 653);
@@ -80,4 +137,10 @@ void GameScene::DrawBox(HWND hWnd, HDC hdc)
 		DeleteObject(hBrush);
 		DeleteDC(hMemDC);
 	}
+}
+
+bool GameScene::isInOutline()
+{
+	if(player->playerPos.x )
+	return false;
 }

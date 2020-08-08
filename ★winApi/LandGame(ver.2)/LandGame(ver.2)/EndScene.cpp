@@ -23,6 +23,6 @@ void EndScene::Render(HWND hWnd, HDC hdc)
 {
 }
 
-void EndScene::Free()
+void EndScene::Free(HWND hWnd)
 {
 }

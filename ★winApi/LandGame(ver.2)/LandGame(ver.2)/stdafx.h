@@ -17,10 +17,14 @@
 #include <malloc.h>
 #include <memory.h>
 #include <tchar.h>
+#include <vector>
 
 // TODO: reference additional headers your program requires here
 #include "Singleton.h"
 #include "Scene.h"
 #include "SceneManager.h"
 
+using namespace std;
+
 enum class GameState { NONE, START, INGAME, END };
+enum class TimerID { TM_START = 100, TM_INGAME, TM_END };
