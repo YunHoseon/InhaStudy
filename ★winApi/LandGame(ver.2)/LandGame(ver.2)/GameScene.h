@@ -11,7 +11,8 @@ public:
 	Bitmap *bitmap;
 	Player *player;
 	POINT mapPoint[4];
-	vector<POINT> *points;
+	vector<POINT> transparentPolygon;
+	vector<POINT> footPrint;
 
 	GameScene();
 	virtual ~GameScene();
@@ -22,6 +23,16 @@ public:
 	void Free(HWND hWnd);
 
 	void DrawBox(HWND hWnd, HDC hdc);
-	bool isInOutline();
+	void DrawFootPrint(HDC hdc);
+
+	bool isInTpPolyLine(POINT tmpPt, int * lineNum = NULL);
+	bool isInsideOutline(POINT tmpPt);
+	bool isInsidePoly(int _x, int _y);
+	bool isInsideFootprint(POINT tmpPt);
+	bool isInLineFootprint(POINT tmpPt);
+
+	bool PolygonMakedCompleteCheck();
+
+	vector<POINT> CollectTpPt(int startLineNum, int endLineNum);
 };
 

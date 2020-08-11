@@ -4,12 +4,13 @@
 
 Player::Player()
 {
-	playerPos.x = 15;
-	playerPos.y = 20;
+	playerPos.x = 100;
+	playerPos.y = 60;
 	size = 8;
-	speed = 3;
+	speed = 10;
 
 	drawMode = false;
+	moved = false;
 }
 
 

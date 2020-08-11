@@ -28,3 +28,10 @@ using namespace std;
 
 enum class GameState { NONE, START, INGAME, END };
 enum class TimerID { TM_START = 100, TM_INGAME, TM_END };
+
+inline bool operator!= (POINT pt1, POINT pt2)
+{
+	if (pt1.x != pt2.x || pt1.y != pt2.y)
+		return true;
+	return false;
+}

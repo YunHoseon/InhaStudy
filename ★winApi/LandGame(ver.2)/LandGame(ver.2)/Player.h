@@ -8,6 +8,7 @@ public:
 	int dir;
 
 	bool drawMode;
+	bool moved;
 
 	Player();
 	virtual ~Player();
