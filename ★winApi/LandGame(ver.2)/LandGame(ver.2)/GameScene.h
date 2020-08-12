@@ -25,11 +25,11 @@ public:
 	void DrawBox(HWND hWnd, HDC hdc);
 	void DrawFootPrint(HDC hdc);
 
-	bool isInTpPolyLine(POINT tmpPt, int * lineNum = NULL);
-	bool isInsideOutline(POINT tmpPt);
-	bool isInsidePoly(int _x, int _y);
-	bool isInsideFootprint(POINT tmpPt);
-	bool isInLineFootprint(POINT tmpPt);
+	bool isInTpPolyLine(POINT tmpPt, int * lineNum = NULL);		
+	bool isInsideOutline(POINT tmpPt);							//테두리 안쪽인지
+	bool isInsidePoly(int _x, int _y);							//투명도형라인 위인지
+	bool isInsideFootprint(POINT tmpPt);						//발자국으로 그려진 도형안에 있는지
+	bool isInLineFootprint(POINT tmpPt);						//발자국으로 그려진 도형의 테두리 위인지
 
 	bool PolygonMakedCompleteCheck();
 

@@ -7,7 +7,7 @@ Player::Player()
 	playerPos.x = 100;
 	playerPos.y = 60;
 	size = 8;
-	speed = 10;
+	speed = 2;
 
 	drawMode = false;
 	moved = false;
