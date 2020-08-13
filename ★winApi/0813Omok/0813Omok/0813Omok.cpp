@@ -187,9 +187,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			if (_tcscmp(tcMessage, _T("")))
 			{
 				for (int i = 0; i < messages.size();i++)
-				{
 					TextOut(hdc, 760, 30 * i, messages[i], (int)_tcslen(messages[i]));
-				}
 			}
 			TextOut(hdc, 760, 680, str, _tcslen(str));
 
@@ -238,9 +236,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	{
 		if (wParam == VK_RETURN)
 			if (s == INVALID_SOCKET)
-			{
 				return 0;
-			}
 			else
 			{
 #ifdef _UNICODE
