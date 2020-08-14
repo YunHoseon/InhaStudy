@@ -25,4 +25,22 @@
 #include "Bitmap.h"
 #include "Map.h"
 
+#define WHITESTONE 10
+#define BLACKSTONE 11
+
 using namespace std;
+
+typedef struct Player_Chat
+{
+	char ID[16];
+	char msg[256];
+}Player_Chat;
+
+typedef struct Player_Stone
+{
+	char ID[16];
+	int px, py;
+	int myStoneColor;
+	bool isWin;
+	bool isMyTurn;
+}Player_Stone;

@@ -126,11 +126,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			MessageBox(NULL, _T("binding failed"), _T("Error"), MB_OK);
 			return 0;
 		}
-		else
-		{
-			MessageBox(NULL, _T("binding success"), _T("Success"), MB_OK);
-		}
-
 		WSAAsyncSelect(s, hWnd, WM_ASYNC, FD_ACCEPT);
 
 		if (listen(s, 5) == -1)	//SOCKET_ERROR

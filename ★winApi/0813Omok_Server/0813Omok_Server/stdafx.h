@@ -31,6 +31,7 @@ typedef struct Player_Stone
 {
 	char ID[16];
 	int px, py;
+	int myStoneColor;
 	bool isWin;
 	bool isMyTurn;
 }Player_Stone;

@@ -128,11 +128,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			MessageBox(NULL, _T("socket failed"), _T("Error"), MB_OK);
 			return 0;
 		}
-		else
-		{
-			MessageBox(NULL, _T("socket success"), _T("Success"), MB_OK);
-		}
-
 		addr.sin_family = AF_INET;
 		addr.sin_port = 20;
 		addr.sin_addr.S_un.S_addr = inet_addr("127.0.0.1");

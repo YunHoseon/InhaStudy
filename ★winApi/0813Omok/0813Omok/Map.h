@@ -12,7 +12,7 @@ public:
 	{
 		POINT crossPt;
 		RECT collider;
-		bool isStone;
+		int stoneColor;		// 0 : empty   1 : white   2 : black
 	}Board;
 	Board board[COL][ROW];
 
