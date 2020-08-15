@@ -3,6 +3,7 @@
 #include "Scene.h"
 class Bitmap;
 class Player;
+class Enemy;
 
 class GameScene :
 	public Scene
@@ -10,10 +11,11 @@ class GameScene :
 public:
 	Bitmap *bitmap;
 	Player *player;
+
 	POINT mapPoint[4];
 	vector<POINT> transparentPolygon;
 	vector<POINT> footPrint;
-
+	
 	GameScene();
 	virtual ~GameScene();
 

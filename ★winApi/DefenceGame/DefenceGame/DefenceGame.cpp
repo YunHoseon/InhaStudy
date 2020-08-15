@@ -366,7 +366,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 				RECT rc_ID = { 10, 10, 100, 40 };
 				DrawText(hdc, player.GetID(), _tcslen(player.GetID()), &rc_ID, DT_SINGLELINE | DT_LEFT);
 
-				 RECT rc_Score = { 300, 10, 450, 50 };
+				RECT rc_Score = { 300, 10, 450, 50 };
 				DrawText(hdc, to_wstring(player.GetScore()).c_str(), _tcslen(to_wstring(player.GetScore()).c_str()), &rc_Score, DT_SINGLELINE | DT_RIGHT);
 
 				for (EnemyObj *it_enemies : enemyList)

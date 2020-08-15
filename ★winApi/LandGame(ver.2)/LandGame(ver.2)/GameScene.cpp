@@ -2,6 +2,7 @@
 #include "GameScene.h"
 #include "Bitmap.h"
 #include "Player.h"
+#include "Enemy.h"
 
 extern Singleton *singleton;
 
@@ -10,6 +11,7 @@ GameScene::GameScene()
 	bitmap = new Bitmap;
 	player = new Player;
 	bitmap->CreateBitmap();
+	Enemy enemies[5];
 }
 
 GameScene::~GameScene()
