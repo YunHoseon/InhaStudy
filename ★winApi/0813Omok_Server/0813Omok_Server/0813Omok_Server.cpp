@@ -101,12 +101,13 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	static WSADATA wsadata;
-	static SOCKET s, cs;
-	static TCHAR tcMessage[200];
-	static char buffer[100];
+	static SOCKET s;
+	static vector<SOCKET> vecCs;
+	static TCHAR tcMessage[200];	//유니코드 문자열용 저장소
+	static char buffer[100];		//클라이언트 데이터를 읽기위한 임시저장소
 	static TCHAR szbuffer[100];
 	static SOCKADDR_IN addr = { 0 }, c_addr;
-	static TCHAR str[100];	//접속 메시지
+	static TCHAR str[100];			//접속 메시지
 	static int count;
 	int size, msgLen;
 
@@ -126,13 +127,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			MessageBox(NULL, _T("binding failed"), _T("Error"), MB_OK);
 			return 0;
 		}
-		WSAAsyncSelect(s, hWnd, WM_ASYNC, FD_ACCEPT);
 
 		if (listen(s, 5) == -1)	//SOCKET_ERROR
 		{
 			MessageBox(NULL, _T("listen failed"), _T("Error"), MB_OK);
 			return 0;
 		}
+		WSAAsyncSelect(s, hWnd, WM_ASYNC, FD_ACCEPT);
 		break;
 
 	case WM_ASYNC:
@@ -141,35 +142,38 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		case FD_ACCEPT:
 		{
 			size = sizeof(c_addr);
-			cs = accept(s, (LPSOCKADDR)&c_addr, &size);
+			SOCKET cs = accept(s, (LPSOCKADDR)&c_addr, &size);
+			vecCs.push_back(cs);
 
-			wsprintf(str, L"%s", szbuffer);
-			WSAAsyncSelect(cs, hWnd, WM_ASYNC, FD_READ);
-		}
-			break;
-		case FD_READ:
-		{
-			msgLen = recv(cs, buffer, 100, 0);
-			buffer[msgLen] = NULL;
+			WSAAsyncSelect(cs, hWnd, WM_ASYNC, FD_READ | FD_CLOSE);
 
-			MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, buffer, strlen(buffer), szbuffer, 100);
-
-			TCHAR *tmpBuffer = new TCHAR[_tcslen(szbuffer)];
-			wsprintf(tmpBuffer, L"%s", szbuffer);
-			messages.push_back(tmpBuffer);
-			memset(szbuffer, 0, sizeof(szbuffer));
-
-#ifdef _UNICODE
-			msgLen = MultiByteToWideChar(CP_ACP, 0, buffer, strlen(buffer), NULL, NULL);
-			MultiByteToWideChar(CP_ACP, 0, buffer, strlen(buffer), tcMessage, msgLen);
-			tcMessage[msgLen] = NULL;
-#else
-			strcpy_s(msg, buffer);
-
-#endif
+			TCHAR *log = new TCHAR[32];
+			wsprintf(log, L"%d 님이 접속했습니다.", cs);
+			messages.push_back(log);
 			InvalidateRgn(hWnd, NULL, TRUE);
 		}
 		break;
+
+		case FD_READ:
+		{
+			msgLen = recv(wParam, buffer, 100, 0);
+			buffer[msgLen] = NULL;
+
+			for (int i = 0; i < vecCs.size(); i++)
+				send(vecCs[i], buffer, strlen(buffer), 0);
+		}
+		break;
+
+		case FD_CLOSE:
+		{
+			closesocket(wParam);
+			TCHAR *log = new TCHAR[32];
+			wsprintf(log, L"%d 님이 나갔습니다.", wParam);
+			messages.push_back(log);
+			InvalidateRgn(hWnd, NULL, TRUE);
+		}
+		break;
+
 		default:
 			break;
 		}
@@ -196,7 +200,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             PAINTSTRUCT ps;
             HDC hdc = BeginPaint(hWnd, &ps);
 
-			TextOut(hdc, 20, 450, str, _tcslen(str));
+			for (int i = 0; i < messages.size(); i++)
+				TextOut(hdc, 20, i * 30, messages[i], _tcslen(messages[i]));
 
             EndPaint(hWnd, &ps);
         }

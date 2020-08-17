@@ -192,7 +192,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			DrawText(hdc, to_wstring(my).c_str(), _tcslen(to_wstring(my).c_str()), &rc_Score2, DT_SINGLELINE | DT_RIGHT);*/
 
 			map.DrawStone(hdc, mx, my);
-			
             EndPaint(hWnd, &ps);
         }
         break;
@@ -205,10 +204,11 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			msgLen = recv(s, buffer, 100, 0);
 			buffer[msgLen] = NULL;
 
-			MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, buffer, strlen(buffer), szbuffer, 100);
+			MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, buffer, strlen(buffer), szbuffer, 100);	//char형을 유니코드로 변환
 
 			TCHAR *tmpBuffer = new TCHAR[_tcslen(szbuffer)];
 			wsprintf(tmpBuffer, L"%s", szbuffer);
+
 			messages.push_back(tmpBuffer);
 			memset(szbuffer, 0, sizeof(szbuffer));
 #ifdef _UNICODE
@@ -237,10 +237,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 #ifdef _UNICODE
 				msgLen = WideCharToMultiByte(CP_ACP, 0, str, -1, NULL, 0, NULL, NULL);
 				WideCharToMultiByte(CP_ACP, 0, str, -1, buffer, msgLen, NULL, NULL);
-
-				TCHAR *tmpBuffer2 = new TCHAR[_tcslen(str)];
-				wsprintf(tmpBuffer2, L"%s", str);
-				messages.push_back(tmpBuffer2);
 #else
 				strcpy_s(buffer, str);
 				msgLen = strlen(buffer);

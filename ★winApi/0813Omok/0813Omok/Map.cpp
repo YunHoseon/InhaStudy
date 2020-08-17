@@ -69,11 +69,11 @@ int *Map::LocationStone(int _mx, int _my)
 		for (int j = 0; j < ROW; j++)
 		{
 			if (board[i][j].collider.left < _mx && board[i][j].collider.right > _mx &&
-				board[i][j].collider.top < _my && board[i][j].collider.bottom > _my && board[i][j].stoneColor == -1)
+				board[i][j].collider.top < _my && board[i][j].collider.bottom > _my /*&& board[i][j].stoneColor == -1*/)
 			{
 				loc[0] = i;
 				loc[1] = j;
-				board[i][j].stoneColor = stone.myStoneColor;
+				/*board[i][j].stoneColor = stone.myStoneColor;*/
 				return  loc;
 			}
 		}
