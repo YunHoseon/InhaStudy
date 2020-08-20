@@ -1,8 +1,8 @@
-// Hokemon2.cpp : Defines the entry point for the application.
+// SpriteTool.cpp : Defines the entry point for the application.
 //
 
 #include "stdafx.h"
-#include "Hokemon2.h"
+#include "SpriteTool.h"
 
 #define MAX_LOADSTRING 100
 
@@ -16,6 +16,10 @@ ATOM                MyRegisterClass(HINSTANCE hInstance);
 BOOL                InitInstance(HINSTANCE, int);
 LRESULT CALLBACK    WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK    About(HWND, UINT, WPARAM, LPARAM);
+INT_PTR CALLBACK    MenuDlg(HWND, UINT, WPARAM, LPARAM);
+
+HWND g_hWnd, g_hMenuWnd;
+SIZE g_szMainWnd;
 
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
                      _In_opt_ HINSTANCE hPrevInstance,
@@ -29,7 +33,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
 
     // Initialize global strings
     LoadStringW(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
-    LoadStringW(hInstance, IDC_HOKEMON2, szWindowClass, MAX_LOADSTRING);
+    LoadStringW(hInstance, IDC_SPRITETOOL, szWindowClass, MAX_LOADSTRING);
     MyRegisterClass(hInstance);
 
     // Perform application initialization:
@@ -38,7 +42,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
         return FALSE;
     }
 
-    HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_HOKEMON2));
+    HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_SPRITETOOL));
 
     MSG msg;
 
@@ -55,6 +59,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     return (int) msg.wParam;
 }
 
+
 ATOM MyRegisterClass(HINSTANCE hInstance)
 {
     WNDCLASSEXW wcex;
@@ -66,7 +71,7 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
     wcex.cbClsExtra     = 0;
     wcex.cbWndExtra     = 0;
     wcex.hInstance      = hInstance;
-    wcex.hIcon          = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_HOKEMON2));
+    wcex.hIcon          = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_SPRITETOOL));
     wcex.hCursor        = LoadCursor(nullptr, IDC_ARROW);
     wcex.hbrBackground  = (HBRUSH)(COLOR_WINDOW+1);
 	wcex.lpszMenuName = NULL;
@@ -80,8 +85,10 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
    hInst = hInstance; // Store instance handle in our global variable
 
-   HWND hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW,
-      CW_USEDEFAULT, 0, 600, 450, nullptr, nullptr, hInstance, nullptr);
+   HWND hWnd;
+   
+   g_hWnd = hWnd = CreateWindowW(szWindowClass, szTitle, WS_OVERLAPPEDWINDOW & ~WS_MAXIMIZEBOX,
+      CW_USEDEFAULT, 0, CW_USEDEFAULT, 0, nullptr, nullptr, hInstance, nullptr);
 
    if (!hWnd)
    {
@@ -94,10 +101,47 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    return TRUE;
 }
 
+//
+//  FUNCTION: WndProc(HWND, UINT, WPARAM, LPARAM)
+//
+//  PURPOSE:  Processes messages for the main window.
+//
+//  WM_COMMAND  - process the application menu
+//  WM_PAINT    - Paint the main window
+//  WM_DESTROY  - post a quit message and return
+//
+//
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
+	int wmId, wmEvent;
+	PAINTSTRUCT ps;
+	HDC hdc;
+	RECT rtWnd = { 0, 0, 800, 600 }, rtDlg = {800, 0, 1200, 800 };
+	static SIZE szWndSize, szDlgSize;
+	OPENFILENAME ofn;
+	static char strFileTitle[256];
     switch (message)
     {
+	case WM_CREATE:
+		g_hMenuWnd = CreateDialog(hInst, MAKEINTRESOURCE(IDD_CUT_IMAGE), hWnd, MenuDlg);
+		AdjustWindowRect(&rtWnd, WS_OVERLAPPEDWINDOW, TRUE);
+		GetWindowRect(g_hMenuWnd, &rtDlg);
+		szWndSize.cx = rtWnd.right - rtWnd.left;
+		szWndSize.cy = rtWnd.bottom - rtWnd.top;
+		szDlgSize.cx = rtDlg.right - rtDlg.left + 1;
+		szDlgSize.cy = rtDlg.bottom - rtDlg.top + 1;
+		MoveWindow(hWnd, 10, 10, szWndSize.cx, szWndSize.cy, TRUE);
+		MoveWindow(g_hMenuWnd, 10 + szWndSize.cx, 10, szDlgSize.cx, szDlgSize.cy, TRUE);
+		break;
+	case WM_SIZE:
+		GetWindowRect(hWnd, &rtWnd);
+		MoveWindow(hWnd, rtWnd.left, rtWnd.top, szWndSize.cx, szWndSize.cy, TRUE);
+		break;
+	case WM_MOVE:
+		GetWindowRect(hWnd, &rtWnd);
+		MoveWindow(hWnd, rtWnd.left, rtWnd.top, szWndSize.cx, szWndSize.cy, TRUE);
+		MoveWindow(g_hMenuWnd, rtWnd.right, rtWnd.top, szDlgSize.cx, szDlgSize.cy, TRUE);
+		break;
     case WM_COMMAND:
         {
             int wmId = LOWORD(wParam);
@@ -124,6 +168,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         }
         break;
     case WM_DESTROY:
+		DestroyWindow(g_hMenuWnd);
         PostQuitMessage(0);
         break;
     default:
@@ -150,4 +195,23 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
         break;
     }
     return (INT_PTR)FALSE;
+}
+
+INT_PTR CALLBACK MenuDlg(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
+{
+	UNREFERENCED_PARAMETER(lParam);
+	switch (message)
+	{
+	case WM_INITDIALOG:
+		return (INT_PTR)TRUE;
+
+	case WM_COMMAND:
+		/*if (LOWORD(wParam) == IDOK || LOWORD(wParam) == IDCANCEL)
+		{
+			EndDialog(hDlg, LOWORD(wParam));
+			return (INT_PTR)TRUE;
+		}*/
+		break;
+	}
+	return (INT_PTR)FALSE;
 }
