@@ -55,7 +55,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
             DispatchMessage(&msg);
         }
     }
-
     return (int) msg.wParam;
 }
 
@@ -74,7 +73,7 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
     wcex.hIcon          = LoadIcon(hInstance, MAKEINTRESOURCE(IDI_SPRITETOOL));
     wcex.hCursor        = LoadCursor(nullptr, IDC_ARROW);
     wcex.hbrBackground  = (HBRUSH)(COLOR_WINDOW+1);
-	wcex.lpszMenuName = NULL;
+	wcex.lpszMenuName = MAKEINTRESOURCE(IDC_SPRITETOOL);
     wcex.lpszClassName  = szWindowClass;
     wcex.hIconSm        = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
 
@@ -101,16 +100,6 @@ BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
    return TRUE;
 }
 
-//
-//  FUNCTION: WndProc(HWND, UINT, WPARAM, LPARAM)
-//
-//  PURPOSE:  Processes messages for the main window.
-//
-//  WM_COMMAND  - process the application menu
-//  WM_PAINT    - Paint the main window
-//  WM_DESTROY  - post a quit message and return
-//
-//
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	int wmId, wmEvent;
@@ -119,7 +108,9 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	RECT rtWnd = { 0, 0, 800, 600 }, rtDlg = {800, 0, 1200, 800 };
 	static SIZE szWndSize, szDlgSize;
 	OPENFILENAME ofn;
-	static char strFileTitle[256];
+	static char strFileTitle[256], strFileExtension[10], strFile[256];
+	static TCHAR szFileTitle[256] = { 0, }, szFile[256];
+
     switch (message)
     {
 	case WM_CREATE:
@@ -145,12 +136,41 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     case WM_COMMAND:
         {
             int wmId = LOWORD(wParam);
+			int wmEvent = HIWORD(wParam);
             // Parse the menu selections:
             switch (wmId)
             {
             case IDM_ABOUT:
                 DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
                 break;
+			case ID_FILE_OPEN:
+				ZeroMemory(&ofn, sizeof(ofn));
+				MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, strFileTitle, strlen(strFileTitle), szFileTitle, 256);
+				MultiByteToWideChar(CP_ACP, MB_PRECOMPOSED, strFile, strlen(strFile), szFile, 256);
+				ofn.lStructSize = sizeof(ofn);
+				ofn.hwndOwner = hWnd;
+				ofn.lpstrTitle = L"파일을 선택해주세요";
+				ofn.lpstrFileTitle = szFileTitle;
+				ofn.lpstrFile = szFile;
+				ofn.lpstrFilter = L"임시파일(*.txt)\0*.txt\0모든 파일(*.*)\0*.*\0";
+				ofn.nMaxFile = 256;
+				ofn.nMaxFileTitle = 256;
+
+				if (GetOpenFileName(&ofn) != 0)
+				{
+					switch (ofn.nFilterIndex)
+					{
+					case 1:
+						MessageBox(0, szFile, L"임시 파일", MB_OK);
+						break;
+					case 2:
+						MessageBox(0, szFile, L"모든 파일", MB_OK);
+						break;
+					default:
+						break;
+					}
+				}
+				break;
             case IDM_EXIT:
                 DestroyWindow(hWnd);
                 break;
