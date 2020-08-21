@@ -19,3 +19,10 @@
 
 
 // TODO: reference additional headers your program requires here
+#include "Hokemon.h"
+#include "Player.h"
+#include "Singleton.h"
+
+enum class GameState { NONE, START, INGAME };
+enum class TimerID { TM_START = 50, TM_INGAME, TM_BATTLE };
+enum class TileState {ROAD = 100, TREE, BUSH, OBJECT};
