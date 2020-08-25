@@ -6,7 +6,12 @@ class StartScene :
 	public Scene
 {
 public:
+	bool startGame;
 	TimerID timerId;
+
+	RECT startBtn;
+	RECT loadBtn;
+	RECT quitBtn;
 
 	StartScene();
 	virtual ~StartScene();

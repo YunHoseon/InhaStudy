@@ -6,9 +6,16 @@ class Player
 	char pId[32];
 	POINT pt;
 	Hokemon myMonster[6];
+
+	int speed;
+	RECT playerCollider;
+
 public:
 	Player();
 	~Player();
+
+	void UpdatePlayer(UINT message, WPARAM wParam, LPARAM lParam);
+	void DrawPlayer(HDC hdc);
 
 	/*getter setter*/
 	char* GetId() { return pId; }

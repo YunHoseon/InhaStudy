@@ -4,7 +4,7 @@
 #include "Scene.h"
 #include "StartScene.h"
 #include "GameScene.h"
-#include "EndScene.h"
+#include "BattleScene.h"
 
 extern Singleton *singleton;
 
@@ -12,7 +12,7 @@ SceneManager::SceneManager()
 {
 	curScene = NULL;
 	gameScene = NULL;
-	endScene = NULL;
+	battleScene = NULL;
 }
 
 SceneManager::~SceneManager()
@@ -49,6 +49,7 @@ void SceneManager::SceneChange(GameState nextState)
 	switch (nextState)
 	{
 	case GameState::START:
+
 		break;
 
 	case GameState::INGAME:
@@ -59,12 +60,12 @@ void SceneManager::SceneChange(GameState nextState)
 		curScene = gameScene;
 		break;
 
-	case GameState::END:
-		if (endScene == NULL)
-			endScene = new EndScene;
+	case GameState::BATTLE:
+		if (battleScene == NULL)
+			battleScene = new BattleScene;
 
-		timerId = TimerID::TM_END;
-		curScene = endScene;
+		timerId = TimerID::TM_BATTLE;
+		curScene = battleScene;
 		break;
 
 	default:

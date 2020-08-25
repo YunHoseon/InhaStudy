@@ -8,6 +8,10 @@ class Singleton
 
 public:
 	SceneManager *sceneManager;
+	HDC hdc;
+	HDC backHDC;
+	RECT rectView;
+
 	virtual ~Singleton() {};
 
 	static Singleton *GetInstance()

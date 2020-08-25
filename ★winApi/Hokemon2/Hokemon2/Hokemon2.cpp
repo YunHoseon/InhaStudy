@@ -10,6 +10,7 @@
 HINSTANCE hInst;                                // current instance
 WCHAR szTitle[MAX_LOADSTRING];                  // The title bar text
 WCHAR szWindowClass[MAX_LOADSTRING];            // the main window class name
+extern Singleton *singleton;
 
 // Forward declarations of functions included in this code module:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
@@ -98,6 +99,15 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message)
     {
+	case WM_CREATE:
+		singleton = Singleton::GetInstance();
+
+		singleton->sceneManager = new SceneManager;
+		singleton->sceneManager->hWnd = hWnd;
+		singleton->sceneManager->ManagerInit();
+
+		GetClientRect(hWnd, &(singleton->rectView));
+		break;
     case WM_COMMAND:
         {
             int wmId = LOWORD(wParam);
@@ -115,11 +125,24 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             }
         }
         break;
+
+	case WM_TIMER:
+		InvalidateRect(hWnd, NULL, TRUE);
+		break;
+
+	case WM_LBUTTONDOWN:
+		singleton->sceneManager->ManagerUpdate(message, wParam, lParam);
+		break;
+	case WM_KEYDOWN:
+		singleton->sceneManager->ManagerUpdate(message, wParam, lParam);
+		break;
+
     case WM_PAINT:
         {
             PAINTSTRUCT ps;
             HDC hdc = BeginPaint(hWnd, &ps);
-            // TODO: Add any drawing code that uses hdc here...
+
+			singleton->sceneManager->ManagerRender(hWnd, hdc);
             EndPaint(hWnd, &ps);
         }
         break;

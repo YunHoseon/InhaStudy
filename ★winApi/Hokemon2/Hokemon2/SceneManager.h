@@ -1,6 +1,6 @@
 #pragma once
 
-class Scene;			//클래스 전방선언
+class Scene;
 class StartScene;
 class GameScene;
 class BattleScene;

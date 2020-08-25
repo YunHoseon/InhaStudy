@@ -1,20 +1,24 @@
 #pragma once
 
+#define ROW 10
+#define COL 10
+enum class TileState;
+
 typedef struct Tile
 {
+	char cell;
 	TileState tileState;
-	int size;
-	POINT pt;
+	RECT collider;
 };
 
 class TileMap
 {
-	Tile map[100][100];
 public:
+	Tile map[COL][ROW];
+	int gap;
 	TileMap();
 	~TileMap();
 
-	/*getter setter*/
-
+	void DrawMap(HDC hdc);
 };
 

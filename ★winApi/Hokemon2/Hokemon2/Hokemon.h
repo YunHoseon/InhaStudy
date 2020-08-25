@@ -4,6 +4,8 @@ enum Type { normal, fire, water, grass, elec };
 
 typedef struct MonsterSkill
 {
+	unsigned int id;
+	int accuracy;
 	char sName[32];
 	unsigned int pp;
 	unsigned int MaxPp;
@@ -26,9 +28,10 @@ private:
 	unsigned int mLevel;
 	unsigned int mExp;
 
-	enum Type mType;
+	int nextEvol;			//다음 진화형태의 번호
+	enum Type mType[2];
 
-	MonsterSkill mskill[4];
+	MonsterSkill mSkill[4];
 
 public:
 	Hokemon();
@@ -70,18 +73,18 @@ public:
 
 	/*skill getter setter*/
 
-	char* GetsName(int skillNum) { return mskill[skillNum].sName; }
-	void SetsName(const char* _sName, int skillNum) { strcpy_s(mskill[skillNum].sName, _sName); }
+	char* GetsName(int skillNum) { return mSkill[skillNum].sName; }
+	void SetsName(const char* _sName, int skillNum) { strcpy_s(mSkill[skillNum].sName, _sName); }
 
-	unsigned int Getpp(int skillNum) { return mskill[skillNum].pp; }
-	void Setpp(unsigned int _pp, int skillNum) { mskill[skillNum].pp = _pp; }
+	unsigned int Getpp(int skillNum) { return mSkill[skillNum].pp; }
+	void Setpp(unsigned int _pp, int skillNum) { mSkill[skillNum].pp = _pp; }
 
-	unsigned int GetMaxPp(int skillNum) { return mskill[skillNum].MaxPp; }
-	void SetMaxPp(unsigned int _MaxPp, int skillNum) { mskill[skillNum].MaxPp = _MaxPp; }
+	unsigned int GetMaxPp(int skillNum) { return mSkill[skillNum].MaxPp; }
+	void SetMaxPp(unsigned int _MaxPp, int skillNum) { mSkill[skillNum].MaxPp = _MaxPp; }
 
-	int GetsDamage(int skillNum) { return mskill[skillNum].sDamage; }
-	void SetsDamage(int _sDamage, int skillNum) { mskill[skillNum].sDamage = _sDamage; }
+	int GetsDamage(int skillNum) { return mSkill[skillNum].sDamage; }
+	void SetsDamage(int _sDamage, int skillNum) { mSkill[skillNum].sDamage = _sDamage; }
 
-	enum Type GetsType(int skillNum) { return mskill[skillNum].sType; }
-	void SetsType(enum Type _sType, int skillNum) { mskill[skillNum].sType = _sType; }
+	enum Type GetsType(int skillNum) { return mSkill[skillNum].sType; }
+	void SetsType(enum Type _sType, int skillNum) { mSkill[skillNum].sType = _sType; }
 };
