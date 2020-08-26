@@ -1,129 +1,129 @@
 [{
-		"id": "001",
-		"accuracy": "95",
+		"id": 1,
+		"accuracy": 95,
 		"sName": "Tackle",
-		"pp": "35",
-		"MaxPp": "35",
-		"sDamage": "35",
-		"sType": "normal"
+		"pp": 35,
+		"MaxPp": 35,
+		"sDamage": 35,
+		"sType": 0
 	},
 
 	{
-		"id": "002",
-		"accuracy": "100",
+		"id": 2,
+		"accuracy": 100,
 		"sName": "Growl",
-		"pp": "40",
-		"MaxPp": "40",
-		"sDamage": "0",
-		"sType": "normal"
+		"pp": 40,
+		"MaxPp": 40,
+		"sDamage": 0,
+		"sType": 0
 	},
 
 	{
-		"id": "003",
-		"accuracy": "95",
+		"id": 3,
+		"accuracy": 95,
 		"sName": "Razor Leaf",
-		"pp": "25",
-		"MaxPp": "25",
-		"sDamage": "55",
-		"sType": "grass"
+		"pp": 25,
+		"MaxPp": 25,
+		"sDamage": 55,
+		"sType": 3
 	},
 
 	{
-		"id": "004",
-		"accuracy": "75",
+		"id": 4,
+		"accuracy": 75,
 		"sName": "PoisonPowder",
-		"pp": "35",
-		"MaxPp": "35",
-		"sDamage": "0",
-		"sType": "poison"
+		"pp": 35,
+		"MaxPp": 35,
+		"sDamage": 0,
+		"sType": 5
 	},
 
 	{
-		"id": "005",
-		"accuracy": "100",
+		"id": 5,
+		"accuracy": 100,
 		"sName": "Leer",
-		"pp": "30",
-		"MaxPp": "30",
-		"sDamage": "0",
-		"sType": "normal"
+		"pp": 30,
+		"MaxPp": 30,
+		"sDamage": 0,
+		"sType": 0
 	},
 
 	{
-		"id": "006",
-		"accuracy": "100",
+		"id": 6,
+		"accuracy": 100,
 		"sName": "SmokeScreen",
-		"pp": "20",
-		"MaxPp": "20",
-		"sDamage": "0",
-		"sType": "normal"
+		"pp": 20,
+		"MaxPp": 20,
+		"sDamage": 0,
+		"sType": 0
 	},
 
 	{
-		"id": "007",
-		"accuracy": "100",
+		"id": 7,
+		"accuracy": 100,
 		"sName": "Ember",
-		"pp": "25",
-		"MaxPp": "25",
-		"sDamage": "40",
-		"sType": "fire"
+		"pp": 25,
+		"MaxPp": 25,
+		"sDamage": 40,
+		"sType": 1
 	},
 
 	{
-		"id": "008",
-		"accuracy": "100",
+		"id": 8,
+		"accuracy": 100,
 		"sName": "Scratch",
-		"pp": "35",
-		"MaxPp": "35",
-		"sDamage": "40",
-		"sType": "normal"
+		"pp": 35,
+		"MaxPp": 35,
+		"sDamage": 40,
+		"sType": 0
 	},
 
 	{
-		"id": "009",
-		"accuracy": "100",
+		"id": 9,
+		"accuracy": 100,
 		"sName": "Water Gun",
-		"pp": "25",
-		"MaxPp": "25",
-		"sDamage": "40",
-		"sType": "water"
+		"pp": 25,
+		"MaxPp": 25,
+		"sDamage": 40,
+		"sType": 2
 	},
 
 	{
-		"id": "010",
-		"accuracy": "100",
+		"id": 10,
+		"accuracy": 100,
 		"sName": "Rage",
-		"pp": "20",
-		"MaxPp": "20",
-		"sDamage": "20",
-		"sType": "normal"
+		"pp": 20,
+		"MaxPp": 20,
+		"sDamage": 20,
+		"sType": 0
 	},
 
 	{
-		"id": "011",
-		"accuracy": "100",
+		"id": 11,
+		"accuracy": 100,
 		"sName": "Foresight",
-		"pp": "40",
-		"MaxPp": "40",
-		"sDamage": "0",
-		"sType": "normal"
+		"pp": 40,
+		"MaxPp": 40,
+		"sDamage": 0,
+		"sType": 0
 	},
 
 	{
-		"id": "012",
-		"accuracy": "100",
+		"id": 12,
+		"accuracy": 100,
 		"sName": "Defense Curl",
-		"pp": "40",
-		"MaxPp": "40",
-		"sDamage": "0",
-		"sType": "normal"
+		"pp": 40,
+		"MaxPp": 40,
+		"sDamage": 0,
+		"sType": 0
 	},
 
 	{
-		"id": "013",
-		"accuracy": "100",
+		"id": 13,
+		"accuracy": 100,
 		"sName": "Quick Attack",
-		"pp": "30",
-		"MaxPp": "30",
-		"sDamage": "40",
-		"sType": "normal"
+		"pp": 30,
+		"MaxPp": 30,
+		"sDamage": 40,
+		"sType": 0
 	}]

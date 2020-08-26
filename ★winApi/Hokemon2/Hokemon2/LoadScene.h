@@ -1,7 +1,7 @@
 #pragma once
 #include "Scene.h"
 
-#define TOKEN_COUNT 100    // 토큰의 최대 개수
+#define TOKEN_COUNT 200    // 토큰의 최대 개수
 
 enum MY_TOKEN_TYPE;
 
@@ -17,7 +17,7 @@ struct MY_TOKEN
 };
 
 // JSON 구조체
-struct JSON 
+struct JSON
 {
 	MY_TOKEN tokens[TOKEN_COUNT];    // 토큰 배열
 };
@@ -32,7 +32,7 @@ struct Hokemon_Data
 	int hGrd;
 	int hSpd;
 	int hNextEvol;
-	//타입
+	int hType;
 };
 
 struct Skill_Data
@@ -43,7 +43,7 @@ struct Skill_Data
 	int pp;
 	int MaxPp;
 	int sDamage;
-	//스킬 타입
+	int sType;
 };
 
 class LoadScene :
@@ -64,7 +64,8 @@ public:
 
 	char* ReadFile(char* fileName, int* readSize);
 	void ParseJSON(char* doc, int size, JSON* json);
-	void SaveData(JSON json);
+	void HokemonSaveData(JSON json);
+	void SkillSaveData(JSON json);
 	void FreeJSON(JSON* json);
 };
 

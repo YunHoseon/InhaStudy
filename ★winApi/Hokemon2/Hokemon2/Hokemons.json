@@ -6,7 +6,8 @@
 		"mAtk": 3,
 		"mGrd": 4,
 		"mSpd": 2,
-		"nextEvol": 153
+    "nextEvol": 153,
+    "mType": 3
 	},
 
 	{
@@ -17,7 +18,8 @@
 		"mAtk": 18,
 		"mGrd": 22,
 		"mSpd": 15,
-		"nextEvol": 154
+    "nextEvol": 154,
+    "mType": 3
 	},
 
 	{
@@ -28,7 +30,8 @@
 		"mAtk": 4,
 		"mGrd": 2,
     "mSpd": 4,
-    "nextEvol": 156
+    "nextEvol": 156,
+    "mType": 1
 	},
 
 	{
@@ -39,7 +42,8 @@
 		"mAtk": 3,
 		"mGrd": 4,
     "mSpd": 3,
-    "nextEvol": 159
+    "nextEvol": 159,
+    "mType": 2
 	},
 
 	{
@@ -50,5 +54,6 @@
 		"mAtk": 3,
 		"mGrd": 2,
     "mSpd": 3,
-    "nextEvol": 162
+    "nextEvol": 162,
+    "mType": 0
 	}]

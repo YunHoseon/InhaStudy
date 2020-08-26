@@ -18,19 +18,32 @@ void LoadScene::Init()
 
 void LoadScene::Update(UINT message, WPARAM wParam, LPARAM lParam)
 {
-	int size;			// 문서 크기
-	char *doc = ReadFile("Hokemons.json", &size);    // 파일에서 JSON 문서를 읽음, 문서 크기를 구함
-	if (doc == NULL)
+	int size[2];			// 문서 크기
+	char *doc = ReadFile("Hokemons.json", &size[0]);    // 파일에서 JSON 문서를 읽음, 문서 크기를 구함
+	char *sDoc = ReadFile("Skills.json", &size[1]);
+	if (doc == NULL || sDoc == NULL)
+	{
 		noneFile = true;
+		return;
+	}
+		
+	/* 포켓몬 파싱 */
+	JSON hJson;						// JSON 구조체 변수 선언 및 초기화
+	memset(&hJson, 0, sizeof(JSON));
+	ParseJSON(doc, size[0], &hJson);    // JSON 문서 파싱
+	HokemonSaveData(hJson);
 
-	JSON json;						// JSON 구조체 변수 선언 및 초기화
-	memset(&json, 0, sizeof(JSON));
-	ParseJSON(doc, size, &json);    // JSON 문서 파싱
-
-	SaveData(json);
-
-	FreeJSON(&json);    // json에 할당된 동적 메모리 해제
+	FreeJSON(&hJson);    // json에 할당된 동적 메모리 해제
 	free(doc);			// 문서 동적 메모리 해제
+
+	/* 스킬 파싱 */
+	JSON sJson;
+	memset(&sJson, 0, sizeof(JSON));
+	ParseJSON(sDoc, size[1], &sJson);
+	SkillSaveData(sJson);
+
+	FreeJSON(&sJson);
+	free(sDoc);
 
 	singleton->sceneManager->SceneChange(GameState::INGAME);
 }
@@ -172,28 +185,41 @@ void LoadScene::ParseJSON(char * doc, int size, JSON * json)
 	}
 }
 
-void LoadScene::SaveData(JSON json)
+void LoadScene::HokemonSaveData(JSON json)
 {
 	Hokemon_Data hData[5];
-	Skill_Data sData[13];
-
+	
 	for (int i = 0; i < 5; i++)
 	{
-		hData[i].hNum = json.tokens[1 + (i * 15 + i)].number;
-		strcpy_s(hData[i].hName, json.tokens[3 + (i * 15 + i)].string);
-		hData[i].hHp = json.tokens[5 + (i * 15 + i)].number;
-		hData[i].MaxHp = json.tokens[7 + (i * 15 + i)].number;
-		hData[i].hAtk = json.tokens[9 + (i * 15 + i)].number;
-		hData[i].hGrd = json.tokens[11 + (i * 15 + i)].number;
-		hData[i].hSpd = json.tokens[13 + (i * 15 + i)].number;
-		hData[i].hNextEvol = json.tokens[15 + (i * 15 + i)].number;
+		hData[i].hNum = json.tokens[1 + (i * 17 + i)].number;
+		strcpy_s(hData[i].hName, json.tokens[3 + (i * 17 + i)].string);
+		hData[i].hHp = json.tokens[5 + (i * 17 + i)].number;
+		hData[i].MaxHp = json.tokens[7 + (i * 17 + i)].number;
+		hData[i].hAtk = json.tokens[9 + (i * 17 + i)].number;
+		hData[i].hGrd = json.tokens[11 + (i * 17 + i)].number;
+		hData[i].hSpd = json.tokens[13 + (i * 17 + i)].number;
+		hData[i].hNextEvol = json.tokens[15 + (i * 17 + i)].number;
+		hData[i].hType = json.tokens[17 + (i * 17 + i)].number;
 
-		map_Hokemons.insert(make_pair(json.tokens[1 + (i * 15 + i)].number, hData[i]));
+		map_Hokemons.insert(make_pair(json.tokens[1 + (i * 17 + i)].number, hData[i]));
 	}
+}
+
+void LoadScene::SkillSaveData(JSON json)
+{
+	Skill_Data sData[13];
 
 	for (int i = 0; i < 13; i++)
 	{
-		//map_Skills.insert(make_pair(json.tokens[1 + (i * 15 + i)].number, sData[i]));
+		sData[i].id = json.tokens[1 + (i * 13 + i)].number;
+		sData[i].accuracy = json.tokens[3 + (i * 13 + i)].number;
+		strcpy_s(sData[i].sName, json.tokens[5 + (i * 13 + i)].string);
+		sData[i].pp = json.tokens[7 + (i * 13 + i)].number;
+		sData[i].MaxPp = json.tokens[9 + (i * 13 + i)].number;
+		sData[i].sDamage = json.tokens[11 + (i * 13 + i)].number;
+		sData[i].sType = json.tokens[13 + (i * 13 + i)].number;
+
+		map_Skills.insert(make_pair(json.tokens[1 + (i * 13 + i)].number, sData[i]));
 	}
 }
 
