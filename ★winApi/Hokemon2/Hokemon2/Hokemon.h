@@ -1,6 +1,6 @@
 #pragma once
 
-enum Type { normal, fire, water, grass, elec };
+enum Type { normal, fire, water, grass, elec, poison };
 
 typedef struct MonsterSkill
 {
@@ -62,8 +62,8 @@ public:
 	int GetmSpd() { return mSpd; }
 	void SetmSpd(int _mSpd) { mSpd = _mSpd; }
 
-	enum Type GetmType() { return mType; }
-	void SetmType(enum Type _mType) { mType = _mType; }
+	enum Type* GetmType(int _num) { return &mType[_num]; }
+	void SetmType(enum Type* _mType, int _num) { mType[_num] = *_mType; }
 
 	unsigned int GetmLevel() { return mLevel; }
 	void SetmLevel(const unsigned int _mLevel) { mLevel = _mLevel; }

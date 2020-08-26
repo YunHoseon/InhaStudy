@@ -127,7 +127,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         break;
 
 	case WM_TIMER:
-		InvalidateRect(hWnd, NULL, TRUE);
+		if(wParam == (int)TimerID::TM_RENDER)
+			InvalidateRect(hWnd, NULL, TRUE);
+		else if (wParam == (int)TimerID::TM_UPDATE)
+			singleton->sceneManager->ManagerUpdate(message, wParam, lParam);
 		break;
 
 	case WM_LBUTTONDOWN:

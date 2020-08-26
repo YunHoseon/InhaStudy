@@ -16,6 +16,8 @@
 #include <malloc.h>
 #include <memory.h>
 #include <tchar.h>
+#include <iostream>
+#include <map>
 
 // TODO: reference additional headers your program requires here
 #include "Hokemon.h"
@@ -25,6 +27,9 @@
 #include "SceneManager.h"
 #include "json/json.h"
 
-enum class GameState { NONE, START, INGAME, BATTLE };
-enum class TimerID { TM_START = 50, TM_INGAME, TM_BATTLE };
-enum class TileState { ROAD = 100, BUSH, BLOCK };
+enum class GameState { NONE = 0, LOAD, START, INGAME, BATTLE };
+enum class TimerID { TM_RENDER = 0, TM_UPDATE };
+enum class TileState { ROAD = 0, BUSH, BLOCK };
+enum MY_TOKEN_TYPE { TOKEN_STRING = 0, TOKEN_NUMBER };	//토큰 종류
+
+using namespace std;

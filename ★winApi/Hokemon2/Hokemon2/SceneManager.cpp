@@ -3,6 +3,7 @@
 
 #include "Scene.h"
 #include "StartScene.h"
+#include "LoadScene.h"
 #include "GameScene.h"
 #include "BattleScene.h"
 
@@ -11,6 +12,7 @@ extern Singleton *singleton;
 SceneManager::SceneManager()
 {
 	curScene = NULL;
+	loadScene = NULL;
 	gameScene = NULL;
 	battleScene = NULL;
 }
@@ -22,9 +24,9 @@ SceneManager::~SceneManager()
 void SceneManager::ManagerInit()
 {
 	gameState = GameState::START;
-	timerId = TimerID::TM_START;
 
-	SetTimer(hWnd, (int)timerId, 1000 / 30, NULL);
+	SetTimer(hWnd, (int)TimerID::TM_RENDER, 1000 / 30, NULL);
+	SetTimer(hWnd, (int)TimerID::TM_UPDATE, 1000 / 30, NULL);
 	curScene = startScene = new StartScene;
 	curScene->Init();
 }
@@ -51,12 +53,18 @@ void SceneManager::SceneChange(GameState nextState)
 	case GameState::START:
 
 		break;
+		
+	case GameState::LOAD:
+		if (loadScene == NULL)
+			loadScene = new LoadScene;
+
+		curScene = loadScene;
+		break;
 
 	case GameState::INGAME:
 		if (gameScene == NULL)
 			gameScene = new GameScene;
 
-		timerId = TimerID::TM_INGAME;
 		curScene = gameScene;
 		break;
 
@@ -64,7 +72,6 @@ void SceneManager::SceneChange(GameState nextState)
 		if (battleScene == NULL)
 			battleScene = new BattleScene;
 
-		timerId = TimerID::TM_BATTLE;
 		curScene = battleScene;
 		break;
 

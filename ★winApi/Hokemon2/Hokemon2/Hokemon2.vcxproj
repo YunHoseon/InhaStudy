@@ -145,6 +145,7 @@
     <ClInclude Include="GameScene.h" />
     <ClInclude Include="Hokemon.h" />
     <ClInclude Include="Hokemon2.h" />
+    <ClInclude Include="LoadScene.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="Scene.h" />
@@ -160,6 +161,7 @@
     <ClCompile Include="GameScene.cpp" />
     <ClCompile Include="Hokemon.cpp" />
     <ClCompile Include="Hokemon2.cpp" />
+    <ClCompile Include="LoadScene.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="SceneManager.cpp" />
@@ -178,6 +180,9 @@
   <ItemGroup>
     <Image Include="Hokemon2.ico" />
     <Image Include="small.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

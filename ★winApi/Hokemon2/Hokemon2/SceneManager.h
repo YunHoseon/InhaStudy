@@ -2,6 +2,7 @@
 
 class Scene;
 class StartScene;
+class LoadScene;
 class GameScene;
 class BattleScene;
 
@@ -15,6 +16,7 @@ public:
 
 	Scene *curScene;
 	StartScene *startScene;
+	LoadScene *loadScene;
 	GameScene *gameScene;
 	BattleScene *battleScene;
 

@@ -34,7 +34,7 @@ void StartScene::Update(UINT message, WPARAM wParam, LPARAM lParam)
 			my > startBtn.top && my < startBtn.bottom)
 		{
 			startGame = true;
-			singleton->sceneManager->SceneChange(GameState::INGAME);
+			singleton->sceneManager->SceneChange(GameState::LOAD);
 
 		}
 		else if (mx > loadBtn.left && mx < loadBtn.right &&
@@ -46,6 +46,7 @@ void StartScene::Update(UINT message, WPARAM wParam, LPARAM lParam)
 			my > quitBtn.top && my < quitBtn.bottom)
 			PostQuitMessage(0);
 		break;
+
 	default:
 		break;
 	}

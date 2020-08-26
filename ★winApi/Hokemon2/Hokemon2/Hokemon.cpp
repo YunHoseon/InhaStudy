@@ -3,7 +3,7 @@
 
 Hokemon::Hokemon()	
 {
-	//파싱해서 포켓몬마다 다르게 설정하기
+	mExp = 0;
 }
 
 Hokemon::~Hokemon()

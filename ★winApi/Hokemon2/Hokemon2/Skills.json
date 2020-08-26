@@ -1,0 +1,129 @@
+[{
+		"id": "001",
+		"accuracy": "95",
+		"sName": "Tackle",
+		"pp": "35",
+		"MaxPp": "35",
+		"sDamage": "35",
+		"sType": "normal"
+	},
+
+	{
+		"id": "002",
+		"accuracy": "100",
+		"sName": "Growl",
+		"pp": "40",
+		"MaxPp": "40",
+		"sDamage": "0",
+		"sType": "normal"
+	},
+
+	{
+		"id": "003",
+		"accuracy": "95",
+		"sName": "Razor Leaf",
+		"pp": "25",
+		"MaxPp": "25",
+		"sDamage": "55",
+		"sType": "grass"
+	},
+
+	{
+		"id": "004",
+		"accuracy": "75",
+		"sName": "PoisonPowder",
+		"pp": "35",
+		"MaxPp": "35",
+		"sDamage": "0",
+		"sType": "poison"
+	},
+
+	{
+		"id": "005",
+		"accuracy": "100",
+		"sName": "Leer",
+		"pp": "30",
+		"MaxPp": "30",
+		"sDamage": "0",
+		"sType": "normal"
+	},
+
+	{
+		"id": "006",
+		"accuracy": "100",
+		"sName": "SmokeScreen",
+		"pp": "20",
+		"MaxPp": "20",
+		"sDamage": "0",
+		"sType": "normal"
+	},
+
+	{
+		"id": "007",
+		"accuracy": "100",
+		"sName": "Ember",
+		"pp": "25",
+		"MaxPp": "25",
+		"sDamage": "40",
+		"sType": "fire"
+	},
+
+	{
+		"id": "008",
+		"accuracy": "100",
+		"sName": "Scratch",
+		"pp": "35",
+		"MaxPp": "35",
+		"sDamage": "40",
+		"sType": "normal"
+	},
+
+	{
+		"id": "009",
+		"accuracy": "100",
+		"sName": "Water Gun",
+		"pp": "25",
+		"MaxPp": "25",
+		"sDamage": "40",
+		"sType": "water"
+	},
+
+	{
+		"id": "010",
+		"accuracy": "100",
+		"sName": "Rage",
+		"pp": "20",
+		"MaxPp": "20",
+		"sDamage": "20",
+		"sType": "normal"
+	},
+
+	{
+		"id": "011",
+		"accuracy": "100",
+		"sName": "Foresight",
+		"pp": "40",
+		"MaxPp": "40",
+		"sDamage": "0",
+		"sType": "normal"
+	},
+
+	{
+		"id": "012",
+		"accuracy": "100",
+		"sName": "Defense Curl",
+		"pp": "40",
+		"MaxPp": "40",
+		"sDamage": "0",
+		"sType": "normal"
+	},
+
+	{
+		"id": "013",
+		"accuracy": "100",
+		"sName": "Quick Attack",
+		"pp": "30",
+		"MaxPp": "30",
+		"sDamage": "40",
+		"sType": "normal"
+	}]
