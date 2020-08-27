@@ -4,13 +4,12 @@ class SceneManager;
 
 class Singleton
 {
-	Singleton() {};
+	Singleton() { movable = true; };
 
 public:
 	SceneManager *sceneManager;
-	HDC hdc;
-	HDC backHDC;
 	RECT rectView;
+	bool movable;
 
 	virtual ~Singleton() {};
 

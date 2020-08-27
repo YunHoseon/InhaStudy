@@ -144,8 +144,16 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
         {
             PAINTSTRUCT ps;
             HDC hdc = BeginPaint(hWnd, &ps);
+			HDC backHdc = CreateCompatibleDC(hdc);
+			HBITMAP backHbit = CreateCompatibleBitmap(hdc, ps.rcPaint.right - ps.rcPaint.left, ps.rcPaint.bottom - ps.rcPaint.top);
+			SelectObject(backHdc, backHbit);
 
-			singleton->sceneManager->ManagerRender(hWnd, hdc);
+			singleton->sceneManager->ManagerRender(hWnd, backHdc);
+
+			BitBlt(hdc, 0, 0, ps.rcPaint.right - ps.rcPaint.left, ps.rcPaint.bottom - ps.rcPaint.top, backHdc, 0, 0, SRCCOPY);
+			
+			DeleteDC(backHdc);
+			DeleteObject(backHbit);
             EndPaint(hWnd, &ps);
         }
         break;

@@ -1,7 +1,7 @@
 #pragma once
 
-#define ROW 10
-#define COL 10
+#define ROW 20
+#define COL 20
 enum class TileState;
 
 typedef struct Tile
@@ -20,5 +20,6 @@ public:
 	~TileMap();
 
 	void DrawMap(HDC hdc);
+	void UpdateMap();
 };
 

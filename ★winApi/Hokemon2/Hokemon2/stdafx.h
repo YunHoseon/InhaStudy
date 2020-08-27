@@ -25,6 +25,7 @@
 #include "TileMap.h"
 #include "Singleton.h"
 #include "SceneManager.h"
+#include "Bitmap.h"
 #include "json/json.h"
 
 enum class GameState { NONE = 0, LOAD, START, INGAME, BATTLE };

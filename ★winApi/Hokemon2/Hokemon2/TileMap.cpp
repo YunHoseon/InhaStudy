@@ -1,35 +1,50 @@
 #include "stdafx.h"
 #include "TileMap.h"
 
+#define SPEED 5
+#define POSX	-380
+#define POSY	-100
+
+extern Singleton *singleton;
 
 TileMap::TileMap()
 {
 	char tmpMap[COL][ROW+1] =
 	{
-		{ "kkkkkkkkkk" },
-		{ "k00000000k" },
-		{ "k00000000k" },
-		{ "k00001000k" },
-		{ "k00000000k" },
-		{ "k00000000k" },
-		{ "k01000000k" },
-		{ "k00000000k" },
-		{ "k00000000k" },
-		{ "kkkkkkkkkk" },
+		{ "kkkkkkkkkkkkkkkkkkkk" },
+		{ "k0000000000000000kkk" },
+		{ "k0000000000000000kkk" },
+		{ "k0000000000000000kkk" },
+		{ "k0000000000000000kkk" },
+		{ "k0000000000000000kkk" },
+		{ "k0000000000000000kkk" },
+		{ "k0000000000000000kkk" },
+		{ "k0000000000000000kkk" },
+		{ "k00000000000000000kk" },
+		{ "k00000000000000000kk" },
+		{ "k00000000000000000kk" },
+		{ "k00000000000000000kk" },
+		{ "k00000000000000000kk" },
+		{ "k00000000000000000kk" },
+		{ "k00000000000000000kk" },
+		{ "k00000000000000000kk" },
+		{ "k00000000000000000kk" },
+		{ "k00000000000000000kk" },
+		{ "kkkkkkkkkkkkkkkkkkkk" },
 	};
 
-	gap = 20;
+	gap = 50;
 
-	for (int i = 0; i < COL; i++)
+	for (int i = 0; i < COL-5; i++)		//15
 	{
-		for (int j = 0; j < ROW; j++)
+		for (int j = 0; j < ROW-1; j++)	//19
 		{
 			map[i][j].cell = tmpMap[i][j];
 
-			map[i][j].collider.left = j * gap;
-			map[i][j].collider.top = i * gap;
-			map[i][j].collider.right = gap + (j * gap);
-			map[i][j].collider.bottom = gap + (i * gap);
+			map[i][j].collider.left = j * gap + POSX;
+			map[i][j].collider.top = i * gap + POSY;
+			map[i][j].collider.right = gap + (j * gap) + POSX;
+			map[i][j].collider.bottom = gap + (i * gap) + POSY;
 
 			switch (map[i][j].cell)
 			{
@@ -46,8 +61,6 @@ TileMap::TileMap()
 			default:
 				break;
 			}
-			//map[i][j].cPt.x = 20 + (j * gap);
-			//map[i][j].cPt.y = 20 + (i * gap);
 		}
 	}
 }
@@ -58,6 +71,7 @@ TileMap::~TileMap()
 
 void TileMap::DrawMap(HDC hdc)
 {
+	UpdateMap();
 	HBRUSH oldBrush, roadBrush, bushBrush, blockBrush;
 	roadBrush = CreateSolidBrush(RGB(240, 240, 240));
 	bushBrush = CreateSolidBrush(RGB(110, 215, 110));
@@ -91,4 +105,40 @@ void TileMap::DrawMap(HDC hdc)
 	DeleteObject(roadBrush);
 	DeleteObject(bushBrush);
 	DeleteObject(blockBrush);
+}
+
+void TileMap::UpdateMap()
+{
+	static int colliderMoveX = 0, colliderMoveY = 0;
+
+	if (singleton->movable == true)
+	{
+		if (GetKeyState(VK_LEFT) & 0x8000)
+		{
+			colliderMoveX += SPEED;
+		}
+		else if (GetKeyState(VK_RIGHT) & 0x8000)
+		{
+			colliderMoveX -= SPEED;
+		}
+		else if (GetKeyState(VK_UP) & 0x8000)
+		{
+			colliderMoveY += SPEED;
+		}
+		else if (GetKeyState(VK_DOWN) & 0x8000)
+		{
+			colliderMoveY -= SPEED;
+		}
+
+		for (int i = 0; i < COL - 5; i++)
+		{
+			for (int j = 0; j < ROW - 1; j++)
+			{
+				map[i][j].collider.left = j * gap + POSX + colliderMoveX;
+				map[i][j].collider.top = i * gap + POSY + colliderMoveY;
+				map[i][j].collider.right = gap + (j * gap) + POSX + colliderMoveX;
+				map[i][j].collider.bottom = gap + (i * gap) + POSY + colliderMoveY;
+			}
+		}
+	}
 }

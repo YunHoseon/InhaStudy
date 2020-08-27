@@ -3,6 +3,7 @@
 
 extern Singleton *singleton;
 extern TileMap tileMap;
+extern Bitmap bitmap;
 
 GameScene::GameScene()
 {
@@ -15,7 +16,7 @@ GameScene::~GameScene()
 
 void GameScene::Init()
 {
-
+	bitmap.CreateBitmap();
 }
 
 void GameScene::Update(UINT message, WPARAM wParam, LPARAM lParam)
@@ -25,20 +26,21 @@ void GameScene::Update(UINT message, WPARAM wParam, LPARAM lParam)
 
 void GameScene::Render(HWND hWnd, HDC hdc)
 {
-	//static HBITMAP backHBit = NULL;
-
-	//if (backHBit == NULL)
-	//{
-	//	singleton->backHDC = CreateCompatibleDC(hdc);
-	//	backHBit = CreateCompatibleBitmap(hdc, bitmap->bitBack.bmWidth + 15, bitmap->bitBack.bmHeight + 20);
-	//	SelectObject(singleton->backHDC, backHBit);
-	//}
-	//bitmap->DrawBitmap(hWnd, singleton->backHDC);
-	//DrawBox(hWnd, singleton->backHDC);
-
-	//BitBlt(hdc, 15, 20, bitmap->bitBack.bmWidth, bitmap->bitBack.bmHeight, singleton->backHDC, 15, 20, SRCCOPY);
-
 	tileMap.DrawMap(hdc);
+	bitmap.DrawBitmap(hWnd, hdc);
+
+	//격자 그리기
+	HBRUSH myBrush = (HBRUSH)GetStockObject(NULL_BRUSH);
+	HBRUSH oldBrush = (HBRUSH)SelectObject(hdc, myBrush);
+
+	for (int i = 0; i < COL; i++)
+	{
+		for (int j = 0; j < ROW; j++)
+			Rectangle(hdc, tileMap.map[i][j].collider.left, tileMap.map[i][j].collider.top, tileMap.map[i][j].collider.right, tileMap.map[i][j].collider.bottom);
+	}
+	SelectObject(hdc, oldBrush);
+	DeleteObject(myBrush);
+
 	player->DrawPlayer(hdc);
 }
 

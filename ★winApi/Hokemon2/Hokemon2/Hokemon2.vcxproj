@@ -142,6 +142,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BattleScene.h" />
+    <ClInclude Include="Bitmap.h" />
     <ClInclude Include="GameScene.h" />
     <ClInclude Include="Hokemon.h" />
     <ClInclude Include="Hokemon2.h" />
@@ -158,6 +159,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="BattleScene.cpp" />
+    <ClCompile Include="Bitmap.cpp" />
     <ClCompile Include="GameScene.cpp" />
     <ClCompile Include="Hokemon.cpp" />
     <ClCompile Include="Hokemon2.cpp" />
