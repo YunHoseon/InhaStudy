@@ -27,7 +27,7 @@ void Player::UpdatePlayer(UINT message, WPARAM wParam, LPARAM lParam)
 	if (GetKeyState(VK_LEFT) & 0x8000)
 	{
 		curPos.x -= speed;
-		if (tileMap.map[curPos.y / tileMap.gap][curPos.x / tileMap.gap].cell == 'k')
+		if (tileMap.map[(curPos.y - POSY) / tileMap.gap][(curPos.x - POSX) / tileMap.gap].cell == 'k')
 		{
 			curPos = pt;
 			singleton->movable = false;
@@ -39,7 +39,7 @@ void Player::UpdatePlayer(UINT message, WPARAM wParam, LPARAM lParam)
 	else if (GetKeyState(VK_RIGHT) & 0x8000)
 	{
 		curPos.x += speed;
-		if (tileMap.map[curPos.y / tileMap.gap][curPos.x / tileMap.gap].cell == 'k')
+		if (tileMap.map[(curPos.y - POSY) / tileMap.gap][(curPos.x - POSX) / tileMap.gap].cell == 'k')
 		{
 			curPos = pt;
 			singleton->movable = false;
@@ -51,7 +51,7 @@ void Player::UpdatePlayer(UINT message, WPARAM wParam, LPARAM lParam)
 	else if (GetKeyState(VK_UP) & 0x8000)
 	{
 		curPos.y -= speed;
-		if (tileMap.map[curPos.y / tileMap.gap][curPos.x / tileMap.gap].cell == 'k')
+		if (tileMap.map[(curPos.y - POSY) / tileMap.gap][(curPos.x - POSX) / tileMap.gap].cell == 'k')
 		{
 			curPos = pt;
 			singleton->movable = false;
@@ -63,7 +63,7 @@ void Player::UpdatePlayer(UINT message, WPARAM wParam, LPARAM lParam)
 	else if (GetKeyState(VK_DOWN) & 0x8000)
 	{
 		curPos.y += speed;
-		if (tileMap.map[curPos.y / tileMap.gap][curPos.x / tileMap.gap].cell == 'k')
+		if (tileMap.map[(curPos.y - POSY) / tileMap.gap][(curPos.x - POSX) / tileMap.gap].cell == 'k')
 		{
 			curPos = pt;
 			singleton->movable = false;

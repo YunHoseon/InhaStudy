@@ -25,8 +25,11 @@
 #include "TileMap.h"
 #include "Singleton.h"
 #include "SceneManager.h"
-#include "Bitmap.h"
+//#include "Bitmap.h"
 #include "json/json.h"
+
+#define POSX	-380
+#define POSY	-100
 
 enum class GameState { NONE = 0, LOAD, START, INGAME, BATTLE };
 enum class TimerID { TM_RENDER = 0, TM_UPDATE };

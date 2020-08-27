@@ -2,8 +2,6 @@
 #include "TileMap.h"
 
 #define SPEED 5
-#define POSX	-380
-#define POSY	-100
 
 extern Singleton *singleton;
 
