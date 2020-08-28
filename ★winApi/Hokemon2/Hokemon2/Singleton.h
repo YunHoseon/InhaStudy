@@ -2,7 +2,7 @@
 
 class SceneManager;
 
-class Singleton
+class Singleton		//GameManager·Î Áþ±â
 {
 	Singleton() { movable = true; };
 

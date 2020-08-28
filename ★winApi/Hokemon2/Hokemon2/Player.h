@@ -6,11 +6,11 @@ class Player
 	char pId[32];
 	POINT pt;
 	Hokemon myMonster[6];
-
 	int speed;
-	RECT playerCollider;
 
 public:
+	RECT playerCollider;
+
 	Player();
 	~Player();
 

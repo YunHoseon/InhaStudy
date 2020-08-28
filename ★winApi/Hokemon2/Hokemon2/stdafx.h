@@ -24,8 +24,9 @@
 #include "Player.h"
 #include "TileMap.h"
 #include "Singleton.h"
+#include "HokemonDB.h"
 #include "SceneManager.h"
-//#include "Bitmap.h"
+#include "Bitmap.h"
 #include "json/json.h"
 
 #define POSX	-380
@@ -36,4 +37,4 @@ enum class TimerID { TM_RENDER = 0, TM_UPDATE };
 enum class TileState { ROAD = 0, BUSH, BLOCK };
 enum MY_TOKEN_TYPE { TOKEN_STRING = 0, TOKEN_NUMBER };	//토큰 종류
 
-using namespace std;
+//using namespace std;

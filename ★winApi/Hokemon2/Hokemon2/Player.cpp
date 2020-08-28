@@ -21,63 +21,46 @@ Player::~Player()
 
 void Player::UpdatePlayer(UINT message, WPARAM wParam, LPARAM lParam)
 {
+	/*RECT intersectRc;
 	POINT curPos;
 	curPos = pt;
+	RECT tmpPlayerCol;
 
-	if (GetKeyState(VK_LEFT) & 0x8000)
+
+	tmpPlayerCol.left = pt.x - 20;
+	tmpPlayerCol.top = pt.y - 25;
+	tmpPlayerCol.right = pt.x + 20;
+	tmpPlayerCol.bottom = pt.y + 25;
+
+	if (GetKeyState(VK_LEFT) & 0x8000 || (GetKeyState(VK_RIGHT) & 0x8000) || 
+		(GetKeyState(VK_UP) & 0x8000) || (GetKeyState(VK_DOWN) & 0x8000))
 	{
-		curPos.x -= speed;
-		if (tileMap.map[(curPos.y - POSY) / tileMap.gap][(curPos.x - POSX) / tileMap.gap].cell == 'k')
+		for (int i = 0; i < COL - 5; i++)		//15
 		{
-			curPos = pt;
-			singleton->movable = false;
+			for (int j = 0; j < ROW - 1; j++)	//19
+			{
+				if (IntersectRect(&intersectRc, &tmpPlayerCol, &tileMap.map[i][j].collider) == true
+					&& tileMap.map[i][j].cell == 'k')
+				{
+					curPos = pt;
+					singleton->movable = false;
+					i = COL;
+					break;
+				}
+				else
+					singleton->movable = true;
+			}
 		}
-		else
-			singleton->movable = true;
-		curPos.x += speed;
 	}
-	else if (GetKeyState(VK_RIGHT) & 0x8000)
-	{
-		curPos.x += speed;
-		if (tileMap.map[(curPos.y - POSY) / tileMap.gap][(curPos.x - POSX) / tileMap.gap].cell == 'k')
-		{
-			curPos = pt;
-			singleton->movable = false;
-		}
-		else
-			singleton->movable = true;
-		curPos.x -= speed;
-	}
-	else if (GetKeyState(VK_UP) & 0x8000)
-	{
-		curPos.y -= speed;
-		if (tileMap.map[(curPos.y - POSY) / tileMap.gap][(curPos.x - POSX) / tileMap.gap].cell == 'k')
-		{
-			curPos = pt;
-			singleton->movable = false;
-		}
-		else
-			singleton->movable = true;
-		curPos.y += speed;
-	}
-	else if (GetKeyState(VK_DOWN) & 0x8000)
-	{
-		curPos.y += speed;
-		if (tileMap.map[(curPos.y - POSY) / tileMap.gap][(curPos.x - POSX) / tileMap.gap].cell == 'k')
-		{
-			curPos = pt;
-			singleton->movable = false;
-		}
-		else
-			singleton->movable = true;
-		curPos.y -= speed;
-	}
+
 	pt = curPos;
-
-	playerCollider.left = pt.x - 20;
-	playerCollider.top = pt.y - 25;
-	playerCollider.right = pt.x + 20;
-	playerCollider.bottom = pt.y + 25;
+	if (singleton->movable == true)
+	{
+		playerCollider.left = pt.x - 20;
+		playerCollider.top = pt.y - 25;
+		playerCollider.right = pt.x + 20;
+		playerCollider.bottom = pt.y + 25;
+	}*/
 }
 
 void Player::DrawPlayer(HDC hdc)

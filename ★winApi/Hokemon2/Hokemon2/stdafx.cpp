@@ -7,6 +7,7 @@
 // TODO: reference any additional headers you need in STDAFX.H
 // and not in this file
 Singleton *singleton;
-Singleton *HokemonDB;
+HokemonDB *hokemonDB;
+Player player;
 TileMap tileMap;
-//Bitmap bitmap;
+Bitmap bitmap;

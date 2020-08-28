@@ -10,7 +10,9 @@
 HINSTANCE hInst;                                // current instance
 WCHAR szTitle[MAX_LOADSTRING];                  // The title bar text
 WCHAR szWindowClass[MAX_LOADSTRING];            // the main window class name
+
 extern Singleton *singleton;
+extern HokemonDB *hokemonDB;
 
 // Forward declarations of functions included in this code module:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
@@ -101,10 +103,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     {
 	case WM_CREATE:
 		singleton = Singleton::GetInstance();
+		hokemonDB = HokemonDB::GetInstance();
 
 		singleton->sceneManager = new SceneManager;
 		singleton->sceneManager->hWnd = hWnd;
 		singleton->sceneManager->ManagerInit();
+
+		hokemonDB = new HokemonDB;
 
 		GetClientRect(hWnd, &(singleton->rectView));
 		break;

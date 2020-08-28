@@ -2,10 +2,15 @@
 #include "LoadScene.h"
 
 extern Singleton *singleton;
+extern HokemonDB *hokemonDB;
 
 LoadScene::LoadScene()
 {
 	noneFile = false;
+
+	rc_chikorita = { 120, 210, 180, 240 };
+	rc_Cyndaquil = { 270, 210, 330, 240 };
+	rc_Totodile = { 420, 210, 480, 240 };
 }
 
 LoadScene::~LoadScene()
@@ -18,7 +23,7 @@ void LoadScene::Init()
 
 void LoadScene::Update(UINT message, WPARAM wParam, LPARAM lParam)
 {
-	int size[2];			// 문서 크기
+	int size[2];										// 문서 크기
 	char *doc = ReadFile("Hokemons.json", &size[0]);    // 파일에서 JSON 문서를 읽음, 문서 크기를 구함
 	char *sDoc = ReadFile("Skills.json", &size[1]);
 	if (doc == NULL || sDoc == NULL)
@@ -28,7 +33,7 @@ void LoadScene::Update(UINT message, WPARAM wParam, LPARAM lParam)
 	}
 		
 	/* 포켓몬 파싱 */
-	JSON hJson;						// JSON 구조체 변수 선언 및 초기화
+	JSON hJson;							// JSON 구조체 변수 선언 및 초기화
 	memset(&hJson, 0, sizeof(JSON));
 	ParseJSON(doc, size[0], &hJson);    // JSON 문서 파싱
 	HokemonSaveData(hJson);
@@ -45,15 +50,51 @@ void LoadScene::Update(UINT message, WPARAM wParam, LPARAM lParam)
 	FreeJSON(&sJson);
 	free(sDoc);
 
-	singleton->sceneManager->SceneChange(GameState::INGAME);
+	static int mx, my;
+
+	switch (message)
+	{
+	case WM_LBUTTONDOWN:
+		mx = LOWORD(lParam);
+		my = HIWORD(lParam);
+
+		if (mx > rc_chikorita.left && mx < rc_chikorita.right &&
+			my > rc_chikorita.top && my < rc_chikorita.bottom)
+		{
+
+		}
+		else if (mx > rc_Cyndaquil.left && mx < rc_Cyndaquil.right &&
+			my > rc_Cyndaquil.top && my < rc_Cyndaquil.bottom)
+		{
+
+		}
+		else if (mx > rc_Totodile.left && mx < rc_Totodile.right &&
+			my > rc_Totodile.top && my < rc_Totodile.bottom)
+		{
+
+		}
+		break;
+
+	default:
+		break;
+	}
+
+	//singleton->sceneManager->SceneChange(GameState::INGAME);
 }
 
 void LoadScene::Render(HWND hWnd, HDC hdc)
 {
-	if (noneFile)
+	/*if (noneFile)
 		TextOut(hdc, 100, 100, L"file not found", 15);
 	else
-		TextOut(hdc, 100, 100, L"file Loading...", 15);
+		TextOut(hdc, 100, 100, L"file Loading...", 15);*/
+
+	Rectangle(hdc, 120, 210, 180, 240);
+	DrawText(hdc, _T("치코리타"), _tcslen(_T("치코리타")), &rc_chikorita, DT_SINGLELINE | DT_CENTER | DT_VCENTER);
+	Rectangle(hdc, 270, 210, 330, 240);
+	DrawText(hdc, _T("브케인"), _tcslen(_T("브케인")), &rc_Cyndaquil, DT_SINGLELINE | DT_CENTER | DT_VCENTER);
+	Rectangle(hdc, 420, 210, 480, 240);
+	DrawText(hdc, _T("리아코"), _tcslen(_T("리아코")), &rc_Totodile, DT_SINGLELINE | DT_CENTER | DT_VCENTER);
 }
 
 void LoadScene::Free(HWND hWnd)
@@ -201,7 +242,7 @@ void LoadScene::HokemonSaveData(JSON json)
 		hData[i].hNextEvol = json.tokens[15 + (i * 17 + i)].number;
 		hData[i].hType = json.tokens[17 + (i * 17 + i)].number;
 
-		map_Hokemons.insert(make_pair(json.tokens[1 + (i * 17 + i)].number, hData[i]));
+		hokemonDB->map_Hokemons.insert(std::make_pair(json.tokens[1 + (i * 17 + i)].number, hData[i]));
 	}
 }
 
@@ -219,7 +260,7 @@ void LoadScene::SkillSaveData(JSON json)
 		sData[i].sDamage = json.tokens[11 + (i * 13 + i)].number;
 		sData[i].sType = json.tokens[13 + (i * 13 + i)].number;
 
-		map_Skills.insert(make_pair(json.tokens[1 + (i * 13 + i)].number, sData[i]));
+		hokemonDB->map_Skills.insert(std::make_pair(json.tokens[1 + (i * 13 + i)].number, sData[i]));
 	}
 }
 

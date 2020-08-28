@@ -22,37 +22,15 @@ struct JSON
 	MY_TOKEN tokens[TOKEN_COUNT];    // 토큰 배열
 };
 
-struct Hokemon_Data
-{
-	int hNum;
-	char hName[16];
-	int hHp;
-	int MaxHp;
-	int hAtk;
-	int hGrd;
-	int hSpd;
-	int hNextEvol;
-	int hType;
-};
-
-struct Skill_Data
-{
-	int id;
-	int accuracy;
-	char sName[32];
-	int pp;
-	int MaxPp;
-	int sDamage;
-	int sType;
-};
-
 class LoadScene :
 	public Scene
 {
 public:
 	bool noneFile;
-	map<int, Hokemon_Data> map_Hokemons;
-	map<int, Skill_Data> map_Skills;
+
+	RECT rc_chikorita;
+	RECT rc_Cyndaquil;
+	RECT rc_Totodile;
 
 	LoadScene();
 	~LoadScene();

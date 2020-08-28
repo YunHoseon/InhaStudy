@@ -4,6 +4,7 @@
 #define SPEED 5
 
 extern Singleton *singleton;
+extern Player player;
 
 TileMap::TileMap()
 {
@@ -95,7 +96,6 @@ void TileMap::DrawMap(HDC hdc)
 			default:
 				break;
 			}
-
 			Rectangle(hdc, map[i][j].collider.left, map[i][j].collider.top, map[i][j].collider.right, map[i][j].collider.bottom);
 			SelectObject(hdc, oldBrush);
 		}
@@ -107,36 +107,58 @@ void TileMap::DrawMap(HDC hdc)
 
 void TileMap::UpdateMap()
 {
+	RECT intersectRc;
+	RECT tmpMapCol;
+
 	static int colliderMoveX = 0, colliderMoveY = 0;
+	int tmpMoveX, tmpMoveY;
+	tmpMoveX = colliderMoveX;
+	tmpMoveY = colliderMoveY;
 
-	if (singleton->movable == true)
-	{
 		if (GetKeyState(VK_LEFT) & 0x8000)
-		{
 			colliderMoveX += SPEED;
-		}
 		else if (GetKeyState(VK_RIGHT) & 0x8000)
-		{
 			colliderMoveX -= SPEED;
-		}
 		else if (GetKeyState(VK_UP) & 0x8000)
-		{
 			colliderMoveY += SPEED;
-		}
 		else if (GetKeyState(VK_DOWN) & 0x8000)
-		{
 			colliderMoveY -= SPEED;
-		}
+		else
+			return;
+	
+	for (int i = 0; i < COL - 5; i++)
+	{
+		for (int j = 0; j < ROW - 1; j++)
+		{
+			tmpMapCol.left = j * gap + POSX + colliderMoveX;
+			tmpMapCol.top = i * gap + POSY + colliderMoveY;
+			tmpMapCol.right = gap + (j * gap) + POSX + colliderMoveX;
+			tmpMapCol.bottom = gap + (i * gap) + POSY + colliderMoveY;
 
+			if (map[i][j].cell == 'k' && IntersectRect(&intersectRc, &tmpMapCol, &player.playerCollider))
+			{
+				singleton->movable = false;
+				colliderMoveX = tmpMoveX;
+				colliderMoveY = tmpMoveY;
+				return;
+			}
+		}
+	}
+
+	singleton->movable = true;
+	if (singleton->movable)
+	{
 		for (int i = 0; i < COL - 5; i++)
 		{
 			for (int j = 0; j < ROW - 1; j++)
 			{
-				map[i][j].collider.left = j * gap + POSX + colliderMoveX;
-				map[i][j].collider.top = i * gap + POSY + colliderMoveY;
-				map[i][j].collider.right = gap + (j * gap) + POSX + colliderMoveX;
-				map[i][j].collider.bottom = gap + (i * gap) + POSY + colliderMoveY;
+				tmpMapCol.left = j * gap + POSX + colliderMoveX;
+				tmpMapCol.top = i * gap + POSY + colliderMoveY;
+				tmpMapCol.right = gap + (j * gap) + POSX + colliderMoveX;
+				tmpMapCol.bottom = gap + (i * gap) + POSY + colliderMoveY;
+				map[i][j].collider = tmpMapCol;
 			}
 		}
 	}
+	
 }
