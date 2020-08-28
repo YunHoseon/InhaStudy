@@ -19,6 +19,9 @@ LoadScene::~LoadScene()
 
 void LoadScene::Init()
 {
+	Hokemon *chikorita = new Hokemon;
+	Hokemon *cyndaquil = new Hokemon;
+	Hokemon *totodile = new Hokemon;
 }
 
 void LoadScene::Update(UINT message, WPARAM wParam, LPARAM lParam)
@@ -61,7 +64,7 @@ void LoadScene::Update(UINT message, WPARAM wParam, LPARAM lParam)
 		if (mx > rc_chikorita.left && mx < rc_chikorita.right &&
 			my > rc_chikorita.top && my < rc_chikorita.bottom)
 		{
-
+			//chikorita->
 		}
 		else if (mx > rc_Cyndaquil.left && mx < rc_Cyndaquil.right &&
 			my > rc_Cyndaquil.top && my < rc_Cyndaquil.bottom)

@@ -26,7 +26,6 @@ struct Skill_Data
 
 class HokemonDB
 {
-	
 public:
 	std::map<int, Hokemon_Data> map_Hokemons;
 	std::map<int, Skill_Data> map_Skills;
