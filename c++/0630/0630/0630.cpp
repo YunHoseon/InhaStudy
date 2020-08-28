@@ -41,7 +41,7 @@ void Rec()
 {
 	double width, height;
 
-	cout << "사각형의 높이와 넓이를 입력하세요 : ";
+	cout << "사각형의 높이와 가로 길이를 입력하세요 : ";
 	cin >> height >> width;
 
 	Rectangle2 rec2(width, height);
@@ -50,12 +50,27 @@ void Rec()
 	cout << "사각형의 둘레 : " << rec2.GetPerimeter() << endl;
 }
 
-//int main()
-//{
-//	Tri();
-//	cout << endl;
-//	Rec();
-//}
+void Cir()
+{
+	double radius;
+
+	cout << "원의 반지름을 입력하세요 : ";
+	cin >> radius;
+
+	Circle2 cir2(radius);
+
+	cout << "원의 넓이 : " << cir2.GetArea() << endl;
+	cout << "원의 둘레 : " << cir2.GetPerimeter() << endl;
+}
+
+int main()
+{
+	Tri();
+	cout << endl;
+	Rec();
+	cout << endl;
+	Cir();
+}
 
 //class A
 //{

@@ -34,51 +34,51 @@ void SelectionSort(int arr[], int n)
 	}
 }
 
-int main()
-{
-	Stopwatch stopwatch;
-
-	random_device rd;
-	mt19937_64 gen(rd());
-	uniform_int_distribution<int> dis(1, SIZE*SIZE);
-
-	srand((unsigned)time(NULL));
-	int randNumArr[SIZE] = { 0 };
-	int randNumArr2[SIZE] = { 0 };
-
-	for (int i = 0; i < SIZE; i++)
-	{
-		int randNum = dis(gen);
-		randNumArr[i] = randNum;
-		randNumArr2[i] = randNumArr[i];
-	}
-
-	stopwatch.StartTimer();
-	SelectionSort(randNumArr2, SIZE);
-	stopwatch.StopTimer();
-
-	cout << "선택 정렬에 걸린 시간 : " << (double)stopwatch.getElapsedTime() / 1000 << endl;
-
-	//for (int i = 0; i < SIZE; i++)
-	//{
-	//	cout << randNumArr2[i] << " ";
-	//}
-
-	stopwatch.StartTimer();
-	BubbleSort(randNumArr, SIZE);
-	stopwatch.StopTimer();
-
-	cout << "버블 정렬에 걸린 시간 : " << (double)stopwatch.getElapsedTime() / 1000 << endl;
-
-	//for (int i = 0; i < SIZE; i++)
-	//{
-	//	cout << randNumArr[i] << " ";
-	//}
-	/*for (int i = 0; i < sizeof(randNumArr) / sizeof(int); i++)
-	{
-		cout << randNumArr[i] << " ";
-	}*/
-}
+//int main()
+//{
+//	Stopwatch stopwatch;
+//
+//	random_device rd;
+//	mt19937_64 gen(rd());
+//	uniform_int_distribution<int> dis(1, SIZE*SIZE);
+//
+//	srand((unsigned)time(NULL));
+//	int randNumArr[SIZE] = { 0 };
+//	int randNumArr2[SIZE] = { 0 };
+//
+//	for (int i = 0; i < SIZE; i++)
+//	{
+//		int randNum = dis(gen);
+//		randNumArr[i] = randNum;
+//		randNumArr2[i] = randNumArr[i];
+//	}
+//
+//	stopwatch.StartTimer();
+//	SelectionSort(randNumArr2, SIZE);
+//	stopwatch.StopTimer();
+//
+//	cout << "선택 정렬에 걸린 시간 : " << (double)stopwatch.getElapsedTime() / 1000 << endl;
+//
+//	//for (int i = 0; i < SIZE; i++)
+//	//{
+//	//	cout << randNumArr2[i] << " ";
+//	//}
+//
+//	stopwatch.StartTimer();
+//	BubbleSort(randNumArr, SIZE);
+//	stopwatch.StopTimer();
+//
+//	cout << "버블 정렬에 걸린 시간 : " << (double)stopwatch.getElapsedTime() / 1000 << endl;
+//
+//	//for (int i = 0; i < SIZE; i++)
+//	//{
+//	//	cout << randNumArr[i] << " ";
+//	//}
+//	/*for (int i = 0; i < sizeof(randNumArr) / sizeof(int); i++)
+//	{
+//		cout << randNumArr[i] << " ";
+//	}*/
+//}
 
 //int main()
 //{

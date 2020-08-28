@@ -59,6 +59,8 @@ Triangle2::~Triangle2()
 {
 }
 
+
+
 Rectangle2::Rectangle2()
 {
 	SetWidth(1.0);
@@ -82,5 +84,31 @@ double Rectangle2::GetPerimeter()
 }
 
 Rectangle2::~Rectangle2()
+{
+}
+
+
+
+Circle2::Circle2()
+{
+	SetRadius(1.0);
+}
+
+Circle2::Circle2(double radius)
+{
+	SetRadius(radius);
+}
+
+double Circle2::GetArea()
+{
+	return PI * pow(radius, 2);
+}
+
+double Circle2::GetPerimeter()
+{
+	return 2*PI*radius;
+}
+
+Circle2::~Circle2()
 {
 }

@@ -507,20 +507,20 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
     wcex.hIconSm        = LoadIcon(wcex.hInstance, MAKEINTRESOURCE(IDI_SMALL));
 	RegisterClassExW(&wcex);
 
-	wcex.lpfnWndProc = ChildWndProc;
-	wcex.lpszMenuName = NULL;
-	wcex.lpszClassName = _T("Child1");
-	RegisterClassExW(&wcex);
+	//wcex.lpfnWndProc = ChildWndProc;
+	//wcex.lpszMenuName = NULL;
+	//wcex.lpszClassName = _T("Child1");
+	//RegisterClassExW(&wcex);
 
-	wcex.lpfnWndProc = ChildWndProc2;
-	wcex.lpszMenuName = NULL;
-	wcex.lpszClassName = _T("Child2");
-	RegisterClassExW(&wcex);
+	//wcex.lpfnWndProc = ChildWndProc2;
+	//wcex.lpszMenuName = NULL;
+	//wcex.lpszClassName = _T("Child2");
+	//RegisterClassExW(&wcex);
 
-	wcex.lpfnWndProc = ChildWndProc3;
-	wcex.lpszMenuName = NULL;
-	wcex.lpszClassName = _T("Child3");
-	wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 2);
+	//wcex.lpfnWndProc = ChildWndProc3;
+	//wcex.lpszMenuName = NULL;
+	//wcex.lpszClassName = _T("Child3");
+	//wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 2);
 
     return RegisterClassExW(&wcex);
 }

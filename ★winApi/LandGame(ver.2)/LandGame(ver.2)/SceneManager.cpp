@@ -59,14 +59,6 @@ void SceneManager::SceneChange(GameState nextState)
 		curScene = gameScene;
 		break;
 
-	case GameState::END:
-		if (endScene == NULL)
-			endScene = new EndScene;
-
-		timerId = TimerID::TM_END;
-		curScene = endScene;
-		break;
-
 	default:
 		break;
 	}

@@ -2,6 +2,8 @@
 #include <iostream>
 #include <string>
 
+#define PI 3.141592
+
 using namespace std;
 
 class GeometricObject
@@ -9,8 +11,8 @@ class GeometricObject
 public:
 	GeometricObject();
 
-	virtual double GetArea();
-	virtual double GetPerimeter();
+	virtual double GetArea() = 0;
+	virtual double GetPerimeter() = 0;
 
 	~GeometricObject();
 };
@@ -48,4 +50,18 @@ public:
 	double GetArea();
 	double GetPerimeter();
 	~Rectangle2();
+};
+
+class Circle2 : public GeometricObject
+{
+	double radius;
+
+public:
+	Circle2();
+	Circle2(double radius = 1);
+
+	void SetRadius(double _rad) { radius = _rad; };
+	double GetArea();
+	double GetPerimeter();
+	~Circle2();
 };

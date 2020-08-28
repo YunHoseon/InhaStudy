@@ -1,34 +1,45 @@
 #include <iostream>
 #include <vector>
 #include <time.h>
+#include "Stopwatch.h"
 
 #define SIZE 10
 
 using namespace std;
 
-int QuickSort(vector<double> &arr, int _left, int _right)		//배열, 개수, 왼쪽 인덱스, 오른쪽 인덱스
+bool CheckSort(int arr[], int n)
 {
-	int pivot = _left;
-	int tmp = 0;
-	bool pl_search = false, pr_search = false;
-	int pl = _left, pr = _right + 1;
+	for (int i = 0; i < n - 1; i++)
+	{
+		if (arr[i] > arr[i + 1])
+		{
+			return false;
+		}
+	}
+}
 
-	if (pr - _left <= 0 || _right - pl <= 0)
+int QuickSort(int randNumArr[], int _left, int _right)		//배열, 왼쪽 인덱스, 오른쪽 인덱스
+{
+	int pivot = _left;										//맨 왼쪽 값
+	int pl = _left, pr = _right + 1;						//while에서 --pr하므로 +1
+	int tmp = 0;
+
+	if (pr - _left <= 0 || _right - pl <= 0)				//리스트 크기 <= 0 일 때 종료
 		return 0;
 
 	for ( ; ; )
 	{
-		if (pl > pr)
+		if (pl > pr)	//두 인덱스가 교차됐을 때
 			break;
 
-		while (pl < _right && arr[++pl] < arr[pivot]);
-		while (pr > _left && arr[--pr] > arr[pivot]);
+		while (pl < _right && randNumArr[++pl] < randNumArr[pivot]);	//pl이 가장 마지막 인덱스보다 작고, 피벗보다 값이 작을 때 ++pl
+		while (pr > _left && randNumArr[--pr] > randNumArr[pivot]);		//pr이 가장 첫번째 인덱스보다 크고, 피벗보다 값이 클 때 --pr
 
-		if (pl < pr)
+		if (pl < pr)	//아직 교차하지 않았고, pr과 pl이 둘다 멈췄을 때
 		{
-			tmp = arr[pl];
-			arr[pl] = arr[pr];
-			arr[pr] = tmp;
+			tmp = randNumArr[pl];
+			randNumArr[pl] = randNumArr[pr];
+			randNumArr[pr] = tmp;
 		}
 		
 		//for (int j = 0; j < arr.size() - 1; j++)
@@ -50,46 +61,65 @@ int QuickSort(vector<double> &arr, int _left, int _right)		//배열, 개수, 왼쪽 인
 		//	}
 		//	pr--;
 		//}
-		//
-		//if (pl_search && pr_search)
-		//{
-		//	tmp = arr[pl];
-		//	arr[pl] = arr[pr];
-		//	arr[pr] = tmp;
-		//	pl_search = false;
-		//	pr_search = false;
-		//}
 	}
-	if (arr[pivot] > arr[pl])
+
+	if (randNumArr[pivot] > randNumArr[pl])	//pr이 pl보다 작을 때
 	{
-		tmp = arr[pivot];
-		arr[pivot] = arr[pl];
-		arr[pl] = tmp;
+		tmp = randNumArr[pivot];
+		randNumArr[pivot] = randNumArr[pl];
+		randNumArr[pl] = tmp;
 	}
-	tmp = arr[pivot];
-	arr[pivot] = arr[pr];
-	arr[pr] = tmp;
+	else									//피벗과 [pr]값 교환
+	{	
+		tmp = randNumArr[pivot];
+		randNumArr[pivot] = randNumArr[pr];
+		randNumArr[pr] = tmp;
+	}
+	
+	for (int i = 0; i < SIZE; i++)
+		cout << randNumArr[i] << " ";
+	cout << "| pl : " << pl << " pr : " << pr << " pivot : " << pivot << endl;
 
-
-	for (int i = 0; i < arr.size(); i++)
-		cout << arr[i] << " ";
-	cout << "pl : " << pl << " pr : " << pr << endl;
-	QuickSort(arr, _left, pr);
-	QuickSort(arr, pl, _right);
+	QuickSort(randNumArr, _left, pr);	//왼쪽 정렬
+	QuickSort(randNumArr, pl, _right);	//오른쪽 정렬
 }
 
 int main()
 {
 	vector<double> arr = { 2,5,1,7,4,6,2,2,2,3,9,8 , 2,-2, 12};
+	Stopwatch stopwatch;
 
-	for (int i = 0; i < arr.size(); i++)
-		cout << arr[i] << " ";
-	cout << endl;
-	QuickSort(arr, 0, arr.size() - 1);
+	random_device rd;
+	mt19937_64 gen(rd());
+	uniform_int_distribution<int> dis(1, SIZE*SIZE);
 
-	for (int i = 0; i < arr.size(); i++)
-		cout << arr[i] << " ";
+	srand((unsigned)time(NULL));
+	int randNumArr[SIZE] = { 0 };
+
+	for (int i = 0; i < SIZE; i++)
+	{
+		int randNum = dis(gen);
+		randNumArr[i] = randNum;
+	}
+
+	for (int i = 0; i < SIZE; i++)
+	{
+		cout << randNumArr[i] << " ";
+	}
 	cout << endl;
+
+	stopwatch.StartTimer();
+	QuickSort(randNumArr, 0, SIZE - 1);
+	stopwatch.StopTimer();
+
+	if (CheckSort(randNumArr, SIZE))
+		cout << "true" << endl;
+	else
+		cout << "false" << endl;
+
+	cout << "퀵 정렬에 걸린 시간 : " << (double)stopwatch.getElapsedTime() / 1000 << endl;
+	/*for (int i = 0; i < arr.size(); i++)
+		cout << arr[i] << " ";*/
 }
 
 //void Solution(vector<string> order_times, int k)

@@ -3,7 +3,6 @@
 class Scene;			//클래스 전방선언
 class StartScene;
 class GameScene;
-class EndScene;
 
 enum class GameState;
 enum class TimerID;
@@ -16,7 +15,6 @@ public:
 	Scene *curScene;
 	StartScene *startScene;
 	GameScene *gameScene;
-	EndScene *endScene;
 
 	GameState gameState;
 	TimerID timerId;

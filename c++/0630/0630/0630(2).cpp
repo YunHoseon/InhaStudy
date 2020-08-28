@@ -48,26 +48,26 @@ void ShellSort(int arr[], int n)
 		cout << "false" << endl;
 }
 
-int main()
-{
-	Stopwatch stopwatch;
-
-	random_device rd;
-	mt19937_64 gen(rd());
-	uniform_int_distribution<int> dis(1, SIZE*SIZE);
-
-	srand((unsigned)time(NULL));
-	int randNumArr[SIZE] = { 0 };
-
-	for (int i = 0; i < SIZE; i++)
-	{
-		int randNum = dis(gen);
-		randNumArr[i] = randNum;
-	}
-
-	stopwatch.StartTimer();
-	ShellSort(randNumArr, SIZE);
-	stopwatch.StopTimer();
-
-	cout << "셸 정렬에 걸린 시간 : " << (double)stopwatch.getElapsedTime() / 1000 << endl;
-}
+//int main()
+//{
+//	Stopwatch stopwatch;
+//
+//	random_device rd;
+//	mt19937_64 gen(rd());
+//	uniform_int_distribution<int> dis(1, SIZE*SIZE);
+//
+//	srand((unsigned)time(NULL));
+//	int randNumArr[SIZE] = { 0 };
+//
+//	for (int i = 0; i < SIZE; i++)
+//	{
+//		int randNum = dis(gen);
+//		randNumArr[i] = randNum;
+//	}
+//
+//	stopwatch.StartTimer();
+//	ShellSort(randNumArr, SIZE);
+//	stopwatch.StopTimer();
+//
+//	cout << "셸 정렬에 걸린 시간 : " << (double)stopwatch.getElapsedTime() / 1000 << endl;
+//}
