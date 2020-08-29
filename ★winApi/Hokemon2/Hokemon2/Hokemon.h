@@ -2,36 +2,15 @@
 
 enum Type { normal, fire, water, grass, elec, poison };
 
-typedef struct MonsterSkill
-{
-	unsigned int id;
-	int accuracy;
-	char sName[32];
-	unsigned int pp;
-	unsigned int MaxPp;
-	int sDamage;
-	enum Type sType;
-}MonsterSkill;
-
 class Hokemon
 {
 private:
-	unsigned int mNum;
-	char mName[16];
-
-	int mHp;
-	int MaxHp;
-	int mAtk;
-	int mGrd;
-	int mSpd;
+	Hokemon_Data hData;
 
 	unsigned int mLevel;
 	unsigned int mExp;
 
-	int nextEvol;			//다음 진화형태의 번호
-	enum Type mType[2];
-
-	MonsterSkill mSkill[4];
+	Skill_Data mSkill[4];
 
 public:
 	Hokemon();
@@ -41,7 +20,9 @@ public:
 
 	/*hokemon getter setter*/
 
-	unsigned int GetmNum() { return mNum; }
+	Hokemon_Data GetData() { return hData; }
+	void SetData(Hokemon_Data _hData) { hData = _hData; }
+	/*unsigned int GetmNum() { return mNum; }
 	void SetmNum(unsigned int _mNum) { mNum = _mNum; }
 
 	char* GetmName() { return mName; }
@@ -63,7 +44,7 @@ public:
 	void SetmSpd(int _mSpd) { mSpd = _mSpd; }
 
 	enum Type* GetmType(int _num) { return &mType[_num]; }
-	void SetmType(enum Type* _mType, int _num) { mType[_num] = *_mType; }
+	void SetmType(enum Type* _mType, int _num) { mType[_num] = *_mType; }*/
 
 	unsigned int GetmLevel() { return mLevel; }
 	void SetmLevel(const unsigned int _mLevel) { mLevel = _mLevel; }
@@ -73,7 +54,10 @@ public:
 
 	/*skill getter setter*/
 
-	char* GetsName(int skillNum) { return mSkill[skillNum].sName; }
+	Skill_Data* GetskillData() { return mSkill; }
+	void SetskillData(Skill_Data _skillData, int _n) { mSkill[_n] = _skillData; }
+
+	/*char* GetsName(int skillNum) { return mSkill[skillNum].sName; }
 	void SetsName(const char* _sName, int skillNum) { strcpy_s(mSkill[skillNum].sName, _sName); }
 
 	unsigned int Getpp(int skillNum) { return mSkill[skillNum].pp; }
@@ -86,5 +70,5 @@ public:
 	void SetsDamage(int _sDamage, int skillNum) { mSkill[skillNum].sDamage = _sDamage; }
 
 	enum Type GetsType(int skillNum) { return mSkill[skillNum].sType; }
-	void SetsType(enum Type _sType, int skillNum) { mSkill[skillNum].sType = _sType; }
+	void SetsType(enum Type _sType, int skillNum) { mSkill[skillNum].sType = _sType; }*/
 };

@@ -26,8 +26,8 @@ void GameScene::Update(UINT message, WPARAM wParam, LPARAM lParam)
 
 void GameScene::Render(HWND hWnd, HDC hdc)
 {
-	tileMap.DrawMap(hdc);
 	bitmap.DrawBitmap(hWnd, hdc);
+	tileMap.DrawMap(hdc);
 
 	//격자 그리기
 	/*HBRUSH myBrush = (HBRUSH)GetStockObject(NULL_BRUSH);

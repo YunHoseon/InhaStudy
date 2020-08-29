@@ -3,6 +3,7 @@
 
 extern Singleton *singleton;
 extern HokemonDB *hokemonDB;
+extern Player player;
 
 LoadScene::LoadScene()
 {
@@ -19,9 +20,7 @@ LoadScene::~LoadScene()
 
 void LoadScene::Init()
 {
-	Hokemon *chikorita = new Hokemon;
-	Hokemon *cyndaquil = new Hokemon;
-	Hokemon *totodile = new Hokemon;
+
 }
 
 void LoadScene::Update(UINT message, WPARAM wParam, LPARAM lParam)
@@ -64,25 +63,44 @@ void LoadScene::Update(UINT message, WPARAM wParam, LPARAM lParam)
 		if (mx > rc_chikorita.left && mx < rc_chikorita.right &&
 			my > rc_chikorita.top && my < rc_chikorita.bottom)
 		{
-			//chikorita->
+			Hokemon *chikorita = new Hokemon;
+			chikorita->SetData(hokemonDB->map_Hokemons.find(152)->second);
+			chikorita->SetmLevel(5);
+			chikorita->SetskillData(hokemonDB->map_Skills.find(1)->second, 0);
+			chikorita->SetskillData(hokemonDB->map_Skills.find(2)->second, 1);
+
+			player.SetMyMonster(chikorita, 0);
+			singleton->sceneManager->SceneChange(GameState::INGAME);
 		}
 		else if (mx > rc_Cyndaquil.left && mx < rc_Cyndaquil.right &&
 			my > rc_Cyndaquil.top && my < rc_Cyndaquil.bottom)
 		{
+			Hokemon *cyndaquil = new Hokemon;
+			cyndaquil->SetData(hokemonDB->map_Hokemons.find(155)->second);
+			cyndaquil->SetmLevel(5);
+			cyndaquil->SetskillData(hokemonDB->map_Skills.find(1)->second, 0);
+			cyndaquil->SetskillData(hokemonDB->map_Skills.find(5)->second, 1);
 
+			player.SetMyMonster(cyndaquil, 0);
+			singleton->sceneManager->SceneChange(GameState::INGAME);
 		}
 		else if (mx > rc_Totodile.left && mx < rc_Totodile.right &&
 			my > rc_Totodile.top && my < rc_Totodile.bottom)
 		{
+			Hokemon *totodile = new Hokemon;
+			totodile->SetData(hokemonDB->map_Hokemons.find(158)->second);
+			totodile->SetmLevel(5);
+			totodile->SetskillData(hokemonDB->map_Skills.find(8)->second, 0);
+			totodile->SetskillData(hokemonDB->map_Skills.find(5)->second, 1);
 
+			player.SetMyMonster(totodile, 0);
+			singleton->sceneManager->SceneChange(GameState::INGAME);
 		}
 		break;
 
 	default:
 		break;
 	}
-
-	//singleton->sceneManager->SceneChange(GameState::INGAME);
 }
 
 void LoadScene::Render(HWND hWnd, HDC hdc)

@@ -2,6 +2,8 @@
 class Bitmap
 {
 public:
+	std::map<int, HBITMAP> map_Images;
+
 	HBITMAP hBackImage;
 	BITMAP bitBack;
 

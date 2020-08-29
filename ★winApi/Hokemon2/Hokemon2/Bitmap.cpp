@@ -17,6 +17,13 @@ void Bitmap::CreateBitmap()
 {
 	hBackImage = (HBITMAP)LoadImage(NULL, TEXT("images\\map\\background_NewBarkTown_big.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
 	GetObject(hBackImage, sizeof(BITMAP), &bitBack);
+
+	map_Images.insert(std::make_pair(0, (HBITMAP)LoadImage(NULL, TEXT("images\\objects\\tree.bmp"), 
+		IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION)));
+	map_Images.insert(std::make_pair(1, (HBITMAP)LoadImage(NULL, TEXT("images\\objects\\myHouse.bmp"), 
+		IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION)));
+	map_Images.insert(std::make_pair(2, (HBITMAP)LoadImage(NULL, TEXT("images\\objects\\laboratory.bmp"),
+		IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION)));
 }
 
 void Bitmap::DrawBitmap(HWND hWnd, HDC hdc)
@@ -46,7 +53,6 @@ void Bitmap::DrawBitmap(HWND hWnd, HDC hdc)
 	BitBlt(hdc, 0, 0, bx, by, hMemDC, bitmapX, bitmapY, SRCCOPY);
 	SelectObject(hMemDC, hOldBitmap);
 	DeleteDC(hMemDC);
-
 }
 
 void Bitmap::DeleteBitmap()

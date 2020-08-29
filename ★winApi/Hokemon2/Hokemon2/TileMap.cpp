@@ -5,6 +5,7 @@
 
 extern Singleton *singleton;
 extern Player player;
+extern Bitmap bitmap;
 
 TileMap::TileMap()
 {
@@ -68,10 +69,12 @@ TileMap::~TileMap()
 {
 }
 
-void TileMap::DrawMap(HDC hdc)
+void TileMap::DrawMap(HDC hdc)	//마을인지 숲인지에 따라 다르게
 {
 	UpdateMap();
+
 	HBRUSH oldBrush, roadBrush, bushBrush, blockBrush;
+
 	roadBrush = CreateSolidBrush(RGB(240, 240, 240));
 	bushBrush = CreateSolidBrush(RGB(110, 215, 110));
 	blockBrush = CreateSolidBrush(RGB(60, 60, 75));
@@ -92,6 +95,7 @@ void TileMap::DrawMap(HDC hdc)
 
 			case TileState::BLOCK:
 				oldBrush = (HBRUSH)SelectObject(hdc, blockBrush);
+				
 				break;
 			default:
 				break;
@@ -146,6 +150,7 @@ void TileMap::UpdateMap()
 	}
 
 	singleton->movable = true;
+
 	if (singleton->movable)
 	{
 		for (int i = 0; i < COL - 5; i++)

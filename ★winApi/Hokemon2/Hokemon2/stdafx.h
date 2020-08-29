@@ -19,6 +19,38 @@
 #include <iostream>
 #include <map>
 
+#define POSX	-380
+#define POSY	-100
+
+enum class GameState { NONE = 0, LOAD, START, INGAME, BATTLE };
+enum class TimerID { TM_RENDER = 0, TM_UPDATE };
+enum class TileState { ROAD = 0, BUSH, BLOCK, HOUSE };
+enum MY_TOKEN_TYPE { TOKEN_STRING = 0, TOKEN_NUMBER };	//토큰 종류
+
+struct Hokemon_Data
+{
+	int hNum;
+	char hName[16];
+	int hHp;
+	int MaxHp;
+	int hAtk;
+	int hGrd;
+	int hSpd;
+	int hNextEvol;
+	int hType;
+};
+
+struct Skill_Data
+{
+	int id;
+	int accuracy;
+	char sName[32];
+	int pp;
+	int MaxPp;
+	int sDamage;
+	int sType;
+};
+
 // TODO: reference additional headers your program requires here
 #include "Hokemon.h"
 #include "Player.h"
@@ -28,13 +60,3 @@
 #include "SceneManager.h"
 #include "Bitmap.h"
 #include "json/json.h"
-
-#define POSX	-380
-#define POSY	-100
-
-enum class GameState { NONE = 0, LOAD, START, INGAME, BATTLE };
-enum class TimerID { TM_RENDER = 0, TM_UPDATE };
-enum class TileState { ROAD = 0, BUSH, BLOCK };
-enum MY_TOKEN_TYPE { TOKEN_STRING = 0, TOKEN_NUMBER };	//토큰 종류
-
-//using namespace std;
