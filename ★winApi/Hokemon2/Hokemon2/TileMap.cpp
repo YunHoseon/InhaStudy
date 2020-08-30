@@ -9,37 +9,31 @@ extern Bitmap bitmap;
 
 TileMap::TileMap()
 {
-	char tmpMap[COL][ROW+1] =
+	char tmpMap_Town[COL-6][ROW+1] =
 	{
 		{ "kkkkkkkkkkkkkkkkkkkk" },
+		{ "kkkkkkkkkkkkkkkkkkkk" },
+		{ "kkkkkkkkkkkkkkkkkkkk" },
+		{ "kkkkkkkkkkkkkkkkkkkk" },
+		{ "kkkkkkkkkk00kkkkkkkk" },
+		{ "kkkk00000000kkkkkkkk" },
+		{ "k000000000000000kkkk" },
 		{ "k0000000000000000kkk" },
-		{ "k0000000000000000kkk" },
-		{ "k0000000000000000kkk" },
-		{ "k0000000000000000kkk" },
-		{ "k0000000000000000kkk" },
-		{ "k0000000000000000kkk" },
-		{ "k0000000000000000kkk" },
-		{ "k0000000000000000kkk" },
-		{ "k00000000000000000kk" },
-		{ "k00000000000000000kk" },
-		{ "k00000000000000000kk" },
-		{ "k00000000000000000kk" },
-		{ "k00000000000000000kk" },
-		{ "k00000000000000000kk" },
-		{ "k00000000000000000kk" },
-		{ "k00000000000000000kk" },
-		{ "k00000000000000000kk" },
-		{ "k00000000000000000kk" },
+		{ "k00kkk00000000000kkk" },
+		{ "kkkkkk0000kkk00kkkkk" },
+		{ "kkk00k000kkkk00kkkkk" },
+		{ "k00000000000k00kkkkk" },
+		{ "kkkkk0000000000kkkkk" },
 		{ "kkkkkkkkkkkkkkkkkkkk" },
 	};
 
 	gap = 50;
 
-	for (int i = 0; i < COL-5; i++)		//15
+	for (int i = 0; i < COL-6; i++)		//14
 	{
-		for (int j = 0; j < ROW-1; j++)	//19
+		for (int j = 0; j < ROW; j++)	//20
 		{
-			map[i][j].cell = tmpMap[i][j];
+			map[i][j].cell = tmpMap_Town[i][j];
 
 			map[i][j].collider.left = j * gap + POSX;
 			map[i][j].collider.top = i * gap + POSY;

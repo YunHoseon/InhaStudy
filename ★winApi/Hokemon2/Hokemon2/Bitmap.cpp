@@ -15,7 +15,8 @@ Bitmap::~Bitmap()
 
 void Bitmap::CreateBitmap()
 {
-	hBackImage = (HBITMAP)LoadImage(NULL, TEXT("images\\map\\background_NewBarkTown_big.bmp"), IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
+	hBackImage = (HBITMAP)LoadImage(NULL, TEXT("images\\map\\background_NewBarkTown_big_.bmp"), 
+		IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
 	GetObject(hBackImage, sizeof(BITMAP), &bitBack);
 
 	map_Images.insert(std::make_pair(0, (HBITMAP)LoadImage(NULL, TEXT("images\\objects\\tree.bmp"), 
