@@ -24,7 +24,7 @@
 
 enum class GameState { NONE = 0, LOAD, START, INGAME, BATTLE };
 enum class TimerID { TM_RENDER = 0, TM_UPDATE };
-enum class TileState { ROAD = 0, BUSH, BLOCK, HOUSE };
+enum class TileState { ROAD = 0, BUSH, BLOCK, POTAL };
 enum MY_TOKEN_TYPE { TOKEN_STRING = 0, TOKEN_NUMBER };	//토큰 종류
 
 struct Hokemon_Data

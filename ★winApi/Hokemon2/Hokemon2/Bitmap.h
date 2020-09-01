@@ -2,10 +2,12 @@
 class Bitmap
 {
 public:
-	std::map<int, HBITMAP> map_Images;
+	//std::map<int, HBITMAP> map_Images;
 
 	HBITMAP hBackImage;
 	BITMAP bitBack;
+	HBITMAP hBackImage2;
+	BITMAP bitBack2;
 
 	Bitmap();
 	~Bitmap();

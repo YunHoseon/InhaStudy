@@ -9,7 +9,7 @@ extern Bitmap bitmap;
 
 TileMap::TileMap()
 {
-	char tmpMap_Town[COL-6][ROW+1] =
+	char tmpMap_Town[COL][ROW+1] =
 	{
 		{ "kkkkkkkkkkkkkkkkkkkk" },
 		{ "kkkkkkkkkkkkkkkkkkkk" },
@@ -27,18 +27,59 @@ TileMap::TileMap()
 		{ "kkkkkkkkkkkkkkkkkkkk" },
 	};
 
+	char tmpMap_Forest[COL][ROW + 1] =
+	{
+		{ "kkkkkkkkkkkkkkkkkkkk" },
+		{ "kkkkkkkkkkkkkkkkkkkk" },
+		{ "k000000000000000000k" },
+		{ "k000000000000000000k" },
+		{ "k000000000000000000k" },
+		{ "k000000000000000000k" },
+		{ "k000000000000000000k" },
+		{ "k000000000000000000k" },
+		{ "k000000000000000000k" },
+		{ "k000000000000000000k" },
+		{ "k000000000000000000k" },
+		{ "k000000000000000000k" },
+		{ "k000000000000000000k" },
+		{ "k000000000000000000k" },
+		{ "k000000000000000000k" },
+		{ "k000000000000000000k" },
+		{ "k000000000000000000k" },
+		{ "k000000000000000000k" },
+		{ "k000000000000000000k" },
+		{ "kkkkkkkkkkkkkkkkkkkk" },
+
+	};
+
 	gap = 50;
 
-	for (int i = 0; i < COL-6; i++)		//14
+	for (int i = 0; i < COL; i++)		
 	{
-		for (int j = 0; j < ROW; j++)	//20
+		for (int j = 0; j < ROW; j++)	
 		{
-			map[i][j].cell = tmpMap_Town[i][j];
+			switch (singleton->mapState)
+			{
+			case 1:
+				map[i][j].cell = tmpMap_Town[i][j];
 
-			map[i][j].collider.left = j * gap + POSX;
-			map[i][j].collider.top = i * gap + POSY;
-			map[i][j].collider.right = gap + (j * gap) + POSX;
-			map[i][j].collider.bottom = gap + (i * gap) + POSY;
+				map[i][j].collider.left = j * gap + POSX;
+				map[i][j].collider.top = i * gap + POSY;
+				map[i][j].collider.right = gap + (j * gap) + POSX;
+				map[i][j].collider.bottom = gap + (i * gap) + POSY;
+				break;
+			case 2:
+				map[i][j].cell = tmpMap_Forest[i][j];
+
+				map[i][j].collider.left = j * gap + POSX;
+				map[i][j].collider.top = i * gap + POSY;
+				map[i][j].collider.right = gap + (j * gap) + POSX;
+				map[i][j].collider.bottom = gap + (i * gap) + POSY;
+				break;
+
+			default:
+				break;
+			}
 
 			switch (map[i][j].cell)
 			{
@@ -50,6 +91,9 @@ TileMap::TileMap()
 				break;
 			case 'k':
 				map[i][j].tileState = TileState::BLOCK;
+				break;
+			case 'p':
+				map[i][j].tileState = TileState::POTAL;
 				break;
 
 			default:
@@ -139,6 +183,14 @@ void TileMap::UpdateMap()
 				colliderMoveX = tmpMoveX;
 				colliderMoveY = tmpMoveY;
 				return;
+			}
+			else if(map[i][j].cell == 'p' && IntersectRect(&intersectRc, &tmpMapCol, &player.playerCollider) && singleton->mapState == 1)
+			{
+				singleton->mapState = 2;
+			}
+			else if (map[i][j].cell == 'p' && IntersectRect(&intersectRc, &tmpMapCol, &player.playerCollider) && singleton->mapState == 2)
+			{
+				singleton->mapState = 1;
 			}
 		}
 	}
