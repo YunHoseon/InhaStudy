@@ -19,7 +19,7 @@ void Bitmap::CreateBitmap()
 		IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
 	GetObject(hBackImage, sizeof(BITMAP), &bitBack);
 
-	hBackImage2 = (HBITMAP)LoadImage(NULL, TEXT("images\\map\\background_root29.bmp"),
+	hBackImage2 = (HBITMAP)LoadImage(NULL, TEXT("images\\map\\background_root29_big.bmp"),
 		IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
 	GetObject(hBackImage2, sizeof(BITMAP), &bitBack2);
 
@@ -69,7 +69,7 @@ void Bitmap::DrawBitmap(HWND hWnd, HDC hdc)
 		HDC hMemDC;
 		HBITMAP hOldBitmap;
 		int bx, by;
-		static int bitmapX = 380, bitmapY = 100;
+		static int bitmapX = 700, bitmapY = 150;
 
 		hMemDC = CreateCompatibleDC(hdc);
 		hOldBitmap = (HBITMAP)SelectObject(hMemDC, hBackImage2);

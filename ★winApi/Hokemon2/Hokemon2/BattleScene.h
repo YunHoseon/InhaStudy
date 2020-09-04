@@ -4,7 +4,15 @@
 class BattleScene :
 	public Scene
 {
+	RECT background_under;
+	RECT Btn_battle;
+	RECT Btn_run;
 public:
+	HBITMAP hBackImage;
+	HBITMAP battleUI;
+
+	BITMAP bitBack;
+
 	BattleScene();
 	~BattleScene();
 

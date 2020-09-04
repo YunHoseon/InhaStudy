@@ -8,6 +8,7 @@ class Singleton		//GameManager·Î Áþ±â
 	{
 		movable = true;
 		mapState = 1;
+		isBattle = false;
 	};
 
 public:
@@ -15,6 +16,7 @@ public:
 	RECT rectView;
 	bool movable;
 	int mapState;	//1 = ¸¶À», 2 = ½£
+	bool isBattle;
 
 	virtual ~Singleton() {};
 

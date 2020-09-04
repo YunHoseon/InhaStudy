@@ -17,10 +17,14 @@
 #include <memory.h>
 #include <tchar.h>
 #include <iostream>
+#include <time.h>
 #include <map>
 
 #define POSX	-380
 #define POSY	-100
+
+#define POSX2	-1150
+#define POSY2	-100
 
 enum class GameState { NONE = 0, LOAD, START, INGAME, BATTLE };
 enum class TimerID { TM_RENDER = 0, TM_UPDATE };

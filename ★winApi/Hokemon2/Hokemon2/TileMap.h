@@ -16,6 +16,10 @@ class TileMap
 public:
 	Tile map[COL][ROW];
 	int gap;
+
+	char Map_Town[COL][ROW + 1];
+	char Map_Forest[COL][ROW + 1];
+
 	TileMap();
 	~TileMap();
 
