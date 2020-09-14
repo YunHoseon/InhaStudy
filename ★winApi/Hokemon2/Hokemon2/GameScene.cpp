@@ -4,10 +4,11 @@
 extern Singleton *singleton;
 extern TileMap tileMap;
 extern Bitmap bitmap;
+extern Player player;
 
 GameScene::GameScene()
 {
-	player = new Player;
+	
 }
 
 GameScene::~GameScene()
@@ -21,7 +22,7 @@ void GameScene::Init()
 
 void GameScene::Update(UINT message, WPARAM wParam, LPARAM lParam)
 {
-	player->UpdatePlayer(message, wParam, lParam);
+	player.UpdatePlayer(message, wParam, lParam);
 
 	if (singleton->isBattle == true)
 		singleton->sceneManager->SceneChange(GameState::BATTLE);
@@ -44,7 +45,7 @@ void GameScene::Render(HWND hWnd, HDC hdc)
 	SelectObject(hdc, oldBrush);
 	DeleteObject(myBrush);*/
 
-	player->DrawPlayer(hdc);
+	player.DrawPlayer(hdc);
 }
 
 void GameScene::Free(HWND hWnd)

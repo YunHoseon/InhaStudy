@@ -254,7 +254,8 @@ void LoadScene::HokemonSaveData(JSON json)
 	for (int i = 0; i < 5; i++)
 	{
 		hData[i].hNum = json.tokens[1 + (i * 17 + i)].number;
-		strcpy_s(hData[i].hName, json.tokens[3 + (i * 17 + i)].string);
+		USES_CONVERSION;
+		_tcscpy(hData[i].hName, A2T(json.tokens[3 + (i * 17 + i)].string));
 		hData[i].hHp = json.tokens[5 + (i * 17 + i)].number;
 		hData[i].MaxHp = json.tokens[7 + (i * 17 + i)].number;
 		hData[i].hAtk = json.tokens[9 + (i * 17 + i)].number;
@@ -275,7 +276,9 @@ void LoadScene::SkillSaveData(JSON json)
 	{
 		sData[i].id = json.tokens[1 + (i * 13 + i)].number;
 		sData[i].accuracy = json.tokens[3 + (i * 13 + i)].number;
-		strcpy_s(sData[i].sName, json.tokens[5 + (i * 13 + i)].string);
+		USES_CONVERSION;
+		_tcscpy(sData[i].sName, A2T(json.tokens[5 + (i * 13 + i)].string));
+		//strcpy_s(sData[i].sName, json.tokens[5 + (i * 13 + i)].string);
 		sData[i].pp = json.tokens[7 + (i * 13 + i)].number;
 		sData[i].MaxPp = json.tokens[9 + (i * 13 + i)].number;
 		sData[i].sDamage = json.tokens[11 + (i * 13 + i)].number;

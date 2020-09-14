@@ -7,7 +7,6 @@ class GameScene :
 	public Scene
 {
 public:
-	Player *player;
 
 	GameScene();
 	virtual ~GameScene();

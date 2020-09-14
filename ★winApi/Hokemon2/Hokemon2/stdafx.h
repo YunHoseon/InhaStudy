@@ -18,6 +18,7 @@
 #include <tchar.h>
 #include <iostream>
 #include <time.h>
+#include <atlstr.h>
 #include <map>
 
 #define POSX	-380
@@ -29,12 +30,13 @@
 enum class GameState { NONE = 0, LOAD, START, INGAME, BATTLE };
 enum class TimerID { TM_RENDER = 0, TM_UPDATE };
 enum class TileState { ROAD = 0, BUSH, BLOCK, POTAL };
+enum class BattleState { NONE = 0, BATTLE, RUN,  SELECT};
 enum MY_TOKEN_TYPE { TOKEN_STRING = 0, TOKEN_NUMBER };	//토큰 종류
 
 struct Hokemon_Data
 {
 	int hNum;
-	char hName[16];
+	TCHAR hName[16];
 	int hHp;
 	int MaxHp;
 	int hAtk;
@@ -48,7 +50,7 @@ struct Skill_Data
 {
 	int id;
 	int accuracy;
-	char sName[32];
+	TCHAR sName[32];
 	int pp;
 	int MaxPp;
 	int sDamage;

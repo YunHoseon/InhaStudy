@@ -372,7 +372,7 @@ void BattleWild()
 	printf("\t가라! %s!\n", Player.GetmyMonster(0)->GetmName());
 	Sleep(2000);
 
-	if (enemy->GetmSpd() < Player.GetmyMonster(0)->GetmSpd())			//자신 턴먼저
+	if (enemy->GetmSpd() < Player.GetmyMonster(0)->GetmSpd())		//자신 턴먼저
 		myTurn = 0;
 	else if (enemy->GetmSpd() > Player.GetmyMonster(0)->GetmSpd())	//상대 턴먼저
 		myTurn = 1;

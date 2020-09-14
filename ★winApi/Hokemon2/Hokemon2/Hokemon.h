@@ -22,29 +22,34 @@ public:
 
 	Hokemon_Data GetData() { return hData; }
 	void SetData(Hokemon_Data _hData) { hData = _hData; }
-	/*unsigned int GetmNum() { return mNum; }
-	void SetmNum(unsigned int _mNum) { mNum = _mNum; }
 
-	char* GetmName() { return mName; }
-	void SetmName(const char* _mName) { strcpy_s(mName, _mName); }
+	//unsigned int GetmNum() { return hData.hNum; }
+	//void SetmNum(unsigned int _mNum) { hData.hNum = _mNum; }
 
-	int GetmHp() { return mHp; }
-	void SetmHp(int _mHp) { mHp = _mHp; }
+	/*TCHAR* GetmName() { return hData.hName; }
+	void SetmName(const TCHAR* _mName) 
+	{
+		USES_CONVERSION;
+		_tcscpy(hData.hName, _mName); 
+	}*/
 
-	int GetMaxHp() { return MaxHp; }
-	void SetMaxHp(int _MaxHp) { MaxHp = _MaxHp; }
+	int GetmHp() { return hData.hHp; }
+	void SetmHp(int _mHp) { hData.hHp = _mHp; }
 
-	int GetmAtk() { return mAtk; }
-	void SetmAtk(int _mAtk) { mAtk = _mAtk; }
+	int GetMaxHp() { return hData.MaxHp; }
+	void SetMaxHp(int _MaxHp) { hData.MaxHp = _MaxHp; }
 
-	int GetmGrd() { return mGrd; }
-	void SetmGrd(int _mGrd) { mGrd = _mGrd; }
+	int GetmAtk() { return hData.hAtk; }
+	void SetmAtk(int _mAtk) { hData.hAtk = _mAtk; }
 
-	int GetmSpd() { return mSpd; }
-	void SetmSpd(int _mSpd) { mSpd = _mSpd; }
+	int GetmGrd() { return hData.hGrd; }
+	void SetmGrd(int _mGrd) { hData.hGrd = _mGrd; }
 
-	enum Type* GetmType(int _num) { return &mType[_num]; }
-	void SetmType(enum Type* _mType, int _num) { mType[_num] = *_mType; }*/
+	int GetmSpd() { return hData.hSpd; }
+	void SetmSpd(int _mSpd) { hData.hSpd = _mSpd; }
+
+	//enum Type* GetmType(int _num) { return &mType[_num]; }
+	//void SetmType(enum Type* _mType, int _num) { mType[_num] = *_mType; }
 
 	unsigned int GetmLevel() { return mLevel; }
 	void SetmLevel(const unsigned int _mLevel) { mLevel = _mLevel; }
@@ -54,7 +59,7 @@ public:
 
 	/*skill getter setter*/
 
-	Skill_Data* GetskillData() { return mSkill; }
+	Skill_Data* GetskillData(int _mNum) { return &mSkill[_mNum]; }
 	void SetskillData(Skill_Data _skillData, int _n) { mSkill[_n] = _skillData; }
 
 	/*char* GetsName(int skillNum) { return mSkill[skillNum].sName; }
