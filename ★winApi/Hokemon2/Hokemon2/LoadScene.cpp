@@ -1,9 +1,12 @@
 #include "stdafx.h"
 #include "LoadScene.h"
+#include "SoundManager.h"
+
 
 extern Singleton *singleton;
 extern HokemonDB *hokemonDB;
 extern Player player;
+extern SoundManager* g_theSoundManager;
 
 LoadScene::LoadScene()
 {
@@ -120,6 +123,7 @@ void LoadScene::Render(HWND hWnd, HDC hdc)
 
 void LoadScene::Free(HWND hWnd)
 {
+	g_theSoundManager->Stop();
 }
 
 char * LoadScene::ReadFile(char* fileName, int* readSize)

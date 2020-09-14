@@ -3,6 +3,7 @@
 // stdafx.obj will contain the pre-compiled type information
 
 #include "stdafx.h"
+#include "SoundManager.h"
 
 // TODO: reference any additional headers you need in STDAFX.H
 // and not in this file
@@ -11,3 +12,4 @@ HokemonDB *hokemonDB;
 Player player;
 TileMap tileMap;
 Bitmap bitmap;
+SoundManager* g_theSoundManager;

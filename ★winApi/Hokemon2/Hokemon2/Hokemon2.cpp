@@ -3,6 +3,7 @@
 
 #include "stdafx.h"
 #include "Hokemon2.h"
+#include "SoundManager.h"
 
 #define MAX_LOADSTRING 100
 
@@ -13,6 +14,8 @@ WCHAR szWindowClass[MAX_LOADSTRING];            // the main window class name
 
 extern Singleton *singleton;
 extern HokemonDB *hokemonDB;
+extern SoundManager* g_theSoundManager;
+extern Player player;
 
 // Forward declarations of functions included in this code module:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
@@ -103,6 +106,8 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     {
 	case WM_CREATE:
 		hokemonDB = HokemonDB::GetInstance();
+		if (g_theSoundManager == nullptr)
+			g_theSoundManager = new SoundManager();
 
 		singleton->sceneManager = new SceneManager;
 		singleton->sceneManager->hWnd = hWnd;

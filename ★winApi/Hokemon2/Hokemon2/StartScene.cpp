@@ -1,7 +1,9 @@
 #include "stdafx.h"
 #include "StartScene.h"
+#include "SoundManager.h"
 
 extern Singleton *singleton;
+extern SoundManager* g_theSoundManager;
 
 StartScene::StartScene()
 {
@@ -18,6 +20,9 @@ StartScene::~StartScene()
 
 void StartScene::Init()
 {
+	g_theSoundManager->AddBGM("sound/Title.mp3");
+	//g_theSoundManager->AddSFX("sound/effBBam.mp3", "BBam");
+	g_theSoundManager->PlayBGM();
 }
 
 void StartScene::Update(UINT message, WPARAM wParam, LPARAM lParam)

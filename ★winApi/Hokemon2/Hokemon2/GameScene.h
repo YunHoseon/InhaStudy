@@ -7,6 +7,7 @@ class GameScene :
 	public Scene
 {
 public:
+	bool isInMenu;
 
 	GameScene();
 	virtual ~GameScene();
@@ -16,4 +17,3 @@ public:
 	void Render(HWND hWnd, HDC hdc);
 	void Free(HWND hWnd);
 };
-

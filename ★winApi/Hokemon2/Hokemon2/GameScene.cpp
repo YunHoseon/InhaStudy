@@ -1,14 +1,16 @@
 #include "stdafx.h"
 #include "GameScene.h"
+#include "SoundManager.h"
 
 extern Singleton *singleton;
 extern TileMap tileMap;
 extern Bitmap bitmap;
 extern Player player;
+extern SoundManager* g_theSoundManager;
 
 GameScene::GameScene()
 {
-	
+	isInMenu = false;
 }
 
 GameScene::~GameScene()
@@ -18,6 +20,17 @@ GameScene::~GameScene()
 void GameScene::Init()
 {
 	bitmap.CreateBitmap();
+
+	if (singleton->mapState == 1)
+	{
+		g_theSoundManager->AddBGM("sound/New Bark Town.mp3");
+		g_theSoundManager->PlayBGM();
+	}
+	else if (singleton->mapState == 2)
+	{
+		g_theSoundManager->AddBGM("sound/Route 29.mp3");
+		g_theSoundManager->PlayBGM();
+	}
 }
 
 void GameScene::Update(UINT message, WPARAM wParam, LPARAM lParam)
@@ -26,6 +39,11 @@ void GameScene::Update(UINT message, WPARAM wParam, LPARAM lParam)
 
 	if (singleton->isBattle == true)
 		singleton->sceneManager->SceneChange(GameState::BATTLE);
+
+	if (GetKeyState('q') & 0x8000 || GetKeyState('Q') & 0x8000)
+		isInMenu = (isInMenu == true) ? false : true;
+
+		singleton->movable = (isInMenu == true) ? false : true;
 }
 
 void GameScene::Render(HWND hWnd, HDC hdc)
@@ -45,10 +63,11 @@ void GameScene::Render(HWND hWnd, HDC hdc)
 	SelectObject(hdc, oldBrush);
 	DeleteObject(myBrush);*/
 
-	player.DrawPlayer(hdc);
+	player.DrawPlayer(hWnd, hdc);
 }
 
 void GameScene::Free(HWND hWnd)
 {
+	g_theSoundManager->Stop();
 	KillTimer(hWnd, 1);
 }

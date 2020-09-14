@@ -1,9 +1,11 @@
 #include "stdafx.h"
 #include "BattleScene.h"
+#include "SoundManager.h"
 
 extern Singleton *singleton;
 extern HokemonDB *hokemonDB;
 extern Player player;
+extern SoundManager* g_theSoundManager;
 
 BattleScene::BattleScene()
 {
@@ -29,14 +31,14 @@ BattleScene::~BattleScene()
 {
 }
 
-Hokemon BattleScene::SpawnWildMonster()
+Hokemon *BattleScene::SpawnWildMonster()
 {
 	Hokemon *sentret = new Hokemon;
 	sentret->SetData(hokemonDB->map_Hokemons.find(161)->second);
 	sentret->SetmLevel(3);
 	sentret->SetskillData(hokemonDB->map_Skills.find(8)->second, 0);
 	sentret->SetskillData(hokemonDB->map_Skills.find(11)->second, 1);
-	return *sentret;
+	return sentret;
 }
 
 void BattleScene::TurnBattle()
@@ -47,9 +49,9 @@ void BattleScene::TurnBattle()
 	int saveAtk = player.GetMyMonster(0)->GetData().hAtk;	//원래 능력치 저장
 	int saveGrd = player.GetMyMonster(0)->GetData().hGrd;
 
-	if (wildMonster.GetData().hSpd > player.GetMyMonster(0)->GetData().hSpd)	//스피드 비교
+	if (wildMonster->GetData().hSpd > player.GetMyMonster(0)->GetData().hSpd)	//스피드 비교
 		isMyTurn = false;
-	else if (wildMonster.GetData().hSpd < player.GetMyMonster(0)->GetData().hSpd)
+	else if (wildMonster->GetData().hSpd < player.GetMyMonster(0)->GetData().hSpd)
 		isMyTurn = true;
 	else
 		isMyTurn = rand() % 2;
@@ -58,7 +60,7 @@ void BattleScene::TurnBattle()
 	{
 		mySkillFunc();
 
-		if (player.GetMyMonster(0)->GetData().hHp <= 0)
+		if (wildMonster->GetData().hHp <= 0)
 		{
 			player.GetMyMonster(0)->SetmAtk(saveAtk);
 			player.GetMyMonster(0)->SetmGrd(saveGrd);
@@ -67,8 +69,21 @@ void BattleScene::TurnBattle()
 			singleton->isBattle = false;
 			battleState = BattleState::NONE;
 			singleton->sceneManager->SceneChange(GameState::INGAME);
+			return;
 		}
+
 		eSkillFunc();
+
+		if (player.GetMyMonster(0)->GetData().hHp <= 0)
+		{
+			player.GetMyMonster(0)->SetmAtk(saveAtk);
+			player.GetMyMonster(0)->SetmGrd(saveGrd);
+
+			singleton->isBattle = false;
+			battleState = BattleState::NONE;
+			singleton->sceneManager->SceneChange(GameState::INGAME);
+			return;
+		}
 	}
 	else if (isMyTurn == false)
 	{
@@ -77,13 +92,25 @@ void BattleScene::TurnBattle()
 		{
 			player.GetMyMonster(0)->SetmAtk(saveAtk);
 			player.GetMyMonster(0)->SetmGrd(saveGrd);
+
+			singleton->isBattle = false;
+			battleState = BattleState::NONE;
+			singleton->sceneManager->SceneChange(GameState::INGAME);
+			return;
+		}
+		mySkillFunc();
+
+		if (wildMonster->GetData().hHp <= 0)
+		{
+			player.GetMyMonster(0)->SetmAtk(saveAtk);
+			player.GetMyMonster(0)->SetmGrd(saveGrd);
 			player.GetMyMonster(0)->SetmExp(player.GetMyMonster(0)->GetmExp() + 10);
 
 			singleton->isBattle = false;
 			battleState = BattleState::NONE;
 			singleton->sceneManager->SceneChange(GameState::INGAME);
+			return;
 		}
-		mySkillFunc();
 	}
 
 	battleState = BattleState::SELECT;
@@ -91,6 +118,8 @@ void BattleScene::TurnBattle()
 
 void BattleScene::Init()
 {
+	g_theSoundManager->AddBGM("sound/Battle.mp3");
+	g_theSoundManager->PlayBGM();
 }
 
 void BattleScene::Update(UINT message, WPARAM wParam, LPARAM lParam)
@@ -144,7 +173,6 @@ void BattleScene::Update(UINT message, WPARAM wParam, LPARAM lParam)
 	case BattleState::NONE:
 		break;
 	case BattleState::SELECT:
-		//스킬 선택
 		break;
 	case BattleState::BATTLE:
 		TurnBattle();
@@ -165,31 +193,31 @@ void BattleScene::mySkillFunc()
 	switch (selectedSkill->id)
 	{
 	case 1:	//몸통박치기
-		wildMonster.SetmHp(wildMonster.GetmHp() - myCalDamage());
-		if (wildMonster.GetmHp() < 0)
-			wildMonster.SetmHp(0);
+		wildMonster->SetmHp(wildMonster->GetmHp() - myCalDamage());
+		if (wildMonster->GetmHp() < 0)
+			wildMonster->SetmHp(0);
 		break;
 	case 2:	//울음소리
-		wildMonster.SetmAtk(wildMonster.GetmAtk() - 1);
-		if (wildMonster.GetmAtk() < 0)
-			wildMonster.SetmAtk(0);
+		wildMonster->SetmAtk(wildMonster->GetmAtk() - 1);
+		if (wildMonster->GetmAtk() < 0)
+			wildMonster->SetmAtk(0);
 		break;
 	case 5:	//째려보기
-		wildMonster.SetmGrd(wildMonster.GetmGrd() - 1);
-		if (wildMonster.GetmGrd() < 0)
-			wildMonster.SetmGrd(0);
+		wildMonster->SetmGrd(wildMonster->GetmGrd() - 1);
+		if (wildMonster->GetmGrd() < 0)
+			wildMonster->SetmGrd(0);
 		break;
 	case 8:	//할퀴기
-		wildMonster.SetmHp(wildMonster.GetmHp() - myCalDamage());
-		if (wildMonster.GetmHp() < 0)
-			wildMonster.SetmHp(0);
+		wildMonster->SetmHp(wildMonster->GetmHp() - myCalDamage());
+		if (wildMonster->GetmHp() < 0)
+			wildMonster->SetmHp(0);
 		break;
 	}
 }
 
 void BattleScene::eSkillFunc()
 {
-	int rNum = rNum % 2;
+	int rNum = rand() % 2;
 
 	switch (rNum)
 	{
@@ -210,7 +238,7 @@ int BattleScene::myCalDamage()	//상대 포켓몬에게 줄 데미지
 
 	if (accuracy < player.GetMyMonster(0)->GetskillData(0)->accuracy)
 	{
-		finalDamage = (player.GetMyMonster(0)->GetskillData(0)->sDamage + player.GetMyMonster(0)->GetmAtk()) - (wildMonster.GetmGrd() * 2);
+		finalDamage = (player.GetMyMonster(0)->GetskillData(0)->sDamage + player.GetMyMonster(0)->GetmAtk()) - (wildMonster->GetmGrd() * 2);
 
 		if (finalDamage <= 0)
 			finalDamage = 1;
@@ -226,9 +254,9 @@ int BattleScene::eCalDamage()
 	int accuracy = rand() % 100;
 	int finalDamage = 0;
 
-	if (accuracy < wildMonster.GetskillData(0)->accuracy)
+	if (accuracy < wildMonster->GetskillData(0)->accuracy)
 	{
-		finalDamage = ((wildMonster.GetskillData(0)->sDamage / 10) + wildMonster.GetmAtk()) - (player.GetMyMonster(0)->GetmGrd() * 2);
+		finalDamage = ((wildMonster->GetskillData(0)->sDamage / 10) + wildMonster->GetmAtk()) - (player.GetMyMonster(0)->GetmGrd() * 2);
 
 		if (finalDamage <= 0)
 			finalDamage = 1;
@@ -295,4 +323,6 @@ void BattleScene::Render(HWND hWnd, HDC hdc)
 
 void BattleScene::Free(HWND hWnd)
 {
+	g_theSoundManager->Stop();
+	delete wildMonster;
 }

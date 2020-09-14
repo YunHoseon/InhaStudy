@@ -33,7 +33,7 @@ BITMAP bitTransparent;
 //int run_Frame_min = 0;
 //int cur_Frame = run_Frame_min;
 
-HBITMAP hAniImage;
+HBITMAP hAniImage;	//
 BITMAP bitAni;
 const int Sprite_Size_X = 32;
 const int Sprite_Size_Y = 32;
@@ -106,7 +106,7 @@ VOID CALLBACK AniProc(HWND hWnd, UINT uMsg, UINT idEvent, DWORD dwTime)
 
 TCHAR sKeyState[128];
 
-VOID CALLBACK KeyStateProc(HWND hWnd, UINT uMsg, UINT idEvent, DWORD dwTime)
+VOID CALLBACK KeyStateProc(HWND hWnd, UINT uMsg, UINT idEvent, DWORD dwTime)	//
 {
 	if (GetKeyState('A') & 0x8000)
 	{
@@ -481,13 +481,6 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     return (int) msg.wParam;
 }
 
-
-
-//
-//  FUNCTION: MyRegisterClass()
-//
-//  PURPOSE: Registers the window class.
-//
 ATOM MyRegisterClass(HINSTANCE hInstance)
 {
     WNDCLASSEXW wcex;
@@ -525,16 +518,6 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
     return RegisterClassExW(&wcex);
 }
 
-//
-//   FUNCTION: InitInstance(HINSTANCE, int)
-//
-//   PURPOSE: Saves instance handle and creates main window
-//
-//   COMMENTS:
-//
-//        In this function, we save the instance handle in a global variable and
-//        create and display the main program window.
-//
 BOOL InitInstance(HINSTANCE hInstance, int nCmdShow)
 {
    hInst = hInstance; // Store instance handle in our global variable
@@ -590,7 +573,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 		CreateBitmap();
 		
-		SetTimer(hWnd, 123, 100, AniProc);
+		SetTimer(hWnd, 123, 100, AniProc);	//
 		SetTimer(hWnd, 111, 100, KeyStateProc);
 
 		//GetClientRect(hWnd, &rectView);
@@ -834,7 +817,7 @@ void DrawBitmapDoubleBuffering(HWND hwnd, HDC hdc)
 	}
 
 	{
-		hMemDC2 = CreateCompatibleDC(hMemDC);
+		hMemDC2 = CreateCompatibleDC(hMemDC);	//
 		hOldBitmap2 = (HBITMAP)SelectObject(hMemDC2, hAniImage);
 		bx = bitAni.bmWidth / 6;
 		by = bitAni.bmHeight / 8;
@@ -871,7 +854,7 @@ void CreateBitmap()
 	}
 
 	{
-		hAniImage = (HBITMAP)LoadImage(NULL, TEXT("images\\character.bmp"), IMAGE_BITMAP,
+		hAniImage = (HBITMAP)LoadImage(NULL, TEXT("images\\character.bmp"), IMAGE_BITMAP,	//
 			0, 0, LR_LOADFROMFILE | LR_CREATEDIBSECTION);
 		GetObject(hAniImage, sizeof(BITMAP), &bitAni);
 		run_Frame_max = bitAni.bmWidth / Sprite_Size_X - 1;
@@ -932,7 +915,7 @@ void DeleteBitmap()
 	DeleteObject(hAniImage);
 }
 
-void UpdateFrame(HWND hWnd)
+void UpdateFrame(HWND hWnd)	//
 {
 	cur_Frame++;
 

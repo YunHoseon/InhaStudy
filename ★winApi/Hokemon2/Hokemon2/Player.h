@@ -9,13 +9,30 @@ class Player
 	int speed;
 
 public:
+	HBITMAP hAniImage;
+	BITMAP bitAni;
+
+	int run_Frame_max;
+	int run_Frame_min;
+	int cur_Frame;
+	int dir;
+	int ax, ay;
+
+	HDC hMemDC;
+	HBITMAP hOldBitmap;
+	int bx, by;
+
+	HDC hMemDC2;
+	HBITMAP hOldBitmap2;
+
 	RECT playerCollider;
 
 	Player();
 	~Player();
 
 	void UpdatePlayer(UINT message, WPARAM wParam, LPARAM lParam);
-	void DrawPlayer(HDC hdc);
+	void DrawPlayer(HWND hWnd, HDC hdc);
+	void UpdateFrame(HWND hWnd);
 
 	/*getter setter*/
 	char* GetId() { return pId; }

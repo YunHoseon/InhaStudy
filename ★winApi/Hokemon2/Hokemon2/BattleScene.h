@@ -20,14 +20,14 @@ public:
 
 	BITMAP bitBack;
 
-	Hokemon wildMonster;
+	Hokemon *wildMonster;
 	Skill_Data *selectedSkill;
 	bool isMyTurn;
 
 	BattleScene();
 	~BattleScene();
 
-	Hokemon SpawnWildMonster();
+	Hokemon *SpawnWildMonster();
 	void TurnBattle();
 
 	void mySkillFunc();
